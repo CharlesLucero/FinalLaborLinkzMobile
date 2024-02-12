@@ -70,6 +70,7 @@ const Account =  ({navigation}) => {
                     <View style = {{paddingHorizontal: 20}}>
                         <Text style = {styles.user}>User Information</Text>
                     </View>
+                    <Text>ukkinam</Text>
 
 
 
