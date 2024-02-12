@@ -71,6 +71,7 @@ const Account =  ({navigation}) => {
                         <Text style = {styles.user}>User Information</Text>
                     </View>
                     <Text>ukkinam</Text>
+                    <Text>hello</Text>
 
 
 
