@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
@@ -101,7 +101,7 @@ const AccountSetting = ({ navigation }) => {
       });
 
       setLoading(false);
-      setState({ ...state, user: data?.updatedUser });
+      setState({ ...state, user: data?.updatedUser, image: data?.updatedUser?.image }); // Update the image state
       alert(data && data.message);
     } catch (error) {
       alert(error.response.data.message);
@@ -111,7 +111,7 @@ const AccountSetting = ({ navigation }) => {
   };
 
   return (
-    <View style={styleS.container}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingHorizontal: 20 }}>
           <TouchableOpacity>
@@ -121,9 +121,9 @@ const AccountSetting = ({ navigation }) => {
 
         <View style={{ alignItems: 'center' }}>
           <TouchableOpacity onPress={handleProfilePicAction}>
-            <Image style={styleS.imageborder} source={{ uri: newProfilePic || image }} />
+            <Image style={styles.imageborder} source={{ uri: newProfilePic || state?.user.image }} />
           </TouchableOpacity>
-          <Text style={styleS.username}>{state?.user.firstName} {state?.user.lastName}</Text>
+          <Text style={styles.username}>{state?.user.firstName} {state?.user.lastName}</Text>
         </View>
 
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
@@ -132,32 +132,32 @@ const AccountSetting = ({ navigation }) => {
 
             <View style={{ paddingHorizontal: 32, flexDirection: 'row', alignItems: 'center', gap: 14}}>
                 <View style={{ flex: 1 }}>
-                <TextInput style = {styleS.inputBox}
+                <TextInput style = {styles.inputBox}
                 value={firstName}
-                onChangeText={(text) => setfirstName(text)}
+                onChangeText={(text) => setFirstName(text)}
                 />
                 </View>
 
                 <View style={{ flex: 1 }}>
-                <TextInput style = {styleS.inputBox}
+                <TextInput style = {styles.inputBox}
                 value={lastName}
-                onChangeText={(text) => setlastName(text)}
+                onChangeText={(text) => setLastName(text)}
                 />
                 </View>
             </View>
 
             <View style={{ paddingHorizontal: 32, flexDirection: 'row', alignItems: 'center', gap: 14}}>
                 <View>
-                <TextInput style = {styleS.inputBox}
+                <TextInput style = {styles.inputBox}
                 value={contactNumber}
-                onChangeText={(text) => setcontactNumber(text)}
+                onChangeText={(text) => setContactNumber(text)}
                 />
                 </View>
 
                 <View style={{ flex: 1 }}>
-                <TextInput style = {styleS.inputBox}
+                <TextInput style = {styles.inputBox}
                 value={gender}
-                onChangeText={(text) => setgender(text)}
+                onChangeText={(text) => setGender(text)}
                 />
                 </View>
             </View>
@@ -166,30 +166,30 @@ const AccountSetting = ({ navigation }) => {
 
             <View style={{ paddingHorizontal: 32}}>
                 <View>
-                    <TextInput style = {styleS.inputBoxLong}
+                    <TextInput style = {styles.inputBoxLong}
                     value={location}
-                    onChangeText={(text) => setlocation(text)}
+                    onChangeText={(text) => setLocation(text)}
                     />
                 </View>
 
                 <View>
-                    <TextInput style = {styleS.inputBoxLong}
+                    <TextInput style = {styles.inputBoxLong}
                     value={email}
                     editable ={false}
                     />
                 </View>
 
                 <View>
-                    <TextInput style = {styleS.inputBoxLong}
+                    <TextInput style = {styles.inputBoxLong}
                     value={password}
                     placeholder='--------------change password here--------------'
-                    onChangeText={(text) => setpassword(text)}
+                    onChangeText={(text) => setPassword(text)}
                     secureTextEntry = {true}
                     />
                 </View>
 
                 <View>
-                    <TextInput style = {styleS.inputBoxLong}
+                    <TextInput style = {styles.inputBoxLong}
                     value={state?.user.role}
                     editable= {false}
                     />
@@ -197,8 +197,8 @@ const AccountSetting = ({ navigation }) => {
             </View>
 
             <View style = {{alignItems:'center'}}>
-                <TouchableOpacity style = {styleS.btnsave} onPress={handleUpdate}>
-                <Text style = {styleS.btntext}>{loading ? 'Please Wait' : "Save"}</Text>
+                <TouchableOpacity style = {styles.btnsave} onPress={handleUpdate}>
+                <Text style = {styles.btntext}>{loading ? 'Please Wait' : "Save"}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -206,7 +206,8 @@ const AccountSetting = ({ navigation }) => {
         </View>
     );
 };
-const styleS = StyleSheet.create({
+
+const styles = StyleSheet.create({
     container:{ 
         flex:1,
         justifyContent: 'space-between',
@@ -265,4 +266,5 @@ const styleS = StyleSheet.create({
         borderColor: "black",
       },    
 })
+
 export default AccountSetting;

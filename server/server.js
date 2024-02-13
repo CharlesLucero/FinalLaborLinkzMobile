@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 const socket = require("socket.io");
 require("dotenv").config();
 const connectDB = require("./config/db");
-
+const hiringRoutes = require('./routes/hiringRoutes');
 // dotenv
 dotenv.config();
 
@@ -38,6 +38,7 @@ app.use("/ap1/v1/report", require("./routes/reportRoutes"));
 app.use("/ap1/v1/chats", require("./routes/chatRoutes"));
 // Corrected line below
 app.use("/ap1/v1/message", require("./routes/messageRoutes"));
+app.use("/api/v1/hiring", hiringRoutes);
 
 
 mongoose

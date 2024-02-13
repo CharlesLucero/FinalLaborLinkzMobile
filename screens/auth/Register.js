@@ -6,7 +6,6 @@ import HeaderText from '../../components/HeaderText';
 import InputBox from '../../components/InputBox';
 import CustomButton from '../../components/CustomButton';
 import axios from 'axios';
-import { registerRoute } from '../../APIRoutes';
 
 const Register = ({navigation}) => {
   //states
@@ -32,7 +31,7 @@ const Register = ({navigation}) => {
       return;
     }
     setLoading(false);
-    const {data} = await axios.post( registerRoute, 
+    const {data} = await axios.post("/auth/register", 
     {firstName, lastName, contactNumber, gender, location, email, password});
     alert(data && data.message);
     navigation.navigate('Login')
