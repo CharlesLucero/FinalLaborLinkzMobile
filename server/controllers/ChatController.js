@@ -14,21 +14,22 @@ const sendChat = async (req, res) => {
 };
 
 const fetchChats = async (req, res) => {
-    const { userId } = req.params;
-    const { receiverId } = req.query;
+  const { userId } = req.params;
+  const { receiverId } = req.query;
 
-    try {
-        const chats = await Chat.find({
-            $or: [
-                { senderId: userId, receiverId: receiverId },
-                { senderId: receiverId, receiverId: userId }
-            ]
-        }).sort({ createdAt: 'asc' });
-        res.json({ chats });
-    } catch (error) {
-        console.error('Error fetching chats:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+  try {
+      const chats = await Chat.find({
+          $or: [
+              { senderId: userId, receiverId: receiverId },
+              { senderId: receiverId, receiverId: userId }
+          ]
+      }).sort({ createdAt: 'asc' });
+
+      res.json({ chats });
+  } catch (error) {
+      console.error('Error fetching chats:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
 };
 
 module.exports = { sendChat, fetchChats };

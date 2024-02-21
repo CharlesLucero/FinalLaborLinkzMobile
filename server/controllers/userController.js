@@ -26,84 +26,57 @@ const storage = multer.diskStorage({
 
 
 //register controller
+
 const registerController = async (req, res) => {
     try {
-        const {firstName, lastName, contactNumber, gender, location, email, password} = req.body
-        //validation
-        if(!firstName){
+        const { firstName, lastName, contactNumber, gender, location, email, password } = req.body;
+        // Validation
+        if (!firstName || !lastName || !contactNumber || !gender || !location || !email || !password) {
             return res.status(400).send({
-                success:false,
-                message:'firtname is required',
-            });
-        }
-        if(!lastName){
-            return res.status(400).send({
-                success:false,
-                message:'lastname is required',
-            });
-        }
-        if(!contactNumber){
-            return res.status(400).send({
-                success:false,
-                message:'contact is required',
-            });
-        }
-        if(!gender){
-            return res.status(400).send({
-                success:false,
-                message:'gender is required',
-            });
-        }
-        if(!location){
-            return res.status(400).send({
-                success:false,
-                message:'location is required',
-            });
-        }
-        if(!email){
-            return res.status(400).send({
-                success:false,
-                message:'email is required',
-            });
-        }
-        if (!password || password.length < 6) {
-            return res.status(400).send({
-              success: false,
-              message: "password is required and 6 character long",
-            });
-          }
-        //existing user
-        const existingUser = await userModel.findOne({ email });
-        if(existingUser){
-            return res.status(500).send({
                 success: false,
-                message: 'User already register'
+                message: 'All fields are required',
+            });
+        }
+        if (password.length < 6) {
+            return res.status(400).send({
+                success: false,
+                message: 'Password must be at least 6 characters long',
             });
         }
 
-        //hashed password
+        // Check if the user already exists
+        const existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+            return res.status(400).send({
+                success: false,
+                message: 'User already exists',
+            });
+        }
+
+        // Hash the password
         const hashedPassword = await hashPassword(password);
 
-        //save user
+        // Create the user with the rating field included
         const user = await userModel({
-            firstName, 
-            lastName, 
-            contactNumber, 
-            gender, 
-            location, 
-            email, 
+            firstName,
+            lastName,
+            contactNumber,
+            gender,
+            location,
+            email,
             password: hashedPassword,
+            rating: 0, // Add the rating field with a default value of 0
         }).save();
 
         return res.status(201).send({
             success: true,
-            message: 'Registration succesfully'
+            message: 'Registration successful',
         });
-        } catch(error) {
+    } catch (error) {
         console.log(error);
         return res.status(500).send({
-            success:false,
-            message: 'Error in register api',
+            success: false,
+            message: 'Error in register API',
             error,
         });
     }
@@ -254,7 +227,7 @@ const updateUserController = async (req, res) => {
   };
 
 
-
+//hello
 
   // Get total number of users controller
 const getTotalUsersController = async (req, res) => {
@@ -275,6 +248,27 @@ const getTotalUsersController = async (req, res) => {
   }
 };
 
+const updateRating = async (req, res) => {
+  try {
+      const { userId, rating } = req.body;
+      
+      // Update the user's rating in the database
+      await userModel.findByIdAndUpdate(userId, { rating });
+      
+      res.status(200).send({
+          success: true,
+          message: 'Rating updated successfully',
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({
+          success: false,
+          message: 'Error updating rating',
+          error: error.message,
+      });
+  }
+};
+
 module.exports = { 
     requireSignIn, 
     registerController, 
@@ -283,5 +277,6 @@ module.exports = {
     upload,
     uploadImage ,
     getAllUsersController,
-    getTotalUsersController
+    getTotalUsersController,
+    updateRating
     };
