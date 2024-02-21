@@ -8,7 +8,8 @@ const {
     upload, 
     uploadImage,
     getAllUsersController,  
-    getTotalUsersController
+    getTotalUsersController,
+    updateRating
 
 } = require('../controllers/userController');
 
@@ -27,4 +28,6 @@ router.put("/update-user", upload.single("image"), requireSignIn, updateUserCont
 router.get("/all-users", getAllUsersController  );
 
 router.get("/total-users", getTotalUsersController  );
+
+router.post("/ratings", updateRating)
 module.exports = router;

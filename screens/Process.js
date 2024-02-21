@@ -13,8 +13,7 @@ import {
 import axios from "axios";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../context/authContext";
-import { FontAwesome } from "@expo/vector-icons";
-import ProcessHeader from "./ProcessHeader";
+import { FontAwesome, Feather, Entypo } from "@expo/vector-icons";
 
 const Process = () => {
   const navigation = useNavigation();
@@ -28,6 +27,9 @@ const Process = () => {
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [violation, setViolation] = useState("");
   const [description, setDescription] = useState("");
+  const [ratingModal, setRatingModal] = useState(false);
+  const [ratingModalVisible, setRatingModalVisible] = useState(false);
+  const [starRating, setStarRating] = useState(0);
 
   useEffect(() => {
     fetchChats();
@@ -41,11 +43,39 @@ const Process = () => {
         },
       });
       setChats(response.data.chats);
+      console.log(response.data.chats);
     } catch (error) {
       console.error("Error fetching chats:", error);
       Alert.alert("Error", "Failed to fetch chats. Please try again later.");
     }
   };
+
+  const handleStarPress = (rating) => {
+    // Toggle the selected star rating
+    if (starRating === rating) {
+      // If the same star is clicked again, unselect it (set rating to 0)
+      setStarRating(0);
+    } else {
+      // Otherwise, select the clicked star
+      setStarRating(rating);
+    }
+  };
+
+  const handleSubmitRating = async () => {
+    try {
+        const response = await axios.post("/auth/ratings", {
+            userId: application.senderId._id, // Assuming application.senderId._id contains the user's ID
+            rating: starRating,
+        });
+
+        console.log("Rating submitted successfully:", response.data);
+        setStarRating(0);
+        setRatingModalVisible(false);
+    } catch (error) {
+        console.error("Error handling rating:", error);
+        Alert.alert("Error", "Failed to handle rating. Please try again later.");
+    }
+};
 
   const handleAccept = async () => {
     try {
@@ -92,8 +122,7 @@ const Process = () => {
   };
 
   const handleDone = () => {
-    navigation.navigate("Home");
-    Alert.alert("Thank you", "Thank you for using Laborlinkz");
+    setRatingModal(true)
   };
 
   const showReportModal = () => {
@@ -160,6 +189,9 @@ const Process = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+              <Entypo name="chevron-left" size={32} color="#A9A9A9" />
+            </TouchableOpacity>
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.headerInfo}>
@@ -176,6 +208,15 @@ const Process = () => {
           </View>
         </View>
       </View>
+      <FlatList
+          data={chats}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <View>
+              <Text>{`${item.senderId.firstName}: ${item.message}`}</Text>
+            </View>
+          )}
+        />
       {buttonsVisible ? (
         <View style={styles.actionContainer}>
           <TouchableOpacity onPress={handleAccept} style={styles.actionButton}>
@@ -208,15 +249,7 @@ const Process = () => {
         <TouchableOpacity onPress={handleMessageSend} style={styles.buttonSend}>
           <Text style={styles.textButton}>Send</Text>
         </TouchableOpacity>
-        <FlatList
-          data={chats}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <View>
-              <Text>{`${item.senderId.firstName}: ${item.message}`}</Text>
-            </View>
-          )}
-        />
+       
       </View>
 
       <Modal
@@ -259,6 +292,42 @@ const Process = () => {
           </View>
         </View>
       </Modal>
+
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={ratingModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Ratings</Text>
+
+            <View style={{ flexDirection: 'row' }}>
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <TouchableOpacity key={rating} onPress={() => handleStarPress(rating)}>
+                {rating <= starRating ? (
+                  <FontAwesome name="star" size={24} color="black" />
+                ) : (
+                  <Feather name="star" size={24} color="yellow" />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+
+            <TouchableOpacity
+              style={styles.reportButton}
+              onPress={handleSubmitRating}
+            >
+              <Text style={{ color: "#FFFFFF", fontWeight: "700", alignSelf:"center" }}>
+                Submit 
+              </Text>
+            </TouchableOpacity>
+           
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 };

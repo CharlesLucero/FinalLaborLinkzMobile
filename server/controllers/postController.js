@@ -35,15 +35,22 @@ const createPostController = async (req, res) => {
   }
 };
 
+
 //get all post
-const getAllPostsController =  async (req, res) => {
-  try{
-    const posts = await postModel.find().populate("postedBy", "_id firstName lastName location" ).sort({ createdAt: -1 });
-      res.status(200).send({
-        success: true,
-        message: "All Posts Data",
-        posts,
-      });
+const getAllPostsController = async (req, res) => {
+  try {
+    const posts = await postModel.find()
+      .populate({
+        path: "postedBy",
+        select: "_id firstName lastName location rating",
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).send({
+      success: true,
+      message: "All Posts Data",
+      posts,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -73,6 +80,7 @@ const getUserPostPostsController = async (req, res) =>{
     })
   }
 };
+
 //delete post
 const deletePostController = async (req, res) =>{
     try {

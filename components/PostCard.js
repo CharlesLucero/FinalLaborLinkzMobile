@@ -138,6 +138,12 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               </Text>
             </View>
 
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ color: "gray", fontSize: 13 }}>
+                Ratings: {post?.postedBy?.rating}{" "}
+              </Text>
+            </View>
+
             <View style={{ flexDirection: "row" }}>
               <Text style={{ color: "gray", fontSize: 13 }}>
                 Rate: P{post?.minRate}.00 -{" "}
