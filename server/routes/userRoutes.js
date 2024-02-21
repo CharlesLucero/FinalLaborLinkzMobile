@@ -6,8 +6,10 @@ const {
     updateUserController, 
     requireSignIn, 
     upload, 
-    uploadImage,  
-    getAllUsers // Import the getAllUsers function
+    uploadImage,
+    getAllUsersController,  
+    getTotalUsersController
+
 } = require('../controllers/userController');
 
 // Register route
@@ -22,7 +24,7 @@ router.post("/upload", upload.single("image"), uploadImage);
 // Update user route
 router.put("/update-user", upload.single("image"), requireSignIn, updateUserController);
 
-// Get all users route
-router.get("/allusers/:id", getAllUsers);
+router.get("/all-users", getAllUsersController  );
 
+router.get("/total-users", getTotalUsersController  );
 module.exports = router;

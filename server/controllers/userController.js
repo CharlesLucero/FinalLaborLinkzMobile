@@ -131,7 +131,7 @@ const loginController = async (req, res) => {
         if(!user){
             return res.status(500).send({
                 success: false,
-                message: 'user not found'
+                message: 'User not found please provide a correct Username or register first'
             });
         }
         //match password
@@ -139,7 +139,7 @@ const loginController = async (req, res) => {
         if(!match){
             return res.status(500).send({
                 success: false,
-                message:'invalid username and password',
+                message:'Please provide a correct password'
             });
         }
         //token jwt
@@ -151,7 +151,6 @@ const loginController = async (req, res) => {
         user.password = undefined;
         res.status(200).send({
             success: true,
-            message: `Login successful. Welcome, ${user.firstName}!`,
             token,
             user,
         });
@@ -159,8 +158,8 @@ const loginController = async (req, res) => {
         console.log(error);
         return res.status(500).send({
             success: false,
-            message: 'error in login api',
-            error,
+            message: 'error in login api'
+       
         });
     }
 };
@@ -244,22 +243,37 @@ const updateUserController = async (req, res) => {
     }
   };
 
-  const getAllUsers = async (req, res, next) => {
+  const getAllUsersController = async (req, res) => {
     try {
-      const user = await userModel.find({ _id: { $ne: req.params.id } }).select([
-        "email",
-        "firstName",
-        "lastName",
-        "contactNumber",
-        "gender",
-        "location",
-        "_id",
-      ]);
-      return res.json(user);
-    } catch (ex) {
-      next(ex);
+      const users = await userModel.find();
+      res.status(200).json(users);
+    } catch (error) {
+      console.error("Error fetching all users:", error);
+      res.status(500).json({ error: "Failed to fetch all users." });
     }
   };
+
+
+
+
+  // Get total number of users controller
+const getTotalUsersController = async (req, res) => {
+  try {
+    // Query the database to get the count of all users
+    const totalUsersCount = await userModel.countDocuments();
+    res.status(200).json({
+      success: true,
+      totalUsers: totalUsersCount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error getting total number of users",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = { 
     requireSignIn, 
@@ -268,5 +282,6 @@ module.exports = {
     updateUserController,
     upload,
     uploadImage ,
-    getAllUsers
+    getAllUsersController,
+    getTotalUsersController
     };

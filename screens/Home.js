@@ -11,9 +11,24 @@ const Home = ({navigation}) => {
     const [posts, getAllPosts] = useContext(PostContext);
     const [refreshing, setRefreshing] = useState(false);
     const [searchText, setSearchText] = useState('');
-    
+    const [currentPage, setCurrentPage] = useState(1);
+    const postsPerPage = 10;
 
- 
+     // Calculate start and end indices for posts to be displayed
+     const indexOfLastPost = currentPage * postsPerPage;
+     const indexOfFirstPost = indexOfLastPost - postsPerPage;
+     const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+        // Function to handle navigation to previous page
+        const goToPreviousPage = () => {
+            setCurrentPage(currentPage => currentPage - 1);
+        };
+
+        // Function to handle navigation to next page
+        const goToNextPage = () => {
+            setCurrentPage(currentPage => currentPage + 1);
+        };
+
     const getFilteredPosts = () => {
         return posts.filter(post =>
             post.title.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -49,15 +64,18 @@ const Home = ({navigation}) => {
         <SafeAreaView style = {{flex:1, backgroundColor: 'white'}}>
         <View style = {styleS.container}>
         <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, gap: 100, alignItems: 'center',   paddingHorizontal: 20, marginBottom: 20 }}>
-                <TouchableOpacity>
-                    <FontAwesome name="diamond" size={24} color="#00CCAA" />
-                </TouchableOpacity>
-                <Image source={require('../assets/image/logoblack.png')} style={{ width: 45, height: 45 }} />
-                <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
-                    <Ionicons name="create" size={24} color="#00CCAA" />
-                </TouchableOpacity>
-            </View>
+        <View style={styleS.header}>
+                        <TouchableOpacity>
+                            <FontAwesome name="diamond" size={24} color="#00CCAA" />
+                        </TouchableOpacity>
+                        <Image source={require('../assets/image/logoblack.png')} style={{ width: 45, height: 45, }} />
+                        <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
+                            <Ionicons name="create" size={24} color="#00CCAA"  />
+                        </TouchableOpacity>
+                        {/* <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+                            <FontAwesome name="bell" size={24} color="#00CCAA" left={8} />
+                        </TouchableOpacity> */}
+                    </View>
 
 
             <TouchableOpacity>
@@ -127,11 +145,11 @@ const Home = ({navigation}) => {
             </View>
 
             <View style = {{marginTop: 10, paddingHorizontal: 20,}}>
-                <Text style = {{fontWeight: 'bold', fontSize: 16}}>Jobs Listings</Text>
+                <Text style = {{fontWeight: 'bold', fontSize: 16}}>Jobs/Services</Text>
             </View>
 
             <View style={{ paddingHorizontal: 10 }}>
-                        {getFilteredPosts().map(post => (
+                        {currentPosts.map(post => (
                             <PostCard
                                 key={post._id}
                                 post = {post} 
@@ -151,7 +169,15 @@ const Home = ({navigation}) => {
                     </Text>
                 )}
            
-
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10}}>
+                        <TouchableOpacity onPress={goToPreviousPage}>
+                            <FontAwesome name="chevron-left" size={24} color="#00CCAA" />
+                        </TouchableOpacity>
+                        <Text>{currentPage}</Text>
+                        <TouchableOpacity onPress={goToNextPage}>
+                            <FontAwesome name="chevron-right" size={24} color="#00CCAA" />
+                        </TouchableOpacity>
+                    </View>
 
 
 
@@ -181,5 +207,16 @@ const styleS = StyleSheet.create({
         justifyContent: 'center',
         alignItems:'center' 
     },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5,
+        paddingHorizontal: 20,
+        marginBottom: 20,
+        alignItems: 'center',
+        // Adjusted margin to bring the icons closer
+        marginRight: 10,
+    },
+    
 })
 export default Home;

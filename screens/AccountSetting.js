@@ -4,6 +4,7 @@ import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
+import { ImageF } from '../APIRoutes';
 
 const AccountSetting = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
@@ -121,7 +122,7 @@ const AccountSetting = ({ navigation }) => {
 
         <View style={{ alignItems: 'center' }}>
           <TouchableOpacity onPress={handleProfilePicAction}>
-            <Image style={styles.imageborder} source={{ uri: newProfilePic || state?.user.image }} />
+            <Image style={styles.imageborder} source={{ uri: newProfilePic || image }} />
           </TouchableOpacity>
           <Text style={styles.username}>{state?.user.firstName} {state?.user.lastName}</Text>
         </View>
@@ -129,12 +130,16 @@ const AccountSetting = ({ navigation }) => {
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
           <Text style={{ fontSize: 16, fontWeight: '600' }}>Edit Information</Text>
         </View>
+        {/* <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+          <Text style={{ fontSize: 16, fontWeight: '600' }}>{image}</Text>
+        </View> */}
 
             <View style={{ paddingHorizontal: 32, flexDirection: 'row', alignItems: 'center', gap: 14}}>
                 <View style={{ flex: 1 }}>
                 <TextInput style = {styles.inputBox}
                 value={firstName}
                 onChangeText={(text) => setFirstName(text)}
+                editable= {false}
                 />
                 </View>
 
@@ -142,6 +147,7 @@ const AccountSetting = ({ navigation }) => {
                 <TextInput style = {styles.inputBox}
                 value={lastName}
                 onChangeText={(text) => setLastName(text)}
+                editable= {false}
                 />
                 </View>
             </View>

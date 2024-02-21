@@ -15,6 +15,7 @@ import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import PostCard from "../components/PostCard";
 import InformationCards from "../components/InformationCards";
+import { ImageF } from "../APIRoutes";
 
 const Account = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
@@ -77,9 +78,8 @@ const Account = ({ navigation }) => {
             <Image
               source={{
                 uri:
-                  state?.user.image ||
-                  "https://www.pngall.com/wp-content/uploads/5/Profile-Transparent.png",
-              }}
+                state?.user.image || ImageF
+                                }}
               style={{
                 height: 120,
                 width: 120,
@@ -89,7 +89,7 @@ const Account = ({ navigation }) => {
               }}
             />
             <Text style={styles.username}>
-              {state?.user.firstName} {state?.user.lastName}
+              {state?.user.firstName} {state?.user.lastName} 
             </Text>
           </View>
 

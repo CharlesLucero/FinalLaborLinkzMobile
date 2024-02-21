@@ -38,8 +38,8 @@ app.use("/ap1/v1/report", require("./routes/reportRoutes"));
 app.use("/ap1/v1/chats", require("./routes/chatRoutes"));
 // Corrected line below
 app.use("/ap1/v1/message", require("./routes/messageRoutes"));
-app.use("/api/v1/hiring", hiringRoutes);
-
+app.use("/ap1/v1/hiring", hiringRoutes);
+app.use("/ap1/v1/viewprofile", require("./routes/viewprofileRoutes"));
 
 mongoose
   .connect(process.env.MONGO_URL, {

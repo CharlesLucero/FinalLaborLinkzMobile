@@ -45,9 +45,9 @@ const Carpenter = ({navigation}) =>{
                             <CarpenterCard  info = {info} navigation={navigation} />
                     </View>
 
-                    <View>
+                    {/* <View>
                         <Text>{JSON.stringify(info, null, 4)}</Text>
-                    </View>
+                    </View> */}
                 </ScrollView>
             </View>
         </SafeAreaView>

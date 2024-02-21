@@ -1,41 +1,34 @@
-const Chats = require ("../models/ChatModel")
+// chatController.js
+const Chat = require('../models/chatModel');
 
+const sendChat = async (req, res) => {
+  const { senderId, receiverId, message } = req.body;
 
-module.exports.getMessages = async (req, res, next) => {
+  try {
+    const newChat = await Chat.create({ senderId, receiverId, message });
+    res.status(201).json({ message: 'Chat sent successfully', data: newChat });
+  } catch (error) {
+    console.error('Error sending chat:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const fetchChats = async (req, res) => {
+    const { userId } = req.params;
+    const { receiverId } = req.query;
+
     try {
-      const { from, to } = req.body;
-  
-      const messages = await Chats.find({
-        users: {
-          $all: [from, to],
-        },
-      }).sort({ updatedAt: 1 });
-  
-      const projectedMessages = messages.map((msg) => {
-        return {
-          fromSelf: msg.sender.toString() === from,
-          message: msg.message.text,
-        };
-      });
-      res.json(projectedMessages);
-    } catch (ex) {
-      next(ex);
+        const chats = await Chat.find({
+            $or: [
+                { senderId: userId, receiverId: receiverId },
+                { senderId: receiverId, receiverId: userId }
+            ]
+        }).sort({ createdAt: 'asc' });
+        res.json({ chats });
+    } catch (error) {
+        console.error('Error fetching chats:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-  };
-  
-  module.exports.addMessage = async (req, res, next) => {
-    try {
-      const { from, to, message } = req.body;
-      const data = await Chats.create({
-        message: { text: message },
-        users: [from, to],
-        sender: from, 
-      });
-  
-      if (data) return res.json({ msg: "Message added successfully." });
-      else return res.json({ msg: "Failed to add message to the database" });
-    } catch (ex) {
-      next(ex);
-    }
-  };
-  
+};
+
+module.exports = { sendChat, fetchChats };

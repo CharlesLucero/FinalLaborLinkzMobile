@@ -1,3 +1,5 @@
+
+
 import React, { useContext, useState, useEffect } from "react";
 import {
   View,
@@ -15,37 +17,32 @@ import { AuthContext } from "../context/authContext";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 
-const Message = () => {
+const Notifications = () => {
   const [state, setState] = useContext(AuthContext);
   const { token, user } = state;
 
   const [receivedApplications, setReceivedApplications] = useState([]);
-  const [sentApplications, setSentApplications] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetchApplications();
+    fetchReceivedApplications();
   }, []);
 
-  const fetchApplications = async () => {
+  const fetchReceivedApplications = async () => {
     try {
-      const receivedResponse = await axios.get(`/hiring/received-applications/${user._id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setReceivedApplications(receivedResponse.data.data);
-
-      const sentResponse = await axios.get(`/hiring/sent-applications/${user._id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setSentApplications(sentResponse.data.data);
+      const response = await axios.get(
+        `/hiring/received-applications/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setReceivedApplications(response.data.data);
     } catch (error) {
-      console.error("Error fetching applications:", error);
-      Alert.alert("Error", "Failed to fetch applications.");
+      console.error("Error fetching received applications:", error);
+      Alert.alert("Error", "Failed to fetch received applications.");
     } finally {
       setRefreshing(false);
     }
@@ -55,44 +52,48 @@ const Message = () => {
     navigation.navigate("Process", { application }); // Navigate to Process screen with application data
   };
 
-  const renderApplicationItem = ({ item, isSent }) => {
+  const renderApplicationItem = ({ item }) => {
     const createdAt = moment(item.createdAt);
     const formattedDate = createdAt.format("MMMM Do YYYY");
     const formattedTime = createdAt.format("h:mm:ss a");
-
+  
     return (
       <TouchableOpacity onPress={() => handleApplicationPress(item)}>
         <View style={styles.itemContainer}>
-          <View style={styles.rowContainer}>
-            <Text style={styles.received}>
-              {isSent ? "You Sent an Application to:" : "You Received an Application from:"}
-            </Text>
-            <Text style={styles.status}>{item.status}</Text>
-          </View>
-          <Text style={styles.name}>
-            {isSent ? `${item.receiverId.firstName} ${item.receiverId.lastName}` : `${item.senderId.firstName} ${item.senderId.lastName}`}
-          </Text>
-          <View style={styles.rowContainer}>
-            <Text style={styles.date}>{formattedDate}</Text>
-            <Text style={styles.time}>{formattedTime}</Text>
-          </View>
+          <Text style={styles.name}>{`${item.senderId.firstName} ${item.senderId.lastName}`}</Text>
+          <Text style={styles.date}>{formattedDate}</Text>
+          <Text style={styles.time}>{formattedTime}</Text>
         </View>
       </TouchableOpacity>
     );
   };
+
   const onRefresh = () => {
     setRefreshing(true);
-    fetchApplications();
+    fetchReceivedApplications();
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={styles.headerTitle}>Notifications</Text>
         <FlatList
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          data={[...sentApplications.map(app => ({ ...app, isSent: true })), ...receivedApplications.map(app => ({ ...app, isSent: false }))]}
-          renderItem={({ item }) => renderApplicationItem({ item, isSent: item.isSent })}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          ListHeaderComponent={
+            <View style={styles.headerContainer}>
+              <Image
+                source={require("../../client/assets/image/logoblack.png")}
+                style={{ width: 45, height: 45 }}
+              />
+              <Text style={styles.headerTitle}>Request Application </Text>
+            </View>
+          }
+          data={receivedApplications}
+          renderItem={renderApplicationItem}
           keyExtractor={(item) => item._id}
           contentContainerStyle={styles.flatListContainer}
         />
@@ -105,45 +106,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    flexDirection: "row",
+    padding: 25,
+    marginLeft: 15,
+  },
   headerTitle: {
     alignSelf: "center",
+    left: "50%",
     color: "#00CCAA",
     fontSize: 24,
     fontWeight: "500",
     textShadowColor: "gray",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
-    marginVertical: 10,
+  },
+  postContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    height: "100%",
+    marginTop: 15,
+    borderRadius: 40,
+    flex: 1,
+  },
+  userContainer: {
+    top: "3%",
+    margin: 15,
   },
   name: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
     marginLeft: 15,
-    paddingLeft: 15
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 5,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 10
-  },
-  status: {
-    fontSize: 15,
-    fontWeight: "600",
-    marginBottom: 5,
-    marginLeft: 15,
-    paddingRight: 20
-  },
-  received: {
-    fontSize: 15,
-    fontWeight: "600",
-    marginBottom: 5,
-    marginLeft: 15,
-
   },
   date: {
     fontSize: 16,
@@ -161,6 +155,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     padding: 10,
+    marginTop: 15,
     borderBottomWidth: 2.5,
     borderBottomColor: "#C8C8C8",
     elevation: 2,
@@ -169,4 +164,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Message;
+export default Notifications;
+

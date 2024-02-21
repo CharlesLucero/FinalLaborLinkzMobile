@@ -1,9 +1,8 @@
 const HiringProcess = require('../models/HiringProcessModel');
 
 // Controller function to send an application from user1 to user2
-// Controller function to send an application from user1 to user2
 const sendApplication = async (req, res) => {
-    const { senderId, receiverId, postId } = req.body; // Extract postId from request body
+    const { senderId, receiverId } = req.body;
 
     try {
         // Check if the hiring process already exists
@@ -12,15 +11,14 @@ const sendApplication = async (req, res) => {
             return res.status(400).json({ message: 'Application already sent.' });
         }
 
-        // Create a new hiring process with senderId, receiverId, and postId
-        const newApplication = await HiringProcess.create({ senderId, receiverId, postId });
+        // Create a new hiring process
+        const newApplication = await HiringProcess.create({ senderId, receiverId });
         return res.status(201).json({ message: 'Application sent successfully.', data: newApplication });
     } catch (error) {
         console.error('Error sending application:', error);
         return res.status(500).json({ message: 'Internal server error.' });
     }
 };
-
 
 // Controller function for user2 to accept an application
 const acceptApplication = async (req, res) => {
@@ -62,34 +60,25 @@ const declineApplication = async (req, res) => {
     }
 };
 
-const getReceivedApplications = async (req, res) => {
-    const { userId } = req.params;
-
+const getApplicationsForUser = async (req, res) => {
     try {
-        // Find all hiring processes where this user is the receiver
-        const receivedApplications = await HiringProcess.find({ receiverId: userId }).populate('senderId');
+        // Retrieve user ID from the req object (extracted by requireSignIn middleware)
+        const userId = req.user._id;
 
-        return res.status(200).json({ message: 'Received applications retrieved successfully.', data: receivedApplications });
+        // Retrieve hiring processes where the receiver ID matches the logged-in user's ID
+        const applicationsForUser = await HiringProcess.find({ receiverId: userId }).populate('senderId', 'firstName lastName');
+        
+        // Check if any applications were found
+        if (!applicationsForUser || applicationsForUser.length === 0) {
+            return res.status(404).json({ message: 'No applications found for the current user.' });
+        }
+
+        // Return the applications
+        return res.status(200).json({ applications: applicationsForUser });
     } catch (error) {
-        console.error('Error retrieving received applications:', error);
+        console.error('Error fetching applications for user:', error);
         return res.status(500).json({ message: 'Internal server error.' });
     }
 };
 
-
-
-const getSentApplications = async (req, res) => {
-    const { userId } = req.params;
-
-    try {
-        // Find all hiring processes where this user is the sender
-        const sentApplications = await HiringProcess.find({ senderId: userId }).populate('receiverId');
-
-        return res.status(200).json({ message: 'Sent applications retrieved successfully.', data: sentApplications });
-    } catch (error) {
-        console.error('Error retrieving sent applications:', error);
-        return res.status(500).json({ message: 'Internal server error.' });
-    }
-};
-
-module.exports = {declineApplication,getSentApplications, getReceivedApplications, acceptApplication, sendApplication}
+module.exports = {declineApplication, acceptApplication, getApplicationsForUser, sendApplication}

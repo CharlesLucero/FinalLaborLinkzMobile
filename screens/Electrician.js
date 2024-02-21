@@ -45,9 +45,9 @@ const Electrician = ({navigation}) =>{
                     <ElectricianCard info = {info}/>
                     </View>
 
-                    <View>
+                    {/* <View>
                         <Text>{JSON.stringify(info, null, 4)}</Text>
-                    </View>
+                    </View> */}
                         
                     
 

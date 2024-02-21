@@ -41,7 +41,7 @@ const createInformationController = async (req, res) => {
   const getCarpenterController = async (req, res) => {
     try {
         const info = await informationModel.find({ job: { $regex: /Carpenter/i } })
-            .populate("createdBy", "_id firstName lastName")
+            .populate("createdBy", "_id firstName lastName image")
             .sort({ createdAt: -1 });
 
         res.status(200).send({
@@ -63,7 +63,7 @@ const createInformationController = async (req, res) => {
 const getTechnicianController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Technician/i } })
-          .populate("createdBy", "_id firstName lastName")
+          .populate("createdBy", "_id firstName lastName image")
           .sort({ createdAt: -1 });
 
       res.status(200).send({
@@ -86,7 +86,7 @@ const getTechnicianController = async (req, res) => {
 const getDriverController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Driver/i } })
-          .populate("createdBy", "_id firstName lastName")
+          .populate("createdBy", "_id firstName lastName image")
           .sort({ createdAt: -1 });
 
       res.status(200).send({
@@ -109,7 +109,7 @@ const getDriverController = async (req, res) => {
 const getElectricianController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Electrician/i } })
-          .populate("createdBy", "_id firstName lastName")
+          .populate("createdBy", "_id firstName lastName image")
           .sort({ createdAt: -1 });
 
       res.status(200).send({
@@ -132,7 +132,7 @@ const getElectricianController = async (req, res) => {
 const getPlumberController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Plumber/i } })
-          .populate("createdBy", "_id firstName lastName")
+          .populate("createdBy", "_id firstName lastName image")
           .sort({ createdAt: -1 });
 
       res.status(200).send({
@@ -155,7 +155,7 @@ const getPlumberController = async (req, res) => {
 const getMaidController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Maid/i } })
-          .populate("createdBy", "_id firstName lastName")
+          .populate("createdBy", "_id firstName lastName image")
           .sort({ createdAt: -1 });
 
       res.status(200).send({
@@ -191,7 +191,26 @@ const getUserInfoController = async (req, res) =>{
       })
     }
   };
+//get all post
+const getAllInfoController =  async (req, res) => {
+  try{
+    const infos = await informationModel.find().populate("createdBy", "_id firstName lastName location" ).sort({ createdAt: -1 });
+      res.status(200).send({
+        success: true,
+        message: "All Infos Data",
+        infos,
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error In getall info API",
+      error,
+    });
+  }
+};
 
+  
+  
 
-
-  module.exports = {getPlumberController,   getUserInfoController, getMaidController,createInformationController, getElectricianController, getCarpenterController, getTechnicianController, getDriverController};
+  module.exports = {getPlumberController,getAllInfoController,  getUserInfoController, getMaidController,createInformationController, getElectricianController, getCarpenterController, getTechnicianController, getDriverController};

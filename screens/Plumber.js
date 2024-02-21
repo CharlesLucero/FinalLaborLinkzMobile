@@ -46,9 +46,9 @@ const Plumber = ({navigation}) =>{
                     <PlumberCard  info = {info}/>
                     </View>
 
-                    <View>
+                    {/* <View>
                         <Text>{JSON.stringify(info, null, 4)}</Text>
-                    </View>
+                    </View> */}
                         
 
                 </ScrollView>

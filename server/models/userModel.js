@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const userSchema = new mongoose.Schema({
     image:{
         type: String,
+        default: 'https://www.pngall.com/wp-content/uploads/5/Profile-Transparent.png'
     },
     firstName:{
         type: String,
@@ -48,27 +49,7 @@ const userSchema = new mongoose.Schema({
         type: String,
 
     },
-    friendRequests:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
-        }
-    ],
-    friends:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
-        }
-    ],
-    sentFriendRequests:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
-        }
-    ]
-
     
-
 },{timestamps: true}
 );
 

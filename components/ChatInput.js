@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+//This is chat
 export default function ChatInput({ handleSendMsg }) {
   const [msg, setMsg] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);

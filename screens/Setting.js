@@ -16,7 +16,7 @@ const Setting = ({navigation}) => {
      const handleLogout = async () => {
         setState ({token: '', user : null});
         await AsyncStorage.removeItem('@auth');
-        alert("Logout Successfully ");
+
         navigation.navigate('Login')
     };
 

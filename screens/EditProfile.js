@@ -14,6 +14,8 @@ import axios from 'axios';
 
 const EditProfile = ({navigation}) => {
     const [state, setState] = useContext(AuthContext);
+    const { user, token } = state;
+
     //global sate
     const [info ,setInfo] = useContext( 
     InfoElectricianContext, InfoPlumberContext, InfoMaidContext, InfoCarpenterContext,
@@ -22,6 +24,7 @@ const EditProfile = ({navigation}) => {
     const [bio, setBio] = useState('');
     const [age, setAge] = useState('');
     const [job, setJob] = useState('');
+    const [image, setImage] = useState(user?.image);
     const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -66,7 +69,7 @@ const EditProfile = ({navigation}) => {
                 </View>
 
                 <View style = {{alignItems:'center'}}>
-                    <Image source={{uri:'https://www.pngall.com/wp-content/uploads/5/Profile-Transparent.png'}} 
+                    <Image source={{uri:image}} 
                     style = {{ height: 170, width: 170, borderRadius: 100, borderWidth: 5, borderColor: 'black'}}></Image>
                     <Text style = {styles.username}>{state?.user.firstName} {state?.user.lastName}</Text>
                 </View>

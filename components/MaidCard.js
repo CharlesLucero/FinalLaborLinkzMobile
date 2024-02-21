@@ -16,7 +16,7 @@ const MaidCard = ({info }) => {
 
     return(
         <View>
-            <Text style = {styles.total}>There are {info?.length} Available Carpenters</Text>
+            <Text style = {styles.total}>There are {info?.length} Available Maids</Text>
             {info?.map( ( infos, i) => (
                 <View style = {styles.card} key ={i}>
                 <TouchableOpacity onPress={() => handleView( infos)}>

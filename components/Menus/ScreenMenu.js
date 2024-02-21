@@ -24,6 +24,10 @@ import Electrician from "../../screens/Electrician";
 import Plumber from "../../screens/Plumber"
 import ViewProfile from "../../screens/ViewProfile";
 import Chat from "../../screens/Chat"
+import Process from "../../screens/Process";
+import Notifications from "../../screens/Notifications";
+import Chats from "../../screens/Chats";
+
 
 
 const ScreenMenu = () => {
@@ -42,6 +46,22 @@ const ScreenMenu = () => {
           component={Home} 
           options={{headerShown: false}}
           />
+          <Stack.Screen 
+          name= "Process" 
+          component={Process} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Chats" 
+          component={Chats} 
+          options={{headerShown: false}}
+          />
+        <Stack.Screen 
+          name= "Notifications" 
+          component={Notifications} 
+          options={{headerShown: false}}
+          />
+       
           <Stack.Screen 
           name= "Message" 
           component={Message} 

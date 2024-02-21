@@ -35,8 +35,6 @@ const createPostController = async (req, res) => {
   }
 };
 
-
-
 //get all post
 const getAllPostsController =  async (req, res) => {
   try{
@@ -131,6 +129,49 @@ const updatePostController = async (req, res) => {
   }
 }
 
+const viewUserProfileController = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Assuming userId is passed in the request params
+    // Query posts associated with the user
+    const userPosts = await postModel.find({ postedBy: userId });
+    if (!userPosts) {
+      return res.status(404).send({
+        success: false,
+        message: "No posts found for this user.",
+      });
+    }
+    res.status(200).send({
+      success: true,
+      message: "User posts retrieved successfully.",
+      userPosts,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in retrieving user posts.",
+      error,
+    });
+  }
+};
+
+const getTotalPostsController = async (req, res) => {
+  try {
+    const totalPosts = await postModel.countDocuments();
+    res.status(200).send({
+      success: true,
+      message: "Total number of posts",
+      totalPosts,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in getting total number of posts",
+      error,
+    });
+  }
+}
 
 
 
@@ -139,5 +180,4 @@ const updatePostController = async (req, res) => {
 
 
 
-
-module.exports = {createPostController,updatePostController, getAllPostsController, deletePostController, getUserPostPostsController};
+module.exports = {createPostController, getTotalPostsController,viewUserProfileController ,updatePostController, getAllPostsController, deletePostController, getUserPostPostsController};

@@ -1,10 +1,10 @@
-const { addMessage, getMessages } = require("../controllers/ChatController");
-const { requireSignIn } = require("../controllers/userController");
+// chatRoutes.js
+const express = require('express');
+const router = express.Router();
+const { sendChat, fetchChats } = require('../controllers/chatController');
+const { requireSignIn } = require('../controllers/userController');
 
+router.post('/send', requireSignIn, sendChat);
+router.get('/:userId', requireSignIn, fetchChats);
 
-const router = require("express").Router();
-
-router.post('/addmsg', addMessage)
-router.post('/getmsg', getMessages)
-
-module.exports = router
+module.exports = router;

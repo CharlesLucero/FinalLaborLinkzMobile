@@ -30,7 +30,7 @@ const Login = ({navigation}) => {
           }
           setLoading(false);
 
-          const {data} = await axios.post(loginRoutes, {
+          const {data} = await axios.post('/auth/login', {
             email, 
             password
           });
@@ -70,7 +70,7 @@ const Login = ({navigation}) => {
               <Entypo name="chevron-left" size={32} color="#A9A9A9" />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>{}}>
+            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
               <BodyText text="Skip" fontSize={16} />
             </TouchableOpacity>
           </View>

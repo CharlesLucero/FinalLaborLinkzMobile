@@ -1,36 +1,47 @@
 const express = require("express");
 const { requireSignIn } = require("../controllers/userController");
-const { createInformationController, getCarpenterController, getTechnicianController, getDriverController, getPlumberController, getMaidController, getElectricianController, getUserInfoController, getOtherUserInfoController, getOtherUserInformation } = require("../controllers/informationController");
+const {
+  createInformationController,
+  getCarpenterController,
+  getTechnicianController,
+  getDriverController,
+  getPlumberController,
+  getMaidController,
+  getElectricianController,
+  getUserInfoController,
+  getAllInfoController,
+
+} = require("../controllers/informationController");
 
 //router object
 const router = express.Router();
 
 //create information
-router.post("/create-info", requireSignIn, createInformationController)
+router.post("/create-info", requireSignIn, createInformationController);
 
 //get info carpendter
-router.get("/getinfocarpenter",  getCarpenterController)
+router.get("/getinfocarpenter", getCarpenterController);
 
 //get info technician
-router.get("/getinfotechnician", getTechnicianController )
+router.get("/getinfotechnician", getTechnicianController);
 
 //get info driver
-router.get("/getinfodriver", getDriverController )
+router.get("/getinfodriver", getDriverController);
 
 //get info plumber
-router.get("/getinfoplumber", getPlumberController  )
+router.get("/getinfoplumber", getPlumberController);
 
 //get info maid
-router.get("/getinfomaid", getMaidController )
+router.get("/getinfomaid", getMaidController);
 
 //get info electrician
-router.get("/getinfoelectrician", getElectricianController )
+router.get("/getinfoelectrician", getElectricianController);
 
 //get user info
-router.get("/get-user-info", requireSignIn, getUserInfoController)
+router.get("/get-user-info", requireSignIn, getUserInfoController);
 
-
-
+//GET ALL POSTs
+router.get("/get-all-info", getAllInfoController);
 
 //export
 module.exports = router;

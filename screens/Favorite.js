@@ -39,7 +39,7 @@ const Favorite = () => {
               <>
                 <Text style={styles.info}>Name: {favorite.profilepost.postedBy?.firstName} {favorite.profilepost.postedBy?.lastName}</Text>
                 <Text style={styles.info}>Location: {favorite.profilepost.postedBy?.location}</Text>
-                <Text style={styles.info}>Rate: {favorite.profilepost.minRate} - {favorite.profilepost.maxRate}</Text>
+                <Text style={styles.info}>Hourly Rate: {favorite.profilepost.minRate} - {favorite.profilepost.maxRate}</Text>
                 <Text style={styles.info}>Description: {favorite.profilepost.description}</Text>
               </>
             )}

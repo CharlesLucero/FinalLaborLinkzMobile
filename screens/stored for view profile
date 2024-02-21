@@ -1,0 +1,62 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import axios from 'axios'; // Import axios
+
+const ViewProfile = ({ route }) => {
+  const { profilepost } = route.params;
+  const [userPosts, setUserPosts] = useState([]);
+  
+
+  useEffect(() => {
+    fetchUserPosts(profilepost.postedBy.firstName, profilepost.postedBy.lastName); // Pass the name of the user who posted the posts
+  }, []);
+
+  const fetchUserPosts = async (firstName, lastName) => {
+    try {
+      const response = await axios.get(`/post/get-all-post`); // Endpoint to fetch all posts
+      // Filter the posts to display only the ones created by the user
+      const filteredPosts = response.data.posts.filter(post => post.postedBy.firstName === firstName && post.postedBy.lastName === lastName);
+      setUserPosts(filteredPosts);
+    } catch (error) {
+      console.error('Error fetching user posts:', error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.heading}>User Profile</Text>
+      <Text>Name: {profilepost.postedBy.firstName} {profilepost.postedBy.lastName}</Text>
+      <Text>Email: {profilepost.postedBy.email}</Text>
+      <Text>Location: {profilepost.postedBy.location}</Text>
+      <Text>Posts:</Text>
+      
+      <FlatList
+        data={userPosts}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View>
+            <Text>Title: {item.title}</Text>
+            <Text>Description: {item.description}</Text>
+            <Text>Min Rate: {item.minRate}</Text>
+            <Text>Max Rate: {item.maxRate}</Text>
+     
+          </View>
+        )}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+});
+
+export default ViewProfile;
