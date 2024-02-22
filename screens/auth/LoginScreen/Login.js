@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react';
 import {View, Text, SafeAreaView, TouchableWithoutFeedback, StyleSheet, Keyboard, TouchableOpacity, Image, Vibration, ScrollView, Alert, TextInput,} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { AuthContext } from '../../context/authContext';
-import BodyText from '../../components/BodyText';
-import HeaderText from '../../components/HeaderText';
-import InputBox from '../../components/InputBox';
-import CustomButton from '../../components/CustomButton';
+import { AuthContext } from '../../../context/authContext';
+import BodyText from '../../../components/BodyText';
+import HeaderText from '../../../components/HeaderText';
+import InputBox from '../../../components/InputBox';
+import CustomButton from '../../../components/CustomButton';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loginRoutes } from '../../APIRoutes';
+import { loginRoutes } from '../../../APIRoutes';
 
 const Login = ({navigation}) => {
   //global state

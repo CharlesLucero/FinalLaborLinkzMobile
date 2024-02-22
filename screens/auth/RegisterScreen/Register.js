@@ -12,10 +12,10 @@ import {
   StyleSheet
 } from "react-native";
 import { Entypo, AntDesign } from "@expo/vector-icons";
-import BodyText from "../../components/BodyText";
-import HeaderText from "../../components/HeaderText";
-import InputBox from "../../components/InputBox";
-import CustomButton from "../../components/CustomButton";
+import BodyText from "../../../components/BodyText";
+import HeaderText from "../../../components/HeaderText";
+import InputBox from "../../../components/InputBox";
+import CustomButton from "../../../components/CustomButton";
 import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 

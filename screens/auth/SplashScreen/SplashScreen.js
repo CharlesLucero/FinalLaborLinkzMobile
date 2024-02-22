@@ -1,9 +1,8 @@
 import React from "react";
 import {Text,  View, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
-import HeaderText from "../../components/HeaderText";
-import BodyText from "../../components/BodyText";
-import CustomButton from "../../components/CustomButton";
-import Login from "./Login";
+import HeaderText from "../../../components/HeaderText";
+import BodyText from "../../../components/BodyText";
+import CustomButton from "../../../components/CustomButton";
 
 const SplashScreen = ({navigation}) => {
     const handleSubmit = () => {

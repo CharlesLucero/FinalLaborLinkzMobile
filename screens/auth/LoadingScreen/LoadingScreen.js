@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text , TouchableOpacity, Image} from 'react-native';
-import BodyText from '../../components/BodyText';
+import BodyText from '../../../components/BodyText';
 
 const LoadingScreen = ({navigation}) => {
 
