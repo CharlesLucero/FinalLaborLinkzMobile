@@ -1,7 +1,7 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
-import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, Image, TextInput, ScrollView,} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, Image, TextInput, ScrollView, TouchableHighlight,} from 'react-native';
 import FooterMenu from '../../../components/Menus/FooterMenu';
-import { MaterialCommunityIcons, Feather , FontAwesome , Ionicons  } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather , FontAwesome , Ionicons, SimpleLineIcons  } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PostContext } from '../../../context/postContext';
 import PostCard from '../../../components/PostCard';
@@ -64,19 +64,43 @@ const Home = ({navigation}) => {
         <SafeAreaView style = {{flex:1, backgroundColor: 'white'}}>
         <View style = {styleS.container}>
         <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 20, alignItems: 'center', gap: 8}}>
+            <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 32, height: 32, }} />
+            <Text style={{color: '#00CCAA', fontSize: '16px', fontWeight: 600}}>LaborLinkz</Text>
+        </View>
         <View style={styleS.header}>
-                        <TouchableOpacity>
-                            <FontAwesome name="diamond" size={24} color="#00CCAA" />
-                        </TouchableOpacity>
-                        <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 45, height: 45, }} />
+            <TouchableHighlight>
+            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                gap: 4, 
+                                backgroundColor: '#70948f', 
+                                padding: 10, 
+                                borderRadius: 10,
+                                width: 140                     
+                                }}>
+                                    <SimpleLineIcons name="diamond" size={18} color="white" />
+                                
+                                <Text style={{color: 'white', fontSize: '14px'}}>Subscribe</Text>
+             </View>
+             </TouchableHighlight>
+            <View style={{
+                            flexDirection: 'row', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            gap: 4,
+                            backgroundColor: '#70948f', 
+                            padding: 10, 
+                            borderRadius: 10,
+                            width: 140
+                            }}>
                         <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
-                            <Ionicons name="create" size={24} color="#00CCAA"  />
+                            <Ionicons name="create-outline" size={18} color="white"  />
                         </TouchableOpacity>
-                        {/* <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-                            <FontAwesome name="bell" size={24} color="#00CCAA" left={8} />
-                        </TouchableOpacity> */}
-                    </View>
-
+                            <Text style={{color: 'white', fontSize: '14px'}}>Add Post</Text>
+            </View>
+        </View>
 
             <TouchableOpacity>
             <View style = {{flexDirection: 'row', borderColor: '#00CCAA',  borderWidth: 1, borderRadius: 20, paddingHorizontal: 20, paddingVertical: 3}}>
@@ -162,7 +186,7 @@ const Home = ({navigation}) => {
                         
                             />
                         ))}
-                    </View>
+            </View>
                 {getFilteredPosts().length === 0 && (
                     <Text style={{ textAlign: 'center', marginTop: 10, color: 'red' }}>
                         No results found for "{searchText}"
@@ -198,7 +222,7 @@ const styleS = StyleSheet.create({
         flex:1,
         justifyContent: 'space-between',
         margin:10,
-        marginTop: 40,
+        marginTop: 16,
         backgroundColor:'white',
       
     },
@@ -209,13 +233,11 @@ const styleS = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 5,
-        paddingHorizontal: 20,
+        justifyContent: 'center',
+        paddingHorizontal: 10,
         marginBottom: 20,
         alignItems: 'center',
-        // Adjusted margin to bring the icons closer
-        marginRight: 10,
+        gap: 8
     },
     
 })
