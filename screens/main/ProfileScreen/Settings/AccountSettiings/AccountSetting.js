@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView,
 import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import { AuthContext } from '../context/authContext';
-import { ImageF } from '../APIRoutes';
+import { AuthContext } from '../../../../../context/authContext';
+import { ImageF } from '../../../../../APIRoutes';
 
 const AccountSetting = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
