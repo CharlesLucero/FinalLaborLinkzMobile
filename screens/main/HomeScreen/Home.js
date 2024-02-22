@@ -1,10 +1,10 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, Image, TextInput, ScrollView,} from 'react-native';
-import FooterMenu from '../components/Menus/FooterMenu';
+import FooterMenu from '../../../components/Menus/FooterMenu';
 import { MaterialCommunityIcons, Feather , FontAwesome , Ionicons  } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PostContext } from '../context/postContext';
-import PostCard from '../components/PostCard';
+import { PostContext } from '../../../context/postContext';
+import PostCard from '../../../components/PostCard';
 
 const Home = ({navigation}) => {
     //global state

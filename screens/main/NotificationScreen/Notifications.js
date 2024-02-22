@@ -13,7 +13,7 @@ import {
   RefreshControl,
 } from "react-native";
 import axios from "axios";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../../context/authContext";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 

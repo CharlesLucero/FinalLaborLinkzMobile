@@ -9,13 +9,13 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { AuthContext } from "../context/authContext";
-import FooterMenu from "../components/Menus/FooterMenu";
+import { AuthContext } from "../../../context/authContext";
+import FooterMenu from "../../../components/Menus/FooterMenu";
 import axios from "axios";
 import { Feather } from "@expo/vector-icons";
-import PostCard from "../components/PostCard";
-import InformationCards from "../components/InformationCards";
-import { ImageF } from "../APIRoutes";
+import PostCard from "../../../components/PostCard";
+import InformationCards from "../../../components/InformationCards";
+import { ImageF } from "../../../APIRoutes";
 
 const Account = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
