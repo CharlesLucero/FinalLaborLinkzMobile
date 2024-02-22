@@ -12,7 +12,7 @@ const SplashScreen = ({navigation}) => {
 
     return (
         <View style = {styles.maincontainer}>
-            <ImageBackground style = {styles.background}  source={require('../../assets/image/background.png')}>
+            <ImageBackground style = {styles.background}  source={require('../../../assets/image/background.png')}>
 
             <View style = {{marginTop: '150%', paddingHorizontal: 20}}>
                 <HeaderText

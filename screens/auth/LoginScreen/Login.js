@@ -116,7 +116,7 @@ const Login = ({navigation}) => {
 
           <View style={styles.googleSignInContainer}>
             <TouchableOpacity onPress={() => {/* Handle Google Sign-In here */}} style={styles.googleSignInButton}>
-              <Image source={require("../../assets/image/googleIcon.png")} style={styles.googleIcon} />
+              <Image source={require("../../../assets/image/googleIcon.png")} style={styles.googleIcon} />
               <Text style={styles.googleButtonText}>Sign in with Google</Text>
             </TouchableOpacity>
           </View>

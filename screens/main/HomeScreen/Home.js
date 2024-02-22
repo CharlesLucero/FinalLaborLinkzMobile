@@ -68,7 +68,7 @@ const Home = ({navigation}) => {
                         <TouchableOpacity>
                             <FontAwesome name="diamond" size={24} color="#00CCAA" />
                         </TouchableOpacity>
-                        <Image source={require('../assets/image/logoblack.png')} style={{ width: 45, height: 45, }} />
+                        <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 45, height: 45, }} />
                         <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
                             <Ionicons name="create" size={24} color="#00CCAA"  />
                         </TouchableOpacity>
@@ -102,42 +102,42 @@ const Home = ({navigation}) => {
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     <View style = {{paddingRight: 10}}>
                         <TouchableOpacity onPress={() => navigation.navigate('Carpenter')}>
-                            <Image source={require('../assets/image/carpenter.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
+                            <Image source={require('../../../assets/image/carpenter.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
                             <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>CARPENTER</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style = {{paddingRight: 10}}>
                         <TouchableOpacity onPress={() => navigation.navigate('Technician')}>
-                            <Image source={require('../assets/image/technician.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
+                            <Image source={require('../../../assets/image/technician.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
                             <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>TECHNICIAN</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style = {{paddingRight: 10}}>
                         <TouchableOpacity onPress={() => navigation.navigate('Driver')}>
-                            <Image source={require('../assets/image/driver.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
+                            <Image source={require('../../../assets/image/driver.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
                             <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0,  backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>DRIVER</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style = {{paddingRight: 10}}>
                         <TouchableOpacity onPress={() => navigation.navigate('Plumber')}>
-                            <Image source={require('../assets/image/plumber.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
+                            <Image source={require('../../../assets/image/plumber.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
                             <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>PLUMBER</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style = {{paddingRight: 10}}>
                         <TouchableOpacity onPress={() => navigation.navigate('Maid')}>
-                            <Image source={require('../assets/image/maid.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
+                            <Image source={require('../../../assets/image/maid.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
                             <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>MAID</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style = {{paddingRight: 10}}>
                         <TouchableOpacity onPress={() => navigation.navigate('Electrician')}>
-                            <Image source={require('../assets/image/electrician.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
+                            <Image source={require('../../../assets/image/electrician.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
                             <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>ELECTRICIAN</Text>
                         </TouchableOpacity>
                     </View>

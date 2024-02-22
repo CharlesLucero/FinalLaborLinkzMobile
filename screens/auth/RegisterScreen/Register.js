@@ -259,7 +259,7 @@ const Register = ({ navigation }) => {
                   }}
                 >
                   <Image
-                    source={require("../../assets/image/googleIcon.png")}
+                    source={require("../../../assets/image/googleIcon.png")}
                     style={{ width: 24, height: 24, marginRight: 10 }}
                   />
                   <Text style={{ color: "#ffffff", fontSize: 14 }}>

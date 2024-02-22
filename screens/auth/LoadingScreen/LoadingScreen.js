@@ -13,7 +13,7 @@ const LoadingScreen = ({navigation}) => {
     <View style={styles.container}>
     <TouchableOpacity onPress={(handlePress)}>
     <View style = {styles.container2}>
-        <Image source={require('../../assets/image/logowhite.png')}></Image>
+        <Image source={require('../../../assets/image/logowhite.png')}></Image>
             <View>
                 <BodyText
                 text="LaborLinkz"
