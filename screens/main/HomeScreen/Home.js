@@ -5,6 +5,7 @@ import { MaterialCommunityIcons, Feather , FontAwesome , Ionicons, SimpleLineIco
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PostContext } from '../../../context/postContext';
 import PostCard from '../../../components/PostCard';
+import CustomCard from '../../../components/CustomCard';
 
 const Home = ({navigation}) => {
     //global state
@@ -63,28 +64,55 @@ const Home = ({navigation}) => {
         
         <SafeAreaView style = {{flex:1, backgroundColor: 'white'}}>
         <View style = {styleS.container}>
-        <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        
         <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 20, alignItems: 'center', gap: 8}}>
             <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 32, height: 32, }} />
-            <Text style={{color: '#00CCAA', fontSize: '16px', fontWeight: 600}}>LaborLinkz</Text>
         </View>
+        <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        {/* Search Desc**/}
+        <View>
+            <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 12}}> Search from 
+            <Text style = {styleS.heading}> {posts?.length}</Text> available jobs now</Text>
+        </View>
+        {/* Search Bar**/}
+        <View style = {{flexDirection: 'row', backgroundColor: '#f0f0f0', borderRadius: 20, padding: 14, marginHorizontal: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 12}}>
+                <Feather style = {{paddingHorizontal: 5}} name="search" size={18} color="#00CCAA" />
+                <TextInput
+                    style={{fontSize: 13}} 
+                    placeholder='What service are you looking for?'
+                    value={searchText}
+                    onChangeText={(text) => setSearchText(text)} >
+                </TextInput>
+        </View>
+
         <View style={styleS.header}>
-            <TouchableHighlight>
+        
+        {/* Subscribe**/}
+        <TouchableHighlight
+            activeOpacity={0.8}
+            underlayColor="#fff"
+            onPress={() => alert('Pressed!')}>
             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center', 
                                 justifyContent: 'center', 
                                 gap: 4, 
-                                backgroundColor: '#70948f', 
+                                backgroundColor: '#343434', 
                                 padding: 10, 
                                 borderRadius: 10,
                                 width: 140                     
                                 }}>
                                     <SimpleLineIcons name="diamond" size={18} color="white" />
                                 
-                                <Text style={{color: 'white', fontSize: '14px'}}>Subscribe</Text>
+                                <Text style={{color: 'white', fontSize: 14}}>Subscribe</Text>
              </View>
-             </TouchableHighlight>
+        </TouchableHighlight>
+        
+        {/* Add Post**/}
+        <TouchableHighlight
+            activeOpacity={0.8}
+            underlayColor="#fff"
+            onPress={() => navigation.navigate('CreatePost')}>
             <View style={{
                             flexDirection: 'row', 
                             alignItems: 'center', 
@@ -93,82 +121,57 @@ const Home = ({navigation}) => {
                             backgroundColor: '#70948f', 
                             padding: 10, 
                             borderRadius: 10,
-                            width: 140
+                            width: 140,
                             }}>
                         <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
                             <Ionicons name="create-outline" size={18} color="white"  />
                         </TouchableOpacity>
-                            <Text style={{color: 'white', fontSize: '14px'}}>Add Post</Text>
+                            <Text style={{color: 'white', fontSize: 14}}>Add Post</Text>
             </View>
+        </TouchableHighlight>
         </View>
 
-            <TouchableOpacity>
-            <View style = {{flexDirection: 'row', borderColor: '#00CCAA',  borderWidth: 1, borderRadius: 20, paddingHorizontal: 20, paddingVertical: 3}}>
-                <Feather style = {{paddingHorizontal: 5}} name="search" size={24} color="#00CCAA" />
-                <TextInput  
-                    placeholder='What kind of job are you looking for?'
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)} >
-                </TextInput>
-            </View>
-            </TouchableOpacity>
-
-            <View>
-                <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 10}}> Search 
-                <Text style = {styleS.heading}> {posts?.length} </Text> jobs now</Text>
-            </View>
-
-            <View style = {{marginTop:15,  paddingHorizontal: 20,}}>
+        <View style = {{marginTop:0,  paddingHorizontal: 20, marginBottom: 12}}>
                 <Text style = {{fontWeight:'600', fontSize: 17}}>Jobs Category</Text>
-            </View>
+        </View>
 
-            <View style = {{flexDirection: 'row', marginTop: 5, paddingHorizontal:10 }}>
+            <View style = {{flexDirection: 'row', marginTop: 5, paddingLeft: 10, marginBottom: 14}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    <View style = {{paddingRight: 10}}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Carpenter')}>
-                            <Image source={require('../../../assets/image/carpenter.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
-                            <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>CARPENTER</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style = {{paddingRight: 10}}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Technician')}>
-                            <Image source={require('../../../assets/image/technician.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
-                            <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>TECHNICIAN</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style = {{paddingRight: 10}}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Driver')}>
-                            <Image source={require('../../../assets/image/driver.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
-                            <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0,  backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>DRIVER</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style = {{paddingRight: 10}}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Plumber')}>
-                            <Image source={require('../../../assets/image/plumber.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
-                            <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>PLUMBER</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style = {{paddingRight: 10}}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Maid')}>
-                            <Image source={require('../../../assets/image/maid.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
-                            <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>MAID</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style = {{paddingRight: 10}}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Electrician')}>
-                            <Image source={require('../../../assets/image/electrician.jpg')} style = {{height: 250, position: 'relative', backgroundColor: 'black', width: 150, borderWidth: .2, borderColor:'black', borderRadius: 20  }}></Image>
-                            <Text style = {{position: 'absolute', textAlign:'center', top: 90,  left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.3)', color: '#00CCAA',  fontSize: 20, paddingVertical: 20, fontWeight: 'bold',  borderRadius: 10}}>ELECTRICIAN</Text>
-                        </TouchableOpacity>
-                    </View>
+                
+                    <CustomCard
+                        title="Carpenter"
+                        imageSource={require('../../../assets/image/carpenter.jpg')}
+                        onPress={() => navigation.navigate('Carpenter')}
+                    />
+                    <CustomCard
+                        title="Technician"
+                        imageSource={require('../../../assets/image/technician.jpg')}
+                        onPress={() => navigation.navigate('Technician')}
+                    />
+                    <CustomCard
+                        title="Driver"
+                        imageSource={require('../../../assets/image/driver.jpg')}
+                        onPress={() => navigation.navigate('Driver')}
+                    />
+                    <CustomCard
+                        title="Plumber"
+                        imageSource={require('../../../assets/image/plumber.jpg')}
+                        onPress={() => navigation.navigate('Plumber')}
+                    />
+                    <CustomCard
+                        title="Maid"
+                        imageSource={require('../../../assets/image/maid.jpg')}
+                        onPress={() => navigation.navigate('Maid')}
+                    />
+                    <CustomCard
+                        title="Electrician"
+                        imageSource={require('../../../assets/image/electrician.jpg')}
+                        onPress={() => navigation.navigate('Electrician')}
+                    />
                 </ScrollView>
             </View>
 
-            <View style = {{marginTop: 10, paddingHorizontal: 20,}}>
+            <View style = {{marginTop: 10, paddingHorizontal: 20, marginBottom: 12}}>
                 <Text style = {{fontWeight: 'bold', fontSize: 16}}>Jobs/Services</Text>
             </View>
 
@@ -221,10 +224,9 @@ const styleS = StyleSheet.create({
     container:{
         flex:1,
         justifyContent: 'space-between',
-        margin:10,
+        margin:0,
         marginTop: 16,
-        backgroundColor:'white',
-      
+        backgroundColor:'white',   
     },
     heading:{
         color: '#00CCAA',    
