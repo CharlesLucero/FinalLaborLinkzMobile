@@ -1,8 +1,8 @@
 import React from "react";
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import HeaderText from "../../components/HeaderText";
-import BodyText from "../../components/BodyText";
+import HeaderText from "../../../components/HeaderText";
+import BodyText from "../../../components/BodyText";
 
 const PrivacyPolicy = ({navigation}) => {
     return (

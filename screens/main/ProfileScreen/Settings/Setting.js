@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import {Text, TouchableOpacity,TouchableWithoutFeedback, View, StyleSheet, Image, TextInput, ImageBackground, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import HeaderText from '../components/HeaderText';
-import BodyText from '../components/BodyText'
+import HeaderText from '../../../../components/HeaderText';
+import BodyText from '../../../../components/BodyText'
 import {MaterialIcons} from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import {AuthContext} from '../context/authContext'
+import {AuthContext} from '../../../../context/authContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 

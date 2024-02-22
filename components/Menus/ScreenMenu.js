@@ -1,31 +1,31 @@
 import { View, Text } from "react-native";
 import React, {useContext} from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "../../screens/Home";
-import Register from "../../screens/auth/Register";
-import Login from "../../screens/auth/Login";
+import Home from "../../screens/main/HomeScreen/Home";
+import Register from "../../screens/auth/RegisterScreen/Register";
+import Login from "../../screens/auth/LoginScreen/Login";
 import { AuthContext } from "../../context/authContext";
 import Message from "../../screens/Message";
-import Favorite from "../../screens/Favorite";
-import Account from "../../screens/Account";
-import SplashScreen from "../../screens/auth/SplashScreen";
-import LoadingScreen from "../../screens/auth/LoadingScreen";
-import TermsnCondition from "../../screens/auth/TermsnCondition";
-import PrivacyPolicy from "../../screens/auth/PrivacyPolicy";
-import CreatePost from "../../screens/CreatePost";
-import Setting from "../../screens/Setting";
-import AccountSetting from "../../screens/AccountSetting";
-import EditProfile from "../../screens/EditProfile";
-import Carpenter from "../../screens/Carpenter";
-import Technician from "../../screens/Technician";
-import Driver from "../../screens/Driver";
-import Maid from "../../screens/Maid";
-import Electrician from "../../screens/Electrician";
-import Plumber from "../../screens/Plumber"
+import Favorite from "../../screens/main/FavoritesScreen/Favorite";
+import Account from "../../screens/main/ProfileScreen/Account";
+import SplashScreen from "../../screens/auth/SplashScreen/SplashScreen";
+import LoadingScreen from "../../screens/auth/LoadingScreen/LoadingScreen";
+import TermsnCondition from "../../screens/auth/TermsScreen/TermsnCondition";
+import PrivacyPolicy from "../../screens/auth/PrivacyScreen/PrivacyPolicy";
+import CreatePost from "../../screens/main/HomeScreen/CreatePost/CreatePost";
+import Setting from "../../screens/main/ProfileScreen/Settings/Setting";
+import AccountSetting from "../../screens/main/ProfileScreen/Settings/AccountSettiings/AccountSetting";
+import EditProfile from "../../screens/main/ProfileScreen/Settings/EditProfile/EditProfile";
+import Carpenter from "../../screens/main/HomeScreen/JobCategories/Carpenter";
+import Technician from "../../screens/main/HomeScreen/JobCategories/Technician";
+import Driver from "../../screens/main/HomeScreen/JobCategories/Driver";
+import Maid from "../../screens/main/HomeScreen/JobCategories/Maid";
+import Electrician from "../../screens/main/HomeScreen/JobCategories/Electrician";
+import Plumber from "../../screens/main/HomeScreen/JobCategories/Plumber"
 import ViewProfile from "../../screens/ViewProfile";
 import Chat from "../../screens/Chat"
 import Process from "../../screens/Process";
-import Notifications from "../../screens/Notifications";
+import Notifications from "../../screens/main/NotificationScreen/Notifications";
 import Chats from "../../screens/Chats";
 
 

@@ -12,10 +12,10 @@ import {
   StyleSheet
 } from "react-native";
 import { Entypo, AntDesign } from "@expo/vector-icons";
-import BodyText from "../../components/BodyText";
-import HeaderText from "../../components/HeaderText";
-import InputBox from "../../components/InputBox";
-import CustomButton from "../../components/CustomButton";
+import BodyText from "../../../components/BodyText";
+import HeaderText from "../../../components/HeaderText";
+import InputBox from "../../../components/InputBox";
+import CustomButton from "../../../components/CustomButton";
 import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -259,7 +259,7 @@ const Register = ({ navigation }) => {
                   }}
                 >
                   <Image
-                    source={require("../../assets/image/googleIcon.png")}
+                    source={require("../../../assets/image/googleIcon.png")}
                     style={{ width: 24, height: 24, marginRight: 10 }}
                   />
                   <Text style={{ color: "#ffffff", fontSize: 14 }}>

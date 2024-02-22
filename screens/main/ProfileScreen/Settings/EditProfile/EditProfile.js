@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, Image, StyleSheet, TextInput, ScrollView } from "react-native";
 import { Entypo } from '@expo/vector-icons';
-import {AuthContext} from '../context/authContext'
-import { InfoElectricianContext } from '../context/infoElectricianContext';
-import { InfoPlumberContext } from '../context/infoPlumberContext';
-import {InfoMaidContext} from '../context/infoMaidContext';
-import {InfoCarpenterContext} from '../context/infoCarpenterContext';
-import {InfoTechnicianContext} from '../context/infoTechnicianContext';
-import {InfoDriverContext} from '../context/infoDriverContext';
+import {AuthContext} from '../../../../../context/authContext'
+import { InfoElectricianContext } from '../../../../../context/infoElectricianContext';
+import { InfoPlumberContext } from '../../../../../context/infoPlumberContext';
+import {InfoMaidContext} from '../../../../../context/infoMaidContext';
+import {InfoCarpenterContext} from '../../../../../context/infoCarpenterContext';
+import {InfoTechnicianContext} from '../../../../../context/infoTechnicianContext';
+import {InfoDriverContext} from '../../../../../context/infoDriverContext';
 import axios from 'axios';
 
 

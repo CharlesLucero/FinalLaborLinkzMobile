@@ -1,17 +1,18 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, SafeAreaView, ScrollView} from 'react-native';
+import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, Image, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import DriverCard from "../components/DriverCard"
-import {InfoDriverContext} from "../context/infoDriverContext"
+import { InfoPlumberContext } from "../../../../context/infoPlumberContext";
+import PlumberCard from "../../../../components/PlumberCard";
 import axios from 'axios';
-const Driver = ({navigation}) =>{
-    const [info, setInfo] = useContext(InfoDriverContext)
+
+const Plumber = ({navigation}) =>{
+    const [info, setInfo] = useContext(InfoPlumberContext)
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
         try {
         setRefreshing(true);
-        const {data} = await axios.get('/information/getinfodriver')
+        const {data} = await axios.get('/information/getinfoplumber')
         setRefreshing(false)
         setInfo(data?.info)
         } catch (error) {
@@ -38,25 +39,25 @@ const Driver = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Driver}>DRIVER</Text>
+                        <Text style = {styles.Plumber}>PLUMBER</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
-                    <DriverCard info = {info}/>
+                    <PlumberCard  info = {info}/>
                     </View>
 
-                    <View>
+                    {/* <View>
+                        <Text>{JSON.stringify(info, null, 4)}</Text>
+                    </View> */}
                         
-                    </View>
-                        
-        
+
                 </ScrollView>
             </View>
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
-    Driver:{
+    Plumber:{
         color: '#00CCAA',
         fontWeight: 'bold',
         fontSize: 25,
@@ -65,5 +66,5 @@ const styles = StyleSheet.create({
         textShadowRadius: 2,
     }
 })
-export default Driver;
+export default Plumber;
 

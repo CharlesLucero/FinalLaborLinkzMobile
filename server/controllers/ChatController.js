@@ -1,5 +1,5 @@
 // chatController.js
-const Chat = require('../models/chatModel');
+const Chat = require('../models/ChatModel');
 
 const sendChat = async (req, res) => {
   const { senderId, receiverId, message } = req.body;

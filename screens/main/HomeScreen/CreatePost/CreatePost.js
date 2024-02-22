@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import {View,SafeAreaView,TouchableWithoutFeedback,Keyboard,TouchableOpacity, ScrollView, Text, TextInput} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import HeaderText from '../components/HeaderText';
-import BodyText from '../components/BodyText';
+import HeaderText from '../../../../components/HeaderText';
+import BodyText from '../../../../components/BodyText';
 import axios from 'axios'; 
-import { PostContext } from '../context/postContext';
+import { PostContext } from '../../../../context/postContext';
 
 const CreatePost = ({ navigation }) => {
      // global state

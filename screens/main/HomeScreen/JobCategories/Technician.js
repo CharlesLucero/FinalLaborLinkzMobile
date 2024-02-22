@@ -1,19 +1,18 @@
-import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, SafeAreaView, ScrollView} from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, Image, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { InfoMaidContext } from "../context/infoMaidContext";
-import MaidCard from "../components/MaidCard"
+import { InfoTechnicianContext } from "../../../../context/infoTechnicianContext";
+import TechnicianCard from "../../../../components/TechnicianCard";
 import axios from 'axios';
 
-
-const Maid = ({navigation}) =>{
-    const [info, setInfo] = useContext(InfoMaidContext)
+const Technician = ({navigation}) =>{
+    const [info, setInfo] = useContext(InfoTechnicianContext)
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
         try {
         setRefreshing(true);
-        const {data} = await axios.get('/information/getinfomaid')
+        const {data} = await axios.get('/information/getinfotechnician')
         setRefreshing(false)
         setInfo(data?.info)
         } catch (error) {
@@ -27,7 +26,6 @@ const Maid = ({navigation}) =>{
         onRefresh();
     }, []);
 
-
     return (
         <SafeAreaView style = {{flex:1, marginTop: 20, backgroundColor: '#ffffff'}}>
             <View style = {{flex:1 , marginTop: 20}}>
@@ -40,27 +38,18 @@ const Maid = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Maid}>MAIDS</Text>
+                        <Text style = {styles.Technician}>TECHNICIAN</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
-                    <MaidCard  info = {info} navigation={navigation}/>
+                        <TechnicianCard info={info} />
                     </View>
 
-                    {/* <View>
-                        <Text>{JSON.stringify(info, null, 4)}</Text>
-                    </View> */}
+                    <View>
                         
-                    
-
-
-
-
-
-
-
-
-
+                    </View>
+                        
+                
 
                 </ScrollView>
             </View>
@@ -68,7 +57,7 @@ const Maid = ({navigation}) =>{
     )
 }
 const styles = StyleSheet.create({
-    Maid:{
+    Technician:{
         color: '#00CCAA',
         fontWeight: 'bold',
         fontSize: 25,
@@ -77,5 +66,5 @@ const styles = StyleSheet.create({
         textShadowRadius: 2,
     }
 })
-export default Maid;
+export default Technician;
 

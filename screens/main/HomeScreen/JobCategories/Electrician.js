@@ -1,18 +1,18 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, Image, SafeAreaView, ScrollView} from 'react-native';
+import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { InfoPlumberContext } from "../context/infoPlumberContext";
-import PlumberCard from "../components/PlumberCard";
+import ElectricianCard from "../../../../components/ElectricianCard";
+import {InfoElectricianContext} from "../../../../context/infoElectricianContext"
 import axios from 'axios';
 
-const Plumber = ({navigation}) =>{
-    const [info, setInfo] = useContext(InfoPlumberContext)
+const Electrician = ({navigation}) =>{
+    const [info, setInfo] = useContext(InfoElectricianContext)
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
         try {
         setRefreshing(true);
-        const {data} = await axios.get('/information/getinfoplumber')
+        const {data} = await axios.get('/information/getinfoelectrician')
         setRefreshing(false)
         setInfo(data?.info)
         } catch (error) {
@@ -26,7 +26,6 @@ const Plumber = ({navigation}) =>{
         onRefresh();
     }, []);
 
-
     return (
         <SafeAreaView style = {{flex:1, marginTop: 20, backgroundColor: '#ffffff'}}>
             <View style = {{flex:1 , marginTop: 20}}>
@@ -39,17 +38,27 @@ const Plumber = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Plumber}>PLUMBER</Text>
+                        <Text style = {styles.Electrician}>ELECTRICIANS</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
-                    <PlumberCard  info = {info}/>
+                    <ElectricianCard info = {info}/>
                     </View>
 
                     {/* <View>
                         <Text>{JSON.stringify(info, null, 4)}</Text>
                     </View> */}
                         
+                    
+
+
+
+
+
+
+
+
+
 
                 </ScrollView>
             </View>
@@ -57,7 +66,7 @@ const Plumber = ({navigation}) =>{
     )
 }
 const styles = StyleSheet.create({
-    Plumber:{
+    Electrician:{
         color: '#00CCAA',
         fontWeight: 'bold',
         fontSize: 25,
@@ -66,5 +75,5 @@ const styles = StyleSheet.create({
         textShadowRadius: 2,
     }
 })
-export default Plumber;
+export default Electrician;
 
