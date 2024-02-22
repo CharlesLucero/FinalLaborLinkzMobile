@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import moment from "moment";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialIcons, Feather, Ionicons} from "@expo/vector-icons";
 import axios from "axios"; // Import axios
 import { useNavigation } from "@react-navigation/native";
 import EditModal from "./EditModal";
@@ -128,33 +128,39 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
                 marginTop: 5,
               }}
             >
-              <Text style={{ fontSize: 15 }}>Client Request: {post?.title} </Text>
+              <Text style={{ fontSize: 18, color: 'white' }}>{post?.title}</Text>
               {/* Toggle Apply button visibility */}
             </View>
 
-            <View style={{ marginTop: 20 }}>
-              <Text style={{ color: "gray", fontSize: 13 }}>
-                Location: {post?.postedBy?.location}{" "}
+            <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
+              <Ionicons name="location-sharp" size={20} color="#00CCAA" />
+              <Text style={{ color: "#e4e4e4", fontSize: 14 }}>
+                {post?.postedBy?.location}{" "}
               </Text>
             </View>
 
-            <View style={{ marginTop: 20 }}>
-              <Text style={{ color: "gray", fontSize: 13 }}>
-                Ratings: {post?.postedBy?.rating}{" "}
-              </Text>
-            </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+            {[...Array(5)].map((_, index) => (
+              <FontAwesome
+                key={index}
+                name={index < post?.postedBy?.rating ? 'star' : 'star-o'} // Use 'star' for filled stars and 'star-o' for outline stars
+                size={18}
+                color="yellow"
+              />
+            ))}
+          </View>
 
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ color: "gray", fontSize: 13 }}>
+            <View style={{ flexDirection: "row", marginTop: 10 }}>
+              <Text style={{ color: "#e4e4e4", fontSize: 13 }}>
                 Rate: P{post?.minRate}.00 -{" "}
               </Text>
-              <Text style={{ color: "gray", fontSize: 13 }}>
+              <Text style={{ color: "#e4e4e4", fontSize: 13 }}>
                 P{post?.maxRate}.00
               </Text>
             </View>
 
             <View style={{ marginTop: 20 }}>
-              <Text style={{ fontSize: 14 }}>Description: {post?.description} </Text>
+              <Text style={{ fontSize: 14, color: "#e4e4e4" }}>Description: {post?.description} </Text>
               <Text style={{ borderBottomWidth: 0.5 }}></Text>
             </View>
 
@@ -164,7 +170,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
                 alignItems:'flex-end'
               }}
             >
-              <Text style={{ color: "gray", fontSize: 13, textAlign: "right" }}>
+              <Text style={{ color: "#e4e4e4", fontSize: 13, textAlign: "right" }}>
                 {" "}
                 <AntDesign name="clockcircleo" size={14} color="#00CCAA" /> Posted{" "}
                 {moment(post?.createdAt).fromNow()} {/* Display relative time */}
