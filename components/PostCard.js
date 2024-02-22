@@ -151,30 +151,33 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
           </View>
 
             <View style={{ flexDirection: "row", marginTop: 10 }}>
-              <Text style={{ color: "#e4e4e4", fontSize: 13 }}>
+              <Text style={{ color: "#00CCAA", fontSize: 16 }}>
                 Rate: P{post?.minRate}.00 -{" "}
               </Text>
-              <Text style={{ color: "#e4e4e4", fontSize: 13 }}>
+              <Text style={{ color: "#00CCAA", fontSize: 16 }}>
                 P{post?.maxRate}.00
               </Text>
             </View>
 
             <View style={{ marginTop: 20 }}>
-              <Text style={{ fontSize: 14, color: "#e4e4e4" }}>Description: {post?.description} </Text>
+              <Text style={{ fontSize: 14, color: "#e4e4e4" }}>{post?.description} </Text>
               <Text style={{ borderBottomWidth: 0.5 }}></Text>
             </View>
 
             <View
               style={{
-                marginTop: 10,
-                alignItems:'flex-end'
+                marginTop: 14,
+                alignItems:'flex-start'
               }}
             >
-              <Text style={{ color: "#e4e4e4", fontSize: 13, textAlign: "right" }}>
-                {" "}
-                <AntDesign name="clockcircleo" size={14} color="#00CCAA" /> Posted{" "}
-                {moment(post?.createdAt).fromNow()} {/* Display relative time */}
-              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
+                <AntDesign name="clockcircleo" size={18} color="#00CCAA" />
+                <Text style={{ color: "#e4e4e4", fontSize: 13, textAlign: "right" }}>
+                  {" "}
+                  Posted{" "}
+                  {moment(post?.createdAt).fromNow()} {/* Display relative time */}
+                </Text>
+              </View>
             </View>
 
             <View style = {{ alignItems:'flex-end', paddingTop: 10}}>
@@ -193,7 +196,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               <View style={{ marginTop: 10 }}>
                 {post?.postedBy?.firstName && (
                   <Text>
-                    <FontAwesome name="user" size={16} color="#00CCAA" /> Posted By:{""}
+                    <FontAwesome name="user" size={16} color="#00CCAA" /> Posted By:
                     {post?.postedBy?.firstName} {post?.postedBy?.lastName}
                   </Text>
                 )}
