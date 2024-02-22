@@ -65,26 +65,6 @@ const Home = ({navigation}) => {
         <SafeAreaView style = {{flex:1, backgroundColor: 'white'}}>
         <View style = {styleS.container}>
         
-        <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 20, alignItems: 'center', gap: 8}}>
-            <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 32, height: 32, }} />
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-        {/* Search Desc**/}
-        <View>
-            <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 12}}> Search from 
-            <Text style = {styleS.heading}> {posts?.length}</Text> available jobs now</Text>
-        </View>
-        {/* Search Bar**/}
-        <View style = {{flexDirection: 'row', backgroundColor: '#f0f0f0', borderRadius: 20, padding: 14, marginHorizontal: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 12}}>
-                <Feather style = {{paddingHorizontal: 5}} name="search" size={18} color="#00CCAA" />
-                <TextInput
-                    style={{fontSize: 13}} 
-                    placeholder='What service are you looking for?'
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)} >
-                </TextInput>
-        </View>
-
         <View style={styleS.header}>
         
         {/* Subscribe**/}
@@ -99,15 +79,16 @@ const Home = ({navigation}) => {
                                 gap: 4, 
                                 backgroundColor: '#343434', 
                                 padding: 10, 
-                                borderRadius: 10,
-                                width: 140                     
+                                borderRadius: 10,                     
                                 }}>
                                     <SimpleLineIcons name="diamond" size={18} color="white" />
                                 
-                                <Text style={{color: 'white', fontSize: 14}}>Subscribe</Text>
+                                <Text style={{color: 'white', fontSize: 12}}>Get Pro</Text>
              </View>
         </TouchableHighlight>
-        
+        <View>
+            <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 32, height: 32, }} />
+        </View>
         {/* Add Post**/}
         <TouchableHighlight
             activeOpacity={0.8}
@@ -121,21 +102,38 @@ const Home = ({navigation}) => {
                             backgroundColor: '#70948f', 
                             padding: 10, 
                             borderRadius: 10,
-                            width: 140,
                             }}>
                         <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
                             <Ionicons name="create-outline" size={18} color="white"  />
                         </TouchableOpacity>
-                            <Text style={{color: 'white', fontSize: 14}}>Add Post</Text>
+                            <Text style={{color: 'white', fontSize: 12}}>Add Post</Text>
             </View>
         </TouchableHighlight>
         </View>
+        <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+
+        {/* Search Bar**/}
+        <View style = {{flexDirection: 'row', backgroundColor: '#f0f0f0', borderRadius: 20, padding: 14, marginHorizontal: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 12}}>
+                <Feather style = {{paddingHorizontal: 5}} name="search" size={18} color="#00CCAA" />
+                <TextInput
+                    style={{fontSize: 13}} 
+                    placeholder='What service are you looking for?'
+                    value={searchText}
+                    onChangeText={(text) => setSearchText(text)} >
+                </TextInput>
+        </View>
+        {/* Search Desc**/}
+        <View>
+            <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 20}}> Search from 
+            <Text style = {styleS.heading}> {posts?.length}</Text> available jobs now</Text>
+        </View>
+
 
         <View style = {{marginTop:0,  paddingHorizontal: 20, marginBottom: 12}}>
                 <Text style = {{fontWeight:'600', fontSize: 17}}>Jobs Category</Text>
         </View>
 
-            <View style = {{flexDirection: 'row', marginTop: 5, paddingLeft: 10, marginBottom: 14}}>
+        <View style = {{flexDirection: 'row', marginTop: 5, paddingLeft: 10, marginBottom: 14}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 
                     <CustomCard
@@ -169,11 +167,11 @@ const Home = ({navigation}) => {
                         onPress={() => navigation.navigate('Electrician')}
                     />
                 </ScrollView>
-            </View>
+        </View>
 
-            <View style = {{marginTop: 10, paddingHorizontal: 20, marginBottom: 12}}>
+        <View style = {{marginTop: 10, paddingHorizontal: 20, marginBottom: 12}}>
                 <Text style = {{fontWeight: 'bold', fontSize: 16}}>Jobs/Services</Text>
-            </View>
+        </View>
 
             <View style={{ paddingHorizontal: 10 }}>
                         {currentPosts.map(post => (
@@ -235,10 +233,11 @@ const styleS = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         paddingHorizontal: 10,
         marginBottom: 20,
         alignItems: 'center',
+        alignContent: 'center',
         gap: 8
     },
     
