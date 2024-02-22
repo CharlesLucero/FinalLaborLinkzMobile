@@ -1,11 +1,12 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
-import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, Image, TextInput, ScrollView, TouchableHighlight,} from 'react-native';
+import {Modal, View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, Image, TextInput, ScrollView, TouchableHighlight,} from 'react-native';
 import FooterMenu from '../../../components/Menus/FooterMenu';
 import { MaterialCommunityIcons, Feather , FontAwesome , Ionicons, SimpleLineIcons  } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PostContext } from '../../../context/postContext';
 import PostCard from '../../../components/PostCard';
 import CustomCard from '../../../components/CustomCard';
+import CustomModal from '../../../components/CustomModal';
 
 const Home = ({navigation}) => {
     //global state
@@ -14,6 +15,15 @@ const Home = ({navigation}) => {
     const [searchText, setSearchText] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 10;
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null);
+
+    const toggleModal = (post) => {
+        setSelectedPost(post);
+        setIsModalVisible(!isModalVisible);
+    };
+
 
      // Calculate start and end indices for posts to be displayed
      const indexOfLastPost = currentPage * postsPerPage;
@@ -65,26 +75,6 @@ const Home = ({navigation}) => {
         <SafeAreaView style = {{flex:1, backgroundColor: 'white'}}>
         <View style = {styleS.container}>
         
-        <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 20, alignItems: 'center', gap: 8}}>
-            <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 32, height: 32, }} />
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-        {/* Search Desc**/}
-        <View>
-            <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 12}}> Search from 
-            <Text style = {styleS.heading}> {posts?.length}</Text> available jobs now</Text>
-        </View>
-        {/* Search Bar**/}
-        <View style = {{flexDirection: 'row', backgroundColor: '#f0f0f0', borderRadius: 20, padding: 14, marginHorizontal: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 12}}>
-                <Feather style = {{paddingHorizontal: 5}} name="search" size={18} color="#00CCAA" />
-                <TextInput
-                    style={{fontSize: 13}} 
-                    placeholder='What service are you looking for?'
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)} >
-                </TextInput>
-        </View>
-
         <View style={styleS.header}>
         
         {/* Subscribe**/}
@@ -99,15 +89,16 @@ const Home = ({navigation}) => {
                                 gap: 4, 
                                 backgroundColor: '#343434', 
                                 padding: 10, 
-                                borderRadius: 10,
-                                width: 140                     
+                                borderRadius: 10,                     
                                 }}>
                                     <SimpleLineIcons name="diamond" size={18} color="white" />
                                 
-                                <Text style={{color: 'white', fontSize: 14}}>Subscribe</Text>
+                                <Text style={{color: 'white', fontSize: 12}}>Get Pro</Text>
              </View>
         </TouchableHighlight>
-        
+        <View>
+            <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 32, height: 32, }} />
+        </View>
         {/* Add Post**/}
         <TouchableHighlight
             activeOpacity={0.8}
@@ -121,21 +112,38 @@ const Home = ({navigation}) => {
                             backgroundColor: '#70948f', 
                             padding: 10, 
                             borderRadius: 10,
-                            width: 140,
                             }}>
                         <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
                             <Ionicons name="create-outline" size={18} color="white"  />
                         </TouchableOpacity>
-                            <Text style={{color: 'white', fontSize: 14}}>Add Post</Text>
+                            <Text style={{color: 'white', fontSize: 12}}>Add Post</Text>
             </View>
         </TouchableHighlight>
         </View>
+        <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+
+        {/* Search Bar**/}
+        <View style = {{flexDirection: 'row', backgroundColor: '#f0f0f0', borderRadius: 20, padding: 14, marginHorizontal: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 12}}>
+                <Feather style = {{paddingHorizontal: 5}} name="search" size={18} color="#00CCAA" />
+                <TextInput
+                    style={{fontSize: 13}} 
+                    placeholder='What service are you looking for?'
+                    value={searchText}
+                    onChangeText={(text) => setSearchText(text)} >
+                </TextInput>
+        </View>
+        {/* Search Desc**/}
+        <View>
+            <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 20}}> Search from 
+            <Text style = {styleS.heading}> {posts?.length}</Text> available jobs now</Text>
+        </View>
+
 
         <View style = {{marginTop:0,  paddingHorizontal: 20, marginBottom: 12}}>
                 <Text style = {{fontWeight:'600', fontSize: 17}}>Jobs Category</Text>
         </View>
 
-            <View style = {{flexDirection: 'row', marginTop: 5, paddingLeft: 10, marginBottom: 14}}>
+        <View style = {{flexDirection: 'row', marginTop: 5, paddingLeft: 10, marginBottom: 14}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 
                     <CustomCard
@@ -169,27 +177,44 @@ const Home = ({navigation}) => {
                         onPress={() => navigation.navigate('Electrician')}
                     />
                 </ScrollView>
-            </View>
+        </View>
 
-            <View style = {{marginTop: 10, paddingHorizontal: 20, marginBottom: 12}}>
+        <View style = {{marginTop: 10, paddingHorizontal: 20, marginBottom: 12}}>
                 <Text style = {{fontWeight: 'bold', fontSize: 16}}>Jobs/Services</Text>
-            </View>
+        </View>
 
-            <View style={{ paddingHorizontal: 10 }}>
-                        {currentPosts.map(post => (
-                            <PostCard
-                                key={post._id}
-                                post = {post} 
-                                navigation={navigation}  // Assuming _id is the unique identifier for a post
-                                posts={[{
-                                    ...post,
-                                    title: highlightSearchText(post.title, searchText),
-                                    description: highlightSearchText(post.description, searchText),
-                                }]}
-                        
-                            />
-                        ))}
-            </View>
+        <View style={{ paddingHorizontal: 10 }}>
+            {currentPosts.map(post => (
+                <TouchableOpacity key={post._id} onPress={() => setIsModalVisible(true)}>
+                    <PostCard
+                        post={post}
+                        navigation={navigation}
+                        posts={[{
+                            ...post,
+                            title: highlightSearchText(post.title, searchText),
+                            description: highlightSearchText(post.description, searchText),
+                        }]}
+                    />
+                </TouchableOpacity>
+            ))}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={() => setIsModalVisible(false)}
+            >
+                <View style={styleS.modalContainer}>
+                    <View style={[styleS.modalContent, { zIndex: 10 }]}>
+                        <Text>This is a modal with z-index of 10</Text>
+                        {/* Add your modal content here */}
+                        <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+                            <Text>Close Modal</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+
                 {getFilteredPosts().length === 0 && (
                     <Text style={{ textAlign: 'center', marginTop: 10, color: 'red' }}>
                         No results found for "{searchText}"
@@ -213,7 +238,6 @@ const Home = ({navigation}) => {
             <View style = {{backgroundColor: '#ffffff', borderWidth: .5, borderColor:'gray', paddingHorizontal: 20, borderTopRightRadius: 20, borderTopLeftRadius: 20, paddingTop:5}}>
                 <FooterMenu />
             </View>
-          
         </SafeAreaView>
 
        
@@ -235,12 +259,30 @@ const styleS = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         paddingHorizontal: 10,
         marginBottom: 20,
         alignItems: 'center',
+        alignContent: 'center',
         gap: 8
     },
-    
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        elevation: 5, // For Android shadow
+        shadowColor: '#000', // For iOS shadow
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        width: 340,
+        height: 340
+      },
 })
 export default Home;
