@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react';
-import {View, Text, SafeAreaView, TouchableWithoutFeedback, StyleSheet, Keyboard, TouchableOpacity, Image, Vibration, ScrollView, Alert, TextInput,} from 'react-native';
+import {View, Text, SafeAreaView, TouchableWithoutFeedback, StyleSheet, Keyboard, TouchableOpacity, Image, Vibration, ScrollView, Alert, TextInput, StatusBar} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { AuthContext } from '../../context/authContext';
-import BodyText from '../../components/BodyText';
-import HeaderText from '../../components/HeaderText';
-import InputBox from '../../components/InputBox';
-import CustomButton from '../../components/CustomButton';
+import { AuthContext } from '../../../context/authContext';
+import BodyText from '../../../components/BodyText';
+import HeaderText from '../../../components/HeaderText';
+import InputBox from '../../../components/InputBox';
+import CustomButton from '../../../components/CustomButton';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loginRoutes } from '../../APIRoutes';
+import { loginRoutes } from '../../../APIRoutes';
 
 const Login = ({navigation}) => {
   //global state
@@ -37,7 +37,6 @@ const Login = ({navigation}) => {
 
           setState(data)
           await AsyncStorage.setItem('@auth', JSON.stringify(data.user));
-          alert(data && data.message);
           navigation.navigate('Home')
           console.log('Login Data==>', {email, password});
           
@@ -61,6 +60,7 @@ const Login = ({navigation}) => {
       };
     return(
         <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
         <ScrollView>
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View>
@@ -116,7 +116,7 @@ const Login = ({navigation}) => {
 
           <View style={styles.googleSignInContainer}>
             <TouchableOpacity onPress={() => {/* Handle Google Sign-In here */}} style={styles.googleSignInButton}>
-              <Image source={require("../../assets/image/googleIcon.png")} style={styles.googleIcon} />
+              <Image source={require("../../../assets/image/googleIcon.png")} style={styles.googleIcon} />
               <Text style={styles.googleButtonText}>Sign in with Google</Text>
             </TouchableOpacity>
           </View>
@@ -152,9 +152,9 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#ffffff',
-      marginTop: 30
     },
     headerContainer: {
+      marginTop: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',

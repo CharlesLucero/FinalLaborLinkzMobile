@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import {View, Text , StyleSheet, SafeAreaView ,TouchableOpacity} from 'react-native';
 
 
-import FooterMenu from '../components/Menus/FooterMenu';
-import {useAuth} from '../context/FavContext'                    
+import FooterMenu from '../../../components/Menus/FooterMenu';
+import {useAuth} from '../../../context/FavContext'                    
 import { AntDesign } from '@expo/vector-icons';
 
 const Favorite = () => {

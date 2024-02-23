@@ -13,7 +13,7 @@ import {
   RefreshControl,
 } from "react-native";
 import axios from "axios";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../../context/authContext";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 
@@ -86,7 +86,7 @@ const Notifications = () => {
           ListHeaderComponent={
             <View style={styles.headerContainer}>
               <Image
-                source={require("../../client/assets/image/logoblack.png")}
+                source={require("../../../assets/image/logoblack.png")}
                 style={{ width: 45, height: 45 }}
               />
               <Text style={styles.headerTitle}>Request Application </Text>

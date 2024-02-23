@@ -1,18 +1,17 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import ElectricianCard from "../components/ElectricianCard";
-import {InfoElectricianContext} from "../context/infoElectricianContext"
+import DriverCard from "../../../../components/DriverCard"
+import {InfoDriverContext} from "../../../../context/infoDriverContext"
 import axios from 'axios';
-
-const Electrician = ({navigation}) =>{
-    const [info, setInfo] = useContext(InfoElectricianContext)
+const Driver = ({navigation}) =>{
+    const [info, setInfo] = useContext(InfoDriverContext)
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
         try {
         setRefreshing(true);
-        const {data} = await axios.get('/information/getinfoelectrician')
+        const {data} = await axios.get('/information/getinfodriver')
         setRefreshing(false)
         setInfo(data?.info)
         } catch (error) {
@@ -26,6 +25,7 @@ const Electrician = ({navigation}) =>{
         onRefresh();
     }, []);
 
+
     return (
         <SafeAreaView style = {{flex:1, marginTop: 20, backgroundColor: '#ffffff'}}>
             <View style = {{flex:1 , marginTop: 20}}>
@@ -38,35 +38,25 @@ const Electrician = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Electrician}>ELECTRICIANS</Text>
+                        <Text style = {styles.Driver}>DRIVER</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
-                    <ElectricianCard info = {info}/>
+                    <DriverCard info = {info}/>
                     </View>
 
-                    {/* <View>
-                        <Text>{JSON.stringify(info, null, 4)}</Text>
-                    </View> */}
+                    <View>
                         
-                    
-
-
-
-
-
-
-
-
-
-
+                    </View>
+                        
+        
                 </ScrollView>
             </View>
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
-    Electrician:{
+    Driver:{
         color: '#00CCAA',
         fontWeight: 'bold',
         fontSize: 25,
@@ -75,5 +65,5 @@ const styles = StyleSheet.create({
         textShadowRadius: 2,
     }
 })
-export default Electrician;
+export default Driver;
 

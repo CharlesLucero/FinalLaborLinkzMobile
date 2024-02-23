@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, Text , RefreshControl , TouchableOpacity, Image, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { InfoCarpenterContext } from "../context/infoCarpenterContext";
-import CarpenterCard from "../components/CarpenterCard";
+import { InfoCarpenterContext } from "../../../../context/infoCarpenterContext";
+import CarpenterCard from "../../../../components/CarpenterCard";
 import axios from 'axios';
 
 

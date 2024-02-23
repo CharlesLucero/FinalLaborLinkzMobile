@@ -1,9 +1,8 @@
 import React from "react";
 import {Text,  View, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
-import HeaderText from "../../components/HeaderText";
-import BodyText from "../../components/BodyText";
-import CustomButton from "../../components/CustomButton";
-import Login from "./Login";
+import HeaderText from "../../../components/HeaderText";
+import BodyText from "../../../components/BodyText";
+import CustomButton from "../../../components/CustomButton";
 
 const SplashScreen = ({navigation}) => {
     const handleSubmit = () => {
@@ -13,7 +12,7 @@ const SplashScreen = ({navigation}) => {
 
     return (
         <View style = {styles.maincontainer}>
-            <ImageBackground style = {styles.background}  source={require('../../assets/image/background.png')}>
+            <ImageBackground style = {styles.background}  source={require('../../../assets/image/background.png')}>
 
             <View style = {{marginTop: '150%', paddingHorizontal: 20}}>
                 <HeaderText
