@@ -6,6 +6,7 @@ import axios from "axios"; // Import axios
 import { useNavigation } from "@react-navigation/native";
 import EditModal from "./EditModal";
 import { AuthContext } from '../context/authContext';
+import Home from "../screens/Home";
 
 const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   const [loading, setLoading] = useState(false);
@@ -171,19 +172,24 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               </Text>
             </View>
 
-            <View style = {{ alignItems:'flex-end', paddingTop: 10}}>
-              <TouchableOpacity
-                onPress={() => setShowApplyButton(!showApplyButton)}
-              >
-                <AntDesign
-                  name={showApplyButton ? "down" : "right"}
-                  size={20}
-                  color="black"
-                />
-              </TouchableOpacity>
-            </View>
+            {!Account && ( // Hide Apply button and toggle arrow for the user who posted the job
+              <View style = {{ alignItems:'flex-end', paddingTop: 10}}>
+                <TouchableOpacity
+                  onPress={() => setShowApplyButton(!showApplyButton)}
+                >
+                  <AntDesign
+                    name={showApplyButton ? "down" : "right"}
+                    size={20}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
+       
             
-            {showApplyButton && (
+
+            {showApplyButton && !Account && ( // Hide Apply button for the user who posted the job
               <View style={{ marginTop: 10 }}>
                 {post?.postedBy?.firstName && (
                   <Text>
@@ -194,7 +200,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               </View>
             )}
 
-            {showApplyButton && (
+            {showApplyButton && !Account && ( // Hide Apply button for the user who posted the job
               <TouchableOpacity
                 style={{
                   marginTop: 10,

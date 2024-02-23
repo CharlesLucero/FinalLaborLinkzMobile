@@ -32,7 +32,7 @@ const Home = ({navigation}) => {
     const getFilteredPosts = () => {
         return posts.filter(post =>
             post.title.toLowerCase().includes(searchText.toLowerCase()) ||
-            post.description.toLowerCase().includes(searchText.toLowerCase())
+            post.description.toLowerCase().includes(searchText.toLowerCase()) 
         );
     };
 
@@ -72,9 +72,7 @@ const Home = ({navigation}) => {
                         <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
                             <Ionicons name="create" size={24} color="#00CCAA"  />
                         </TouchableOpacity>
-                        {/* <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-                            <FontAwesome name="bell" size={24} color="#00CCAA" left={8} />
-                        </TouchableOpacity> */}
+
                     </View>
 
 

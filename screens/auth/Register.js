@@ -185,8 +185,9 @@ const Register = ({ navigation }) => {
                 <InputBox
                   placeholder="Contact Number"
                   height={70}
-                  value={contactNumber}
+                  value={contactNumber}       
                   setValue={setContactNumber}
+                  keyboardType='numeric'
                 />
               </View>
               <View style={{ flex: 1 }}>

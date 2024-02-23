@@ -13,8 +13,8 @@ import { loginRoutes } from '../../APIRoutes';
 const Login = ({navigation}) => {
   //global state
   const [state, setState] = useContext(AuthContext)
-    const [email, setEmail] = useState(false);
-    const [password, setPassword] = useState(false);
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState (false);
 
