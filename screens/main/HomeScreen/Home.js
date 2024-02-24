@@ -16,6 +16,7 @@ const Home = ({navigation}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 10;
 
+    console.log(posts);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
 

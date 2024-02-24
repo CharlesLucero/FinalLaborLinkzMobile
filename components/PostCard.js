@@ -145,7 +145,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
                 <Ionicons name="location-sharp" size={20} color="#00CCAA" />
                 <Text style={{ color: "#e4e4e4", fontSize: 14 }}>
-                  {post?.postedBy?.location}{" "}
+                {post?.postedBy?.barangay.name}, {post?.postedBy?.city.name} {post?.postedBy?.province.name}
                 </Text>
               </View>
 
