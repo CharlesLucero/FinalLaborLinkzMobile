@@ -40,11 +40,16 @@ const createPostController = async (req, res) => {
 const getAllPostsController = async (req, res) => {
   try {
     const posts = await postModel.find()
-      .populate({
-        path: "postedBy",
-        select: "_id firstName lastName location rating region province city barangay",
-      })
-      .sort({ createdAt: -1 });
+    .populate({
+      path: "postedBy",
+      select: "_id firstName lastName location rating",
+      populate: [
+        { path: "province", select: "name" },
+        { path: "city", select: "name" },
+        { path: "barangay", select: "name" }
+      ]
+    })
+    .sort({ createdAt: -1 });
       console.log(posts)
     res.status(200).send({
       success: true,

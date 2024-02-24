@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Button} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import moment from "moment";
 import { AntDesign, FontAwesome, MaterialIcons, Feather, Ionicons} from "@expo/vector-icons";
 import axios from "axios"; // Import axios
 import { useNavigation } from "@react-navigation/native";
-
+import CustomButton from "./CustomButton";
 import { AuthContext } from '../context/authContext';
 
 
@@ -18,6 +18,33 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   const { user, token } = state;
   const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
+
+    console.log('Posts:', JSON.stringify(posts));
+
+    const handleApply = async (postId, senderId, receiverId, postDetails) => {
+
+      console.log(postId, senderId, receiverId )
+      try {
+        setLoading(true);
+        if (receiverId) {
+          const response = await axios.post("/hiring/send-application", {
+            senderId,
+            receiverId,
+            postId,
+            postDetails // Include post details in the request body
+          });
+          setLoading(false);
+          Alert.alert("Success", response.data.message);
+        } else {
+          setLoading(false);
+          Alert.alert("Error", "Failed to send application. Receiver ID not found.");
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+        Alert.alert("Error", "Failed to send application. Please try again later.");
+      }
+    };
 
     const toggleModal = (post) => {
         setSelectedPost(post);
@@ -44,28 +71,6 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
 
   // Handle sending application
   // Modify handleApply function to include post details and navigate to Message screen
-  const handleApply = async (postId, senderId, receiverId, postDetails) => {
-    try {
-      setLoading(true);
-      if (receiverId) {
-        const response = await axios.post("/hiring/send-application", {
-          senderId,
-          receiverId,
-          postId,
-          postDetails // Include post details in the request body
-        });
-        setLoading(false);
-        Alert.alert("Success", response.data.message);
-      } else {
-        setLoading(false);
-        Alert.alert("Error", "Failed to send application. Receiver ID not found.");
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error(error);
-      Alert.alert("Error", "Failed to send application. Please try again later.");
-    }
-  };
 
   //handle delete prompt
   const handleDeletePrompt = (id) => {
@@ -145,7 +150,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
                 <Ionicons name="location-sharp" size={20} color="#00CCAA" />
                 <Text style={{ color: "#e4e4e4", fontSize: 14 }}>
-                  {post?.postedBy?.location}{" "}
+                {post?.postedBy?.barangay.name}, {post?.postedBy?.city.name} {post?.postedBy?.province.name}
                 </Text>
               </View>
 
@@ -199,17 +204,20 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   visible={isModalVisible}
   onRequestClose={handleCloseModal}
 >
-  <View style={styles.modalContainer}>
+<TouchableOpacity
+    activeOpacity={1}
+    onPress={handleCloseModal} // Close modal when background is pressed
+    style={styles.modalContainer}
+  >
+  <View>
     <View style={[styles.modalContent, { zIndex: 10 }]}>
       {/* Post title */}
-      <Text style={styles.postTitle}>{selectedPost?.title}</Text>
+      <Text style={{marginTop: 16, fontSize: 14}}>Posted by: {selectedPost?.postedBy.firstName} {selectedPost?.postedBy.lastName}</Text>
+      <Text style={{fontSize: 18, marginTop: 24}}>{selectedPost?.title}</Text>
       
       {/* Author information */}
       <View style={styles.authorInfoContainer}>
-        <Text style={styles.authorInfo}>
-          Location: {selectedPost?.postedBy?.location}
-        </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4}}>
                 {[...Array(5)].map((_, index) => (
                   <FontAwesome
                     key={index}
@@ -219,22 +227,40 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
                   />
                 ))}
         </View>
+        <Text style={{fontSize: 14, marginTop: 10, color: '#939393'}}>
+          Location: {selectedPost?.postedBy?.location}
+        </Text>
       </View>
       
       {/* Rate */}
-      <Text style={styles.rate}>
+      <Text style={{fontSize: 14, marginTop: 4, color: '#939393'}}>
         P{selectedPost?.minRate}.00 - P{selectedPost?.maxRate}.00
       </Text>
       
       {/* Description */}
-      <Text style={styles.description}>{selectedPost?.description}</Text>
+      <Text style={{marginTop: 16}}>{selectedPost?.description}</Text>
       
-      {/* Close button */}
+      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style={{ backgroundColor: '#343434', borderRadius: 8, overflow: 'hidden', width: 200, padding: 4, marginTop: 30,  }}>
+          <Button
+            title="Apply"
+            color="#00CCAA"
+            style={{ paddingHorizontal: 20 }}
+            onPress={() => handleApply(selectedPost?._id, user?._id, selectedPost?.postedBy?._id)}
+          />
+        </View>               
+      </View>
+
+
+
+
+      {/* Close button
       <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
         <Text style={styles.closeButtonText}>Close Modal</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   </View>
+  </TouchableOpacity>
 </Modal>
 
     </View>
@@ -258,22 +284,27 @@ const styles = StyleSheet.create({
     height: 240,
   },
   modalContainer: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   modalContent: {
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    elevation: 5, // For Android shadow
-    shadowColor: '#000', // For iOS shadow
+    elevation: 5,
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     width: 340,
-    height: 340
+    maxHeight: 500, 
+    overflow: 'auto', 
   },
 });
 

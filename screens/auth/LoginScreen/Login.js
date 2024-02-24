@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {View, Text, SafeAreaView, TouchableWithoutFeedback, StyleSheet, Keyboard, TouchableOpacity, Image, Vibration, ScrollView, Alert, TextInput, StatusBar} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { AuthContext } from '../../../context/authContext';
@@ -9,6 +9,7 @@ import CustomButton from '../../../components/CustomButton';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginRoutes } from '../../../APIRoutes';
+import * as SecureStore from 'expo-secure-store';
 
 const Login = ({navigation}) => {
   //global state
@@ -18,34 +19,56 @@ const Login = ({navigation}) => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState (false);
 
-  
+    useEffect(() => {
+      console.log("useEffect triggered");
+      const checkToken = async () => {
+          try {
+              const token = await AsyncStorage.getItem('jwtToken');
+              console.log("Token:", token);
+              if (token) {
+                  navigation.navigate('Home');
+              }
+          } catch (error) {
+              console.error("Error fetching token:", error);
+          }
+      };
+      checkToken();
+  }, []);
 
-    const handleSubmit = async ()=>{
-        try{
-          setLoading(true);
-          if (!email || !password){
+  const handleSubmit = async () => {
+    try {
+        setLoading(true);
+        if (!email || !password) {
             Alert.alert('Please Fill All Fields');
             setLoading(false);
             return;
-          }
-          setLoading(false);
-
-          const {data} = await axios.post('/auth/login', {
-            email, 
-            password
-          });
-
-          setState(data)
-          await AsyncStorage.setItem('@auth', JSON.stringify(data.user));
-          navigation.navigate('Home')
-          console.log('Login Data==>', {email, password});
-          
-        } catch (error){
-          alert(error.response.data.message);
-          setLoading(false);
-          console.log(error);
         }
-       };
+
+        const { data } = await axios.post('/auth/login', {
+            email,
+            password
+        });
+
+        const token = data.token;
+        await SecureStore.setItemAsync('jwtToken', token);
+        console.log("Stored Token:", token); // Log the token directly
+        setState(data);
+        navigation.navigate('Home');
+        setLoading(false);
+        console.log('Login Data==>', { email, password });
+
+    } catch (error) {
+        alert(error.response.data.message);
+        setLoading(false);
+        console.log(error);
+    }
+};
+
+
+  
+
+
+
        //temp function to check local storage data
        const getLocalStorageData = async () => {
           let data = await AsyncStorage.getItem('@auth');
