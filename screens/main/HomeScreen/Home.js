@@ -197,22 +197,6 @@ const Home = ({navigation}) => {
                     />
                 </TouchableOpacity>
             ))}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={() => setIsModalVisible(false)}
-            >
-                <View style={styleS.modalContainer}>
-                    <View style={[styleS.modalContent, { zIndex: 10 }]}>
-                        <Text>This is a modal with z-index of 10</Text>
-                        {/* Add your modal content here */}
-                        <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-                            <Text>Close Modal</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
         </View>
 
                 {getFilteredPosts().length === 0 && (
@@ -266,23 +250,6 @@ const styleS = StyleSheet.create({
         alignContent: 'center',
         gap: 8
     },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContent: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        elevation: 5, // For Android shadow
-        shadowColor: '#000', // For iOS shadow
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        width: 340,
-        height: 340
-      },
+    
 })
 export default Home;
