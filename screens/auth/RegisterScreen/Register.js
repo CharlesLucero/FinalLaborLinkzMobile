@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Image,
   ScrollView,
   Alert,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 import BodyText from "../../../components/BodyText";
@@ -27,6 +27,14 @@ const Register = ({ navigation }) => {
   const [gender, setGender] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [regions, setRegions] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [barangays, setBarangays] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState("");
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedBarangay, setSelectedBarangay] = useState("");
   const [location, setLocation] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -38,15 +46,80 @@ const Register = ({ navigation }) => {
     { label: "Female", gender: "Female" },
   ];
 
+  const onlyCagayanV = [{ name: "Cagayan Valley", code: "020000000" }];
+
   const renderLabel = () => {
     if (gender || isFocus) {
       return (
-        <Text style={[styles.gender, isFocus && { color: "blue" }]}>
-       
-        </Text>
+        <Text style={[styles.gender, isFocus && { color: "blue" }]}></Text>
       );
     }
     return null;
+  };
+
+  useEffect(() => {
+    populateRegions().catch((error) =>
+      console.error("Error in useEffect (populateRegions):", error)
+    );
+  }, []);
+
+  const fetchData = async (url) => {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+  };
+
+  const populateRegions = async () => {
+    try {
+      const regionsData = await fetchData(
+        "https://psgc.gitlab.io/api/regions/"
+      );
+      setRegions(regionsData);
+    } catch (error) {
+      console.error("Error populating regions:", error);
+    }
+  };
+
+  const populateProvinces = async (regionCode) => {
+    try {
+      const provincesData = await fetchData(
+        `https://psgc.gitlab.io/api/regions/${regionCode}/provinces/`
+      );
+      setProvinces(provincesData);
+      setSelectedRegion(regionCode);
+    } catch (error) {
+      console.error("Error populating provinces:", error);
+    }
+  };
+
+  const populateCities = async (provinceCode) => {
+    try {
+      const citiesData = await fetchData(
+        `https://psgc.gitlab.io/api/provinces/${provinceCode}/cities-municipalities/`
+      );
+
+      setCities(citiesData);
+      setSelectedProvince(provinceCode);
+    } catch (error) {
+      console.error("Error populating cities:", error);
+    }
+  };
+
+  const populateBarangays = async (cityCode) => {
+    try {
+      const barangaysData = await fetchData(
+        `https://psgc.gitlab.io/api/cities-municipalities/${cityCode}/barangays/`
+      );
+      setBarangays(barangaysData);
+      setSelectedCity(cityCode);
+    } catch (error) {
+      console.error("Error populating barangays:", error);
+    }
   };
 
   // Function to validate contact number
@@ -66,7 +139,11 @@ const Register = ({ navigation }) => {
         !gender ||
         !location ||
         !email ||
-        !password
+        !password ||
+        !selectedRegion ||
+        !selectedProvince ||
+        !selectedCity ||
+        !selectedBarangay
       ) {
         Alert.alert("Please Fill All Fields");
         setLoading(false);
@@ -74,10 +151,49 @@ const Register = ({ navigation }) => {
       }
       // Validate contact number format
       if (!validateContactNumber(contactNumber)) {
-        Alert.alert("Invalid Contact Number","Your Contact Number Should like this '09XXXXXXXXX'");
+        Alert.alert(
+          "Invalid Contact Number",
+          "Your Contact Number Should like this '09XXXXXXXXX'"
+        );
         setLoading(false);
         return;
       }
+
+      const regionDatabase = await fetchData(
+        `https://psgc.gitlab.io/api/regions/${selectedRegion}/`
+      );
+      const regionData = JSON.parse(JSON.stringify(regionDatabase));
+      const regionName = regionData.name;
+      const regionCode = regionData.code;
+
+      const provinceDatabase = await fetchData(
+        `https://psgc.gitlab.io/api/provinces/${selectedProvince}/`
+      );
+      const provinceData = JSON.parse(JSON.stringify(provinceDatabase));
+      const provinceName = provinceData.name;
+      const provinceCode = provinceData.code;
+
+      const cityDatabase = await fetchData(
+        `https://psgc.gitlab.io/api/cities-municipalities/${selectedCity}/`
+      );
+      const cityData = JSON.parse(JSON.stringify(cityDatabase));
+      const cityName = cityData.name;
+      const cityCode = cityData.code;
+
+      const barangaysDatabase = await fetchData(
+        `https://psgc.gitlab.io/api/barangays/${selectedBarangay}/`
+      );
+      const barangayData = JSON.parse(JSON.stringify(barangaysDatabase));
+      const barangayName = barangayData.name;
+      const barangayCode = barangayData.code;
+
+      console.log("Updated region:", regionName);
+      console.log("Updated province:", provinceName);
+      console.log("Updated city:", cityName);
+      console.log("Updated barangay:", barangayName);
+
+
+
       setLoading(false);
       const { data } = await axios.post("/auth/register", {
         firstName,
@@ -87,6 +203,14 @@ const Register = ({ navigation }) => {
         location,
         email,
         password,
+        regionName,
+        regionCode,
+        provinceName,
+        provinceCode,
+        cityName,
+        cityCode,
+        barangayName,
+        barangayCode,
       });
       alert(data && data.message);
       navigation.navigate("Login");
@@ -98,6 +222,10 @@ const Register = ({ navigation }) => {
         location,
         email,
         password,
+        regionName,
+        provinceName,
+        cityName,
+        barangayName,
       });
     } catch (error) {
       alert(error.response.data.message);
@@ -108,7 +236,7 @@ const Register = ({ navigation }) => {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
-  };;
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -185,9 +313,8 @@ const Register = ({ navigation }) => {
                 <InputBox
                   placeholder="Contact Number"
                   height={70}
-                  value={contactNumber}       
+                  value={contactNumber}
                   setValue={setContactNumber}
-                  keyboardType='numeric'
                 />
               </View>
               <View style={{ flex: 1 }}>
@@ -225,6 +352,89 @@ const Register = ({ navigation }) => {
             </View>
 
             <View style={{ paddingHorizontal: 32 }}>
+              <View
+                style={{
+                  marginTop: 8,
+                  marginBottom: 8,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 14,
+                }}
+              >
+                <View style={{ flex: 1 }}>
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    data={onlyCagayanV}
+                    search
+                    searchPlaceholder="Search..."
+                    labelField="name"
+                    valueField="code"
+                    placeholder="Select Region"
+                    value={selectedRegion}
+                    onChange={(item) => populateProvinces(item.code)}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    data={provinces}
+                    search
+                    searchPlaceholder="Search..."
+                    labelField="name"
+                    valueField="code"
+                    placeholder="Select Province"
+                    value={selectedProvince}
+                    onChange={(item) => populateCities(item.code)}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 14,
+                }}
+              >
+                <View style={{ flex: 1 }}>
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    data={cities}
+                    search
+                    searchPlaceholder="Search..."
+                    labelField="name"
+                    valueField="code"
+                    placeholder="Select City"
+                    value={selectedCity}
+                    onChange={(item) => populateBarangays(item.code)}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    data={barangays}
+                    search
+                    searchPlaceholder="Search..."
+                    labelField="name"
+                    valueField="code"
+                    placeholder="Select Barangay"
+                    value={selectedBarangay}
+                    onChange={(item) => setSelectedBarangay(item.code)}
+                  />
+                </View>
+              </View>
+
               <InputBox
                 placeholder="Location"
                 height={70}
@@ -297,12 +507,10 @@ const Register = ({ navigation }) => {
   );
 };
 
-
-
 const styles = StyleSheet.create({
   dropdown: {
     height: 50,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
@@ -311,8 +519,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   label: {
-    position: 'absolute',
-    backgroundColor: 'white',
+    position: "absolute",
+    backgroundColor: "white",
     left: 22,
     top: 8,
     zIndex: 999,
@@ -334,6 +542,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
 
 export default Register;

@@ -72,6 +72,10 @@ const Message = () => {
           <Text style={styles.name}>
             {isSent ? `${item.receiverId.firstName} ${item.receiverId.lastName}` : `${item.senderId.firstName} ${item.senderId.lastName}`}
           </Text>
+
+          
+
+          
           <View style={styles.rowContainer}>
             <Text style={styles.date}>{formattedDate}</Text>
             <Text style={styles.time}>{formattedTime}</Text>

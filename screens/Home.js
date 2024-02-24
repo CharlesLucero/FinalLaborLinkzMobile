@@ -147,20 +147,19 @@ const Home = ({navigation}) => {
             </View>
 
             <View style={{ paddingHorizontal: 10 }}>
-                        {currentPosts.map(post => (
-                            <PostCard
-                                key={post._id}
-                                post = {post} 
-                                navigation={navigation}  // Assuming _id is the unique identifier for a post
-                                posts={[{
-                                    ...post,
-                                    title: highlightSearchText(post.title, searchText),
-                                    description: highlightSearchText(post.description, searchText),
-                                }]}
-                        
-                            />
-                        ))}
-                    </View>
+    {currentPosts.reverse().map(post => (
+        <PostCard
+            key={post._id}
+            post={post}
+            navigation={navigation}
+            posts={[{
+                ...post,
+                title: highlightSearchText(post.title, searchText),
+                description: highlightSearchText(post.description, searchText),
+            }]}
+        />
+    ))}
+</View>
                 {getFilteredPosts().length === 0 && (
                     <Text style={{ textAlign: 'center', marginTop: 10, color: 'red' }}>
                         No results found for "{searchText}"

@@ -4,9 +4,9 @@ import moment from "moment";
 import { AntDesign, FontAwesome, MaterialIcons, Feather, Ionicons} from "@expo/vector-icons";
 import axios from "axios"; // Import axios
 import { useNavigation } from "@react-navigation/native";
-import EditModal from "./EditModal";
+
 import { AuthContext } from '../context/authContext';
-import Home from "../screens/Home";
+
 
 const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   const [loading, setLoading] = useState(false);

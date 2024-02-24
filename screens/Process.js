@@ -214,38 +214,25 @@ const Process = () => {
         <Entypo name="chevron-left" size={32} color="#A9A9A9" />
       </TouchableOpacity>
       <View style={styles.container}>
-  <View style={styles.headerContainer}>
-    <View style={styles.headerInfo}>
-      <FontAwesome
-        name="user"
-        size={50}
-        color="#00CCAA"
-        style={{ marginRight: 5, marginLeft: 5 }}
-      />
-      {application.receiverId ? ( // Check if receiverId exists
-        <>
-          <Text style={styles.name}>
-            {`${application.receiverId.firstName} ${application.receiverId.lastName}`}
-          </Text>
-          <Text style={styles.active}>{`Status: ${application.status}`}</Text>
-        </>
-      ) : (
-        <></> // Render nothing if receiverId does not exist
-      )}
-      {application.senderId ? ( // Check if senderId exists
-        <>
-          <Text style={styles.name}>
-            {`${application.senderId.firstName} ${application.senderId.lastName}`}
-          </Text>
-          <Text style={styles.active}>{`Status: ${application.status}`}</Text>
-        </>
-      ) : (
-        <></> // Render nothing if senderId does not exist
-      )}
-    </View>
-  </View>
-</View>
-
+        <View style={styles.headerContainer}>
+          <View style={styles.headerInfo}>
+            <FontAwesome
+              name="user"
+              size={50}
+              color="#00CCAA"
+              style={{ marginRight: 5, marginLeft: 5 }}
+            />
+            <Text
+              style={styles.name}
+            >{`${application.senderId.firstName} ${application.senderId.lastName}`}</Text>
+            <Text style={styles.active}>{`Status: ${application.status}`}</Text>
+            <Text
+              style={styles.name}
+            >{`${application.receiverId.firstName} ${application.receiverId.lastName}`}</Text>
+            <Text style={styles.active}>{`Status: ${application.status}`}</Text>
+          </View>
+        </View>
+      </View>
       <FlatList
         data={chats}
         keyExtractor={(item) => item._id}
