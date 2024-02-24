@@ -19,6 +19,33 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
 
+    console.log('Posts:', JSON.stringify(posts));
+
+    const handleApply = async (postId, senderId, receiverId, postDetails) => {
+
+      console.log(postId, senderId, receiverId )
+      try {
+        setLoading(true);
+        if (receiverId) {
+          const response = await axios.post("/hiring/send-application", {
+            senderId,
+            receiverId,
+            postId,
+            postDetails // Include post details in the request body
+          });
+          setLoading(false);
+          Alert.alert("Success", response.data.message);
+        } else {
+          setLoading(false);
+          Alert.alert("Error", "Failed to send application. Receiver ID not found.");
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+        Alert.alert("Error", "Failed to send application. Please try again later.");
+      }
+    };
+
     const toggleModal = (post) => {
         setSelectedPost(post);
         setIsModalVisible(!isModalVisible);
@@ -44,28 +71,6 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
 
   // Handle sending application
   // Modify handleApply function to include post details and navigate to Message screen
-  const handleApply = async (postId, senderId, receiverId, postDetails) => {
-    try {
-      setLoading(true);
-      if (receiverId) {
-        const response = await axios.post("/hiring/send-application", {
-          senderId,
-          receiverId,
-          postId,
-          postDetails // Include post details in the request body
-        });
-        setLoading(false);
-        Alert.alert("Success", response.data.message);
-      } else {
-        setLoading(false);
-        Alert.alert("Error", "Failed to send application. Receiver ID not found.");
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error(error);
-      Alert.alert("Error", "Failed to send application. Please try again later.");
-    }
-  };
 
   //handle delete prompt
   const handleDeletePrompt = (id) => {
@@ -241,6 +246,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
             title="Apply"
             color="#00CCAA"
             style={{ paddingHorizontal: 20 }}
+            onPress={() => handleApply(selectedPost?._id, user?._id, selectedPost?.postedBy?._id)}
           />
         </View>               
       </View>
@@ -291,14 +297,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    elevation: 5, // For Android shadow
-    shadowColor: '#000', // For iOS shadow
+    elevation: 5,
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     width: 340,
-    maxHeight: 500, // Maximum height of the modal content
-    overflow: 'auto', // Enable scrolling if content exceeds maxHeight
+    maxHeight: 500, 
+    overflow: 'auto', 
   },
 });
 
