@@ -11,10 +11,12 @@ const informationSchema = new mongoose.Schema(
       type: String,
       required: [true, "please add age"],
     },
-    job: {
-      type: String,
-      required: [true, "please add job"],
-    },
+    job: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     address: {
       type: String,
       required: [true, "please add address"],

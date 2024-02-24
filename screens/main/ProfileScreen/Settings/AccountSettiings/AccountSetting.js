@@ -157,6 +157,7 @@ const AccountSetting = ({ navigation }) => {
                 <TextInput style = {styles.inputBox}
                 value={contactNumber}
                 onChangeText={(text) => setContactNumber(text)}
+                editable= {false}
                 />
                 </View>
 
@@ -164,6 +165,7 @@ const AccountSetting = ({ navigation }) => {
                 <TextInput style = {styles.inputBox}
                 value={gender}
                 onChangeText={(text) => setGender(text)}
+                editable= {false}
                 />
                 </View>
             </View>
@@ -175,6 +177,7 @@ const AccountSetting = ({ navigation }) => {
                     <TextInput style = {styles.inputBoxLong}
                     value={location}
                     onChangeText={(text) => setLocation(text)}
+                    editable= {false}
                     />
                 </View>
 
@@ -186,13 +189,15 @@ const AccountSetting = ({ navigation }) => {
                 </View>
 
                 <View>
-                    <TextInput style = {styles.inputBoxLong}
-                    value={password}
-                    placeholder='--------------change password here--------------'
-                    onChangeText={(text) => setPassword(text)}
-                    secureTextEntry = {true}
+                    <TextInput style={styles.inputBoxLong}
+                        value={password}
+                        placeholder='-------------------------- change password here -----------------------'
+                        onChangeText={(text) => setPassword(text)}
+                        secureTextEntry={true}
+                        placeholderTextColor='#00CCAA' // Setting the placeholder text color to green
                     />
                 </View>
+
 
                 <View>
                     <TextInput style = {styles.inputBoxLong}

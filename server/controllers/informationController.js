@@ -2,40 +2,48 @@ const informationModel = require("../models/informationModel");
 
 //create information 
 const createInformationController = async (req, res) => {
-    try {
-      const { bio, age, job, address} = req.body;
-      //validate
-      if (!bio || !age || !job || !address) {
-        return res.status(500).send({
-          success: false,
-          message: "Please Provide All Fields",
-        });
-      }
-      const info = await informationModel({
-        bio,
-        age,
-        job,
-        address,
-        createdBy: req.auth._id,
-        }).save();
-
-   
-  
-      res.status(201).send({
-        success: true,
-        message: "Information Created Successfully",
-        info,
-      });
-      console.log(req);
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({
+  try {
+    const existingInfo = await informationModel.findOne({ createdBy: req.auth._id });
+    if (existingInfo) {
+      return res.status(400).send({
         success: false,
-        message: "Error in Create Info APi",
-        error,
+        message: "User already has existing information",
       });
     }
-  };
+
+
+    const { bio, age, job, address } = req.body;
+    //validate
+    if (!bio || !age || !job || !address) {
+      return res.status(500).send({
+        success: false,
+        message: "Please Provide All Fields",
+      });
+    }
+    const info = await informationModel({
+      bio,
+      age,
+      job,
+      address,
+      createdBy: req.auth._id,
+    }).save();
+
+
+    res.status(201).send({
+      success: true,
+      message: "Information Created Successfully",
+      info,
+    });
+    console.log(req);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in Create Info APi",
+      error,
+    });
+  }
+};
 
   //get carpenter info
   const getCarpenterController = async (req, res) => {

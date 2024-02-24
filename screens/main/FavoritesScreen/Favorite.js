@@ -1,88 +1,104 @@
 import React, { useContext } from 'react';
-import {View, Text , StyleSheet, SafeAreaView ,TouchableOpacity} from 'react-native';
-
-
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import FooterMenu from '../../../components/Menus/FooterMenu';
-import {useAuth} from '../../../context/FavContext'                    
-import { AntDesign } from '@expo/vector-icons';
+import { useAuth } from '../../../context/FavContext';
+import { AntDesign, Feather } from '@expo/vector-icons';
 
 const Favorite = () => {
-    const { favorites, removeFromFavorites } = useAuth();
+  const { favorites, removeFromFavorites } = useAuth();
 
-    const handleRemoveFavorite = (userId) => {
-        removeFromFavorites(userId);
-      };
-    
-    
+  const handleRemoveFavorite = (index) => {
+    removeFromFavorites(index);
+  };
 
+  return (
+  
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={styles.container}>
+        <Text style={{ color: '#343434', fontSize: 25, fontWeight: 'bold', marginBottom: 10 }}>
+          Your Favorites
+        </Text>
+        <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
+      </View>
 
-    return (
-        <SafeAreaView style = {{flex:1, backgroundColor: 'white'}}>
-            <View style = {styles.container}>
-                <Text style = {{color: '#343434', fontSize: 25, fontWeight: 'bold'}}>Your Favorites</Text>
-                <AntDesign style = {{marginTop: 4}} name="heart" size={24} color="#00CCAA" />
-            </View>
-
-            <View style={{ marginBottom: '130%', paddingHorizontal: 30 }}>
+      <View style={{ flex: 1, paddingHorizontal: 30}}>
         {favorites.map((favorite, index) => (
-          <View style = {styles.background} key={index}>
-            {favorite.profileData && (
-              <>
-                <Text style={styles.info}>Name: {favorite.profileData.createdBy?.firstName} {favorite.profileData.createdBy?.lastName}</Text>
-                <Text style={styles.info}>Age: {favorite.profileData.age}</Text>
-                <Text style={styles.info}>Job: {favorite.profileData.job}</Text>
-                <Text style={styles.info}>Address: {favorite.profileData.address}</Text>
-              </>
-            )}
-
-            {favorite.profilepost && (
-              <>
-                <Text style={styles.info}>Name: {favorite.profilepost.postedBy?.firstName} {favorite.profilepost.postedBy?.lastName}</Text>
+          <View style={styles.background} key={index}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+                source={{ uri: favorite.profilepost.postedBy?.image }}
+                style={{
+                  height: 60,
+                  width: 60,
+                  borderRadius: 100,
+                  borderWidth: 5,
+                  borderColor: "black",
+                }}
+              />
+              <View style={{ marginLeft: 10 }}>
+                <Text style={styles.info}>
+                  {favorite.profilepost.postedBy?.firstName} {favorite.profilepost.postedBy?.lastName}
+                </Text>
                 <Text style={styles.info}>Location: {favorite.profilepost.postedBy?.location}</Text>
-                <Text style={styles.info}>Hourly Rate: {favorite.profilepost.minRate} - {favorite.profilepost.maxRate}</Text>
+                <Text style={styles.info}>
+                  Rate: {favorite.profilepost.minRate} - {favorite.profilepost.maxRate}
+                </Text>
                 <Text style={styles.info}>Description: {favorite.profilepost.description}</Text>
-              </>
-            )}
-
-            <TouchableOpacity onPress={() => handleRemoveFavorite(favorite.userId)}>
-              <Text style={{ color: 'red' }}>Remove from Favorites</Text>
+              </View>
+            </View>
+            <View>
+            <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
+            <Feather name="trash-2" size={18} color="#F02" />
             </TouchableOpacity>
+            </View>
           </View>
         ))}
       </View>
 
-
-
-
-
-
-
-
-            <View style = {{backgroundColor: '#ffffff', borderWidth: .5, borderColor:'gray', paddingHorizontal: 20, borderTopRightRadius: 20, borderTopLeftRadius: 20, paddingTop:5}}>
-                <FooterMenu />
-            </View>
-        </SafeAreaView>
-    );
+      <View style={styles.footer}>
+        <FooterMenu />
+      </View>
+    </SafeAreaView>
+  );
 };
+
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor:'white',
-        flexDirection: 'row',
-        marginTop: 40,
-        gap: 10,
-        paddingHorizontal: 20,
-    },
-    background: {
-        backgroundColor: 'black',
-        borderRadius: 20,
-        paddingHorizontal: 30,
-        paddingVertical: 18
-    },
-    info:{
-        color:'#00CCAA',
-        fontSize: 15,
-        fontWeight: '600'
-    }
-})
+  container: {
+    flexDirection: 'row',
+    marginTop: 40,
+    paddingHorizontal: 20,
+  },
+  background: {
+    marginTop: 20,
+    backgroundColor: 'black',
+    borderRadius: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 18,
+    marginBottom: 20, // Add margin bottom to separate each favorite item
+    flexDirection: "row",
+  },
+  info: {
+    color: '#00CCAA',
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 5, // Adjust spacing between each text item
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffff',
+    borderWidth: 0.5,
+    borderColor: 'gray',
+    paddingHorizontal: 20,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    paddingTop: 5,
+  },
+  remove: {
+    left: 30,
+  },
+});
+
 export default Favorite;

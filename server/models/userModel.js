@@ -51,7 +51,24 @@ const userSchema = new mongoose.Schema({
     rating: {
         type: Number,
         default: 0
-    }
+    },
+    region: {
+        code: { trim: true, type: String },
+        name: { trim: true, type: String },
+      },
+      province: {
+          code: { trim: true, type: String },
+          name: { trim: true, type: String },
+        },
+      city: {
+          code: { trim: true, type: String },
+          name: { trim: true, type: String },
+        },
+      barangay: {
+          code: { trim: true, type: String },
+          name: { trim: true, type: String },
+        },
+  
 },{timestamps: true}
 );
 

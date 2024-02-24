@@ -92,7 +92,7 @@ const Account = ({ navigation }) => {
               {state?.user.firstName} {state?.user.lastName} 
             </Text>
           </View>
-              <Text>efdsf</Text>
+     
           <View style={{ paddingHorizontal: 20 }}>
             <Text style={styles.user}>User Information</Text>
           </View>

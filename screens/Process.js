@@ -13,8 +13,8 @@ import {
 import axios from "axios";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../context/authContext";
-import { FontAwesome, Feather, Entypo } from "@expo/vector-icons";
-
+import { FontAwesome, Feather, Entypo, AntDesign } from "@expo/vector-icons";
+import { Dropdown } from "react-native-element-dropdown";
 const Process = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -25,11 +25,20 @@ const Process = () => {
   const [chats, setChats] = useState([]);
   const [buttonsVisible, setButtonsVisible] = useState(true);
   const [reportModalVisible, setReportModalVisible] = useState(false);
-  const [violation, setViolation] = useState("");
+  const [violation, setViolation] = useState(null);
   const [description, setDescription] = useState("");
   const [ratingModal, setRatingModal] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
   const [starRating, setStarRating] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
+  const data = [
+    { label: "Spam", violation: "Spam" },
+    { label: "Scam", violation: "Scam" },
+    { label: "Fake User", violation: "Fake User" },
+    { label: "Trolling", violation: "Trolling" },
+    { label: "Others ", violation: "Others" },
+  ];
 
   useEffect(() => {
     fetchChats();
@@ -63,19 +72,19 @@ const Process = () => {
 
   const handleSubmitRating = async () => {
     try {
-        const response = await axios.post("/auth/ratings", {
-            userId: application.senderId._id, // Assuming application.senderId._id contains the user's ID
-            rating: starRating,
-        });
+      const response = await axios.post("/auth/ratings", {
+        userId: application.senderId._id, // Assuming application.senderId._id contains the user's ID
+        rating: starRating,
+      });
 
-        console.log("Rating submitted successfully:", response.data);
-        setStarRating(0);
-        setRatingModalVisible(false);
+      console.log("Rating submitted successfully:", response.data);
+      setStarRating(0);
+      setRatingModalVisible(false);
     } catch (error) {
-        console.error("Error handling rating:", error);
-        Alert.alert("Error", "Failed to handle rating. Please try again later.");
+      console.error("Error handling rating:", error);
+      Alert.alert("Error", "Failed to handle rating. Please try again later.");
     }
-};
+  };
 
   const handleAccept = async () => {
     try {
@@ -122,7 +131,7 @@ const Process = () => {
   };
 
   const handleDone = () => {
-    setRatingModal(true)
+    setRatingModal(true);
   };
 
   const showReportModal = () => {
@@ -186,12 +195,24 @@ const Process = () => {
       Alert.alert("Error", "Failed to send message. Please try again later.");
     }
   };
+  
+  const renderLabel = () => {
+    return data.map((item, index) => (
+      <TouchableOpacity
+        key={index}
+        onPress={() => setViolation(item.violation)}
+      >
+        <Text>{item.label}</Text>
+      </TouchableOpacity>
+    ));
+  };
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-              <Entypo name="chevron-left" size={32} color="#A9A9A9" />
-            </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Entypo name="chevron-left" size={32} color="#A9A9A9" />
+      </TouchableOpacity>
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.headerInfo}>
@@ -205,18 +226,22 @@ const Process = () => {
               style={styles.name}
             >{`${application.senderId.firstName} ${application.senderId.lastName}`}</Text>
             <Text style={styles.active}>{`Status: ${application.status}`}</Text>
+            <Text
+              style={styles.name}
+            >{`${application.receiverId.firstName} ${application.receiverId.lastName}`}</Text>
+            <Text style={styles.active}>{`Status: ${application.status}`}</Text>
           </View>
         </View>
       </View>
       <FlatList
-          data={chats}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <View>
-              <Text>{`${item.senderId.firstName}: ${item.message}`}</Text>
-            </View>
-          )}
-        />
+        data={chats}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View>
+            <Text>{`${item.senderId.firstName}: ${item.message}`}</Text>
+          </View>
+        )}
+      />
       {buttonsVisible ? (
         <View style={styles.actionContainer}>
           <TouchableOpacity onPress={handleAccept} style={styles.actionButton}>
@@ -249,7 +274,6 @@ const Process = () => {
         <TouchableOpacity onPress={handleMessageSend} style={styles.buttonSend}>
           <Text style={styles.textButton}>Send</Text>
         </TouchableOpacity>
-       
       </View>
 
       <Modal
@@ -267,6 +291,37 @@ const Process = () => {
               value={violation}
               onChangeText={(text) => setViolation(text)}
             />
+
+            {renderLabel()}
+            <Dropdown
+              style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="violation"
+              placeholder={!isFocus ? "Violation" : "..."}
+              searchPlaceholder="Search..."
+              value={violation}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item) => {
+                setViolation(item.violation);
+                setIsFocus(false);
+              }}
+              renderLeftIcon={() => (
+                <AntDesign
+                  style={styles.icon}
+                  color={isFocus ? "blue" : "black"}
+                  name="Safety"
+                  size={20}
+                />
+              )}
+            />
             <TextInput
               style={styles.DescriptionInput}
               placeholder="Description"
@@ -275,11 +330,18 @@ const Process = () => {
               onChangeText={(text) => setDescription(text)}
               multiline
             />
+
             <TouchableOpacity
               style={styles.reportButton}
               onPress={reportUserHandler}
             >
-              <Text style={{ color: "#FFFFFF", fontWeight: "700", alignSelf:"center" }}>
+              <Text
+                style={{
+                  color: "#FFFFFF",
+                  fontWeight: "700",
+                  alignSelf: "center",
+                }}
+              >
                 Submit Report
               </Text>
             </TouchableOpacity>
@@ -287,47 +349,57 @@ const Process = () => {
               style={styles.cancelButton}
               onPress={hideReportModal}
             >
-              <Text style={{ color: "#000000", fontWeight: "700", alignSelf: 'center' }}>Cancel</Text>
+              <Text
+                style={{
+                  color: "#000000",
+                  fontWeight: "700",
+                  alignSelf: "center",
+                }}
+              >
+                Cancel
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={ratingModal}
-      >
+      <Modal animationType="slide" transparent={true} visible={ratingModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Ratings</Text>
 
-            <View style={{ flexDirection: 'row' }}>
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <TouchableOpacity key={rating} onPress={() => handleStarPress(rating)}>
-                {rating <= starRating ? (
-                  <FontAwesome name="star" size={24} color="black" />
-                ) : (
-                  <Feather name="star" size={24} color="yellow" />
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
+            <View style={{ flexDirection: "row" }}>
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <TouchableOpacity
+                  key={rating}
+                  onPress={() => handleStarPress(rating)}
+                >
+                  {rating <= starRating ? (
+                    <FontAwesome name="star" size={24} color="black" />
+                  ) : (
+                    <Feather name="star" size={24} color="yellow" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
 
             <TouchableOpacity
               style={styles.reportButton}
               onPress={handleSubmitRating}
             >
-              <Text style={{ color: "#FFFFFF", fontWeight: "700", alignSelf:"center" }}>
-                Submit 
+              <Text
+                style={{
+                  color: "#FFFFFF",
+                  fontWeight: "700",
+                  alignSelf: "center",
+                }}
+              >
+                Submit
               </Text>
             </TouchableOpacity>
-           
           </View>
         </View>
       </Modal>
-
     </SafeAreaView>
   );
 };
@@ -447,7 +519,7 @@ const styles = StyleSheet.create({
     height: "35%",
     marginTop: 10,
     fontSize: 12,
-    color: "#000000"
+    color: "#000000",
   },
   reportButton: {
     padding: 15,
@@ -458,7 +530,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     marginLeft: 5,
-    
   },
   cancelButton: {
     padding: 15,

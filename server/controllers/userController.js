@@ -28,58 +28,98 @@ const storage = multer.diskStorage({
 //register controller
 
 const registerController = async (req, res) => {
-    try {
-        const { firstName, lastName, contactNumber, gender, location, email, password } = req.body;
-        // Validation
-        if (!firstName || !lastName || !contactNumber || !gender || !location || !email || !password) {
-            return res.status(400).send({
-                success: false,
-                message: 'All fields are required',
-            });
-        }
-        if (password.length < 6) {
-            return res.status(400).send({
-                success: false,
-                message: 'Password must be at least 6 characters long',
-            });
-        }
-
-        // Check if the user already exists
-        const existingUser = await userModel.findOne({ email });
-        if (existingUser) {
-            return res.status(400).send({
-                success: false,
-                message: 'User already exists',
-            });
-        }
-
-        // Hash the password
-        const hashedPassword = await hashPassword(password);
-
-        // Create the user with the rating field included
-        const user = await userModel({
-            firstName,
-            lastName,
-            contactNumber,
-            gender,
-            location,
-            email,
-            password: hashedPassword,
-            rating: 0, // Add the rating field with a default value of 0
-        }).save();
-
-        return res.status(201).send({
-            success: true,
-            message: 'Registration successful',
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            success: false,
-            message: 'Error in register API',
-            error,
-        });
+  try {
+    const {
+      firstName,
+      lastName,
+      contactNumber,
+      gender,
+      location,
+      email,
+      password,
+      regionName,
+      regionCode,
+      provinceName,
+      provinceCode,
+      cityName,
+      cityCode,
+      barangayName,
+      barangayCode,
+    } = req.body;
+    // Validation
+    if (
+      !firstName ||
+      !lastName ||
+      !contactNumber ||
+      !gender ||
+      !location ||
+      !email ||
+      !password ||
+      !regionName ||
+      !regionCode ||
+      !provinceName ||
+      !provinceCode ||
+      !cityName ||
+      !cityCode ||
+      !barangayName ||
+      !barangayCode
+    ) {
+      return res.status(400).send({
+        success: false,
+        message: "All fields are required",
+      });
     }
+    if (password.length < 6) {
+      return res.status(400).send({
+        success: false,
+        message: "Password must be at least 6 characters long",
+      });
+    }
+
+
+    // Check if the user already exists
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
+
+    // Hash the password
+    const hashedPassword = await hashPassword(password);
+
+
+    // Create the user with the rating field included
+    const user = await userModel({
+      firstName,
+      lastName,
+      contactNumber,
+      gender,
+      location,
+      email,
+      password: hashedPassword,
+      rating: 0, // Add the rating field with a default value of 0
+      region: { code: regionCode, name: regionName },
+      province: { code: provinceCode, name: provinceName },
+      city: { code: cityCode, name: cityName },
+      barangay: { code: barangayCode, name: barangayName },
+    }).save();
+
+
+    return res.status(201).send({
+      success: true,
+      message: "Registration successful",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Error in register API",
+      error,
+    });
+  }
 };
 
 
@@ -139,70 +179,100 @@ const loginController = async (req, res) => {
 
 
 
-//update user
 const updateUserController = async (req, res) => {
-    try {
-      const {
-        firstName,
-        lastName,
-        contactNumber,
-        gender,
-        location,
-        email,
-        password,
-      } = req.body;
-  
-      // Get the user from the database
-      const user = await userModel.findOne({ email });
-  
-      // Handle image update if included in the request
-      let updatedImage = user.image; // Default to the existing image
-      if (req.file) {
-        // If a new image is uploaded, update the image path
-        updatedImage = req.file.filename;
-        // updatedImage = req.file.path;
-        // Assuming the image is stored in req.file.path after upload
-      }
-  
-      // Password validation and hashing
-      if (password && password.length < 6) {
-        return res.status(400).send({
-          success: false,
-          message: "Password is required and should be at least 6 characters long",
-        });
-      }
-      const hashedPassword = password ? await hashPassword(password) : undefined;
-  
-      // Update user information including the updated image path if provided
-      const updatedUser = await userModel.findOneAndUpdate(
-        { email },
-        {
-          firstName: firstName || user.firstName,
-          lastName: lastName || user.lastName,
-          contactNumber: contactNumber || user.contactNumber,
-          location: location || user.location,
-          gender: gender || user.gender,
-          password: hashedPassword || user.password,
-          image: updatedImage, // Update the image path
-        },
-        { new: true }
-      );
-  
-      updatedUser.password = undefined; // Remove password from the response
-      res.status(200).send({
-        success: true,
-        message: "Profile Updated Successfully",
-        updatedUser,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({
+  try {
+    const {
+      firstName,
+      lastName,
+      contactNumber,
+      gender,
+      location,
+      email,
+      password,
+      regionName,
+      regionCode,
+      provinceName,
+      provinceCode,
+      cityName,
+      cityCode,
+      barangayName,
+      barangayCode,
+    } = req.body;
+
+
+    // Get the user from the database
+    const user = await userModel.findOne({ email });
+
+
+    // Handle image update if included in the request
+    let updatedImage = user.image; // Default to the existing image
+    if (req.file) {
+      // If a new image is uploaded, update the image path
+      updatedImage = req.file.filename;
+      // updatedImage = req.file.path;
+      // Assuming the image is stored in req.file.path after upload
+    }
+
+
+    // Password validation and hashing
+    if (password && password.length < 6) {
+      return res.status(400).send({
         success: false,
-        message: "Error in user update",
-        error: error.message,
+        message:
+          "Password is required and should be at least 6 characters long",
       });
     }
-  };
+    const hashedPassword = password ? await hashPassword(password) : undefined;
+
+
+    // Update user information including the updated image path if provided
+    const updatedUser = await userModel.findOneAndUpdate(
+      { email },
+      {
+        firstName: firstName || user.firstName,
+        lastName: lastName || user.lastName,
+        contactNumber: contactNumber || user.contactNumber,
+        location: location || user.location,
+        gender: gender || user.gender,
+        password: hashedPassword || user.password,
+        image: updatedImage, // Update the image path
+        region: {
+          code: regionCode || user.region.code,
+          name: regionName || user.region.name,
+        },
+        province: {
+          code: provinceCode || user.province.code,
+          name: provinceName || user.province.name,
+        },
+        city: {
+          code: cityCode || user.city.code,
+          name: cityName || user.city.name,
+        },
+        barangay: {
+          code: barangayCode || user.barangay.code,
+          name: barangayName || user.barangay.name,
+        },
+      },
+      { new: true }
+    );
+
+
+    updatedUser.password = undefined; // Remove password from the response
+    res.status(200).send({
+      success: true,
+      message: "Profile Updated Successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in user update",
+      error: error.message,
+    });
+  }
+};
+
   
   const uploadImage = async (req, res) => {
     console.log(req.body);
