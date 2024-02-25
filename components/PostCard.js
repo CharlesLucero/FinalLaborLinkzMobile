@@ -24,6 +24,12 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
     const handleApply = async (postId, senderId, receiverId) => {
 
       console.log(`THIS IS POST ID: ${postId}, ${senderId}, ${receiverId}` )
+
+      if (senderId === receiverId) {
+        Alert.alert("Error", "You cannot send an application to yourself.");
+        return;
+    }
+
       try {
         setLoading(true);
         if (receiverId) {
@@ -40,8 +46,13 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
         }
       } catch (error) {
         setLoading(false);
-        console.error(`THIS IS THE ERROR: ${error}`);
-        Alert.alert("Error", "Failed to send application. Please try again later.");
+        if (error.response && error.response.status === 409) {
+          // Application already exists
+          Alert.alert("Error", "You have already sent an application for this post.");
+      } else {
+          console.error(`THIS IS THE ERROR: ${error}`);
+          Alert.alert("Error", "Failed to send application. Please try again later.");
+      }
       }
     };
 

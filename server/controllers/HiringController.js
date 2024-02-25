@@ -11,7 +11,7 @@ const sendApplication = async (req, res) => {
         // Check if the hiring process already exists
         const existingProcess = await HiringProcess.findOne({ senderId, receiverId });
         if (existingProcess) {
-            return res.status(400).json({ message: 'Application already sent.' });
+            return res.status(409).json({ message: 'Application already sent.' });
         }
 
         // Create a new hiring process with senderId, receiverId, and postId
@@ -29,6 +29,12 @@ const acceptApplication = async (req, res) => {
     const { hiringProcessId } = req.params;
 
     try {
+        // Check if the hiring process already exists
+        const existingProcess = await HiringProcess.findOne({ senderId, receiverId });
+        if (existingProcess) {
+            return res.status(400).json({ message: 'Application already sent.' });
+        }
+        
         // Find the hiring process by ID
         const hiringProcess = await HiringProcess.findById(hiringProcessId);
         if (!hiringProcess) {
