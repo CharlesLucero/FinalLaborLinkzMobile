@@ -3,7 +3,9 @@ const HiringProcess = require('../models/HiringProcessModel');
 // Controller function to send an application from user1 to user2
 // Controller function to send an application from user1 to user2
 const sendApplication = async (req, res) => {
-    const { senderId, receiverId, postId } = req.body; // Extract postId from request body
+    const { senderId, receiverId, postId } = req.body;
+
+    console.log(`SERVER:::::: THIS IS POST ID: ${postId}, ${senderId}, ${receiverId}` )
 
     try {
         // Check if the hiring process already exists

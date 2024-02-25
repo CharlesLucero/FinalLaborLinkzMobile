@@ -21,9 +21,9 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
 
     console.log('Posts:', JSON.stringify(posts));
 
-    const handleApply = async (postId, senderId, receiverId, postDetails) => {
+    const handleApply = async (postId, senderId, receiverId) => {
 
-      console.log(postId, senderId, receiverId )
+      console.log(`THIS IS POST ID: ${postId}, ${senderId}, ${receiverId}` )
       try {
         setLoading(true);
         if (receiverId) {
@@ -31,7 +31,6 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
             senderId,
             receiverId,
             postId,
-            postDetails // Include post details in the request body
           });
           setLoading(false);
           Alert.alert("Success", response.data.message);
@@ -41,7 +40,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
         }
       } catch (error) {
         setLoading(false);
-        console.error(error);
+        console.error(`THIS IS THE ERROR: ${error}`);
         Alert.alert("Error", "Failed to send application. Please try again later.");
       }
     };
@@ -150,7 +149,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
                 <Ionicons name="location-sharp" size={20} color="#00CCAA" />
                 <Text style={{ color: "#e4e4e4", fontSize: 14 }}>
-                {post?.postedBy?.barangay.name}, {post?.postedBy?.city.name} {post?.postedBy?.province.name}
+                {post?.postedBy?.barangay?.name}, {post?.postedBy?.city?.name} {post?.postedBy?.province?.name}
                 </Text>
               </View>
 
@@ -228,7 +227,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
                 ))}
         </View>
         <Text style={{fontSize: 14, marginTop: 10, color: '#939393'}}>
-          Location: {selectedPost?.postedBy?.location}
+          {selectedPost?.postedBy?.barangay?.name}, {selectedPost?.postedBy?.city?.name} {selectedPost?.postedBy?.province?.name}
         </Text>
       </View>
       
