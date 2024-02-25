@@ -39,13 +39,13 @@ const ScreenMenu = () => {
 
     return(
         <Stack.Navigator initialRouteName="Login">
-        {authenticatedUser ? (
-          <>
           <Stack.Screen 
           name= "Home" 
           component={Home} 
           options={{headerShown: false}}
           />
+        {authenticatedUser ? (
+          <>
           <Stack.Screen 
           name= "Process" 
           component={Process} 

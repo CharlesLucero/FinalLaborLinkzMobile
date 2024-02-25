@@ -24,6 +24,7 @@ const Login = ({navigation}) => {
       const checkToken = async () => {
           try {
               const token = await AsyncStorage.getItem('jwtToken');
+              console.log('======================================================================================');
               console.log("Token:", token);
               if (token) {
                   navigation.navigate('Home');
@@ -33,7 +34,7 @@ const Login = ({navigation}) => {
           }
       };
       checkToken();
-  }, []);
+  }, [handleSubmit]);
 
   const handleSubmit = async () => {
     try {

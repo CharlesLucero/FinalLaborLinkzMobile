@@ -7,6 +7,8 @@ import { PostContext } from '../../../context/postContext';
 import PostCard from '../../../components/PostCard';
 import CustomCard from '../../../components/CustomCard';
 import CustomModal from '../../../components/CustomModal';
+import { Alert } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 const Home = ({navigation}) => {
     //global state
@@ -70,6 +72,24 @@ const Home = ({navigation}) => {
         }, 500);
     }, []);
 
+    const handleAddPost = async () => {
+        try {
+            // Retrieve the JWT token from secure storage
+            const token = await SecureStore.getItemAsync('jwtToken');
+            console.log(`+++++++++++++++++++++++`)
+            console.log(`THIS IS THE WORKING TOKEN FOR GUEST MODE: ${token}`)
+            // Check if token exists
+            if (token) {
+                // User is logged in, navigate to CreatePost screen
+                navigation.navigate('CreatePost');
+            } else {
+                // Token does not exist, show alert to prompt user to log in
+                Alert.alert('Login Required', 'You must log in first.');
+            }
+        } catch (error) {
+            console.error('Error retrieving JWT token:', error);
+        }
+    };
 
     return (
         
@@ -104,7 +124,7 @@ const Home = ({navigation}) => {
         <TouchableHighlight
             activeOpacity={0.8}
             underlayColor="#fff"
-            onPress={() => navigation.navigate('CreatePost')}>
+            onPress={handleAddPost}>
             <View style={{
                             flexDirection: 'row', 
                             alignItems: 'center', 
