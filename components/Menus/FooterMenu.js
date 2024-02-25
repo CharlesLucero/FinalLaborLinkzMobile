@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet, Platform} from "react-native";
 import React from "react";
-import { FontAwesome, AntDesign, MaterialCommunityIcons   } from '@expo/vector-icons';
+import { FontAwesome, AntDesign, MaterialCommunityIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const FooterMenu = ({}) => {
@@ -13,17 +13,15 @@ const FooterMenu = ({}) => {
             <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                 <FontAwesome style={styles.iconStyle} name="home" size={30} color={route.name === "Home" ? "#00CCAA" : "#343434"} />
             </TouchableOpacity>
-
             <TouchableOpacity onPress={() => navigation.navigate('Message')}>
-                <AntDesign name="wechat" size={30} color={route.name === "Message" ? "#00CCAA" : "#343434"} />
+                <Ionicons name="notifications" size={30} color={route.name === "Message" ? "#00CCAA" : "#343434"} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('Favorite')}>
                 <AntDesign name="heart" size={30} color={route.name === "Favorite" ? "#00CCAA" : "#343434"} />
             </TouchableOpacity>
-
             <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-                <MaterialCommunityIcons name="account" size={30} color={route.name === "Account" ? "#00CCAA" : "#343434"} />
+                <FontAwesome5 name="user-cog" size={28} color={route.name === "Account" ? "#00CCAA" : "#343434"} />
             </TouchableOpacity>
         </View>
     );
@@ -50,9 +48,9 @@ const styles = StyleSheet.create({
                 shadowOpacity: 0.5,
                 shadowRadius: 10,
             },
-            android: {
-                elevation: 8,
-            },
+            // android: {
+            //     elevation: -4,
+            // },
         }),
     },
     iconStyle: {

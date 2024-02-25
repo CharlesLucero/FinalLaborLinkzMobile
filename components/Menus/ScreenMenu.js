@@ -5,7 +5,7 @@ import Home from "../../screens/main/HomeScreen/Home";
 import Register from "../../screens/auth/RegisterScreen/Register";
 import Login from "../../screens/auth/LoginScreen/Login";
 import { AuthContext } from "../../context/authContext";
-import Message from "../../screens/Message";
+import Message from "../../screens/main/NotificationScreen/Message";
 import Favorite from "../../screens/main/FavoritesScreen/Favorite";
 import Account from "../../screens/main/ProfileScreen/Account";
 import SplashScreen from "../../screens/auth/SplashScreen/SplashScreen";

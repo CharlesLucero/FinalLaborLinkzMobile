@@ -11,9 +11,10 @@ import {
   RefreshControl,
 } from "react-native";
 import axios from "axios";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../../context/authContext";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
+import FooterMenu from "../../../components/Menus/FooterMenu";
 
 const Message = () => {
   const [state, setState] = useContext(AuthContext);
@@ -101,6 +102,7 @@ const Message = () => {
           contentContainerStyle={styles.flatListContainer}
         />
       </View>
+      <FooterMenu />
     </SafeAreaView>
   );
 };

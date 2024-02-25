@@ -113,19 +113,8 @@ const Account = ({ navigation }) => {
         </ScrollView>
       </View>
 
-      <View
-        style={{
-          backgroundColor: "#ffffff",
-          borderWidth: 0.5,
-          borderColor: "gray",
-          paddingHorizontal: 20,
-          borderTopRightRadius: 20,
-          borderTopLeftRadius: 20,
-          paddingTop: 5,
-        }}
-      >
         <FooterMenu />
-      </View>
+
     </SafeAreaView>
   );
 };
