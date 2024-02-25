@@ -44,6 +44,41 @@ const ScreenMenu = () => {
           component={Home} 
           options={{headerShown: false}}
           />
+          <Stack.Screen 
+          name= "Carpenter" 
+          component={Carpenter} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Technician" 
+          component={Technician} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Driver" 
+          component={Driver} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Maid" 
+          component={Maid} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Electrician" 
+          component={Electrician} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Plumber" 
+          component={Plumber} 
+          options={{headerShown: false}}
+          />
+            <Stack.Screen 
+          name= "ViewProfile" 
+          component={ViewProfile} 
+          options={{headerShown: false}}
+          />
         {authenticatedUser ? (
           <>
           <Stack.Screen 
@@ -98,46 +133,10 @@ const ScreenMenu = () => {
           options={{headerShown: false}}
           />
           <Stack.Screen 
-          name= "Carpenter" 
-          component={Carpenter} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Technician" 
-          component={Technician} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Driver" 
-          component={Driver} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Maid" 
-          component={Maid} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Electrician" 
-          component={Electrician} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Plumber" 
-          component={Plumber} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
           name= "Chat" 
           component={Chat} 
           options={{headerShown: false}}
           />
-          <Stack.Screen 
-          name= "ViewProfile" 
-          component={ViewProfile} 
-          options={{headerShown: false}}
-          />
-
         </>) : 
         (
           <>
