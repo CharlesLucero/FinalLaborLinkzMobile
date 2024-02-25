@@ -34,7 +34,6 @@ const registerController = async (req, res) => {
       lastName,
       contactNumber,
       gender,
-      location,
       email,
       password,
       regionName,
@@ -52,7 +51,6 @@ const registerController = async (req, res) => {
       !lastName ||
       !contactNumber ||
       !gender ||
-      !location ||
       !email ||
       !password ||
       !regionName ||
@@ -97,10 +95,9 @@ const registerController = async (req, res) => {
       lastName,
       contactNumber,
       gender,
-      location,
       email,
       password: hashedPassword,
-      rating: 0, // Add the rating field with a default value of 0
+      rating: 0,
       region: { code: regionCode, name: regionName },
       province: { code: provinceCode, name: provinceName },
       city: { code: cityCode, name: cityName },
