@@ -52,6 +52,22 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    ratingPoints: {
+        type: Number,
+        default: 0
+    },
+    verified: {
+        type: Boolean,
+        default: false
+    },
+    banned: {
+        type: Boolean,
+        default: false
+    },
+    archived: {
+        type: Boolean,
+        default: false
+    },
     region: {
         code: { trim: true, type: String },
         name: { trim: true, type: String },

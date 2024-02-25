@@ -6,7 +6,7 @@ import axios from "axios"; // Import axios
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "./CustomButton";
 import { AuthContext } from '../context/authContext';
-
+import * as SecureStore from 'expo-secure-store';
 
 const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   const [loading, setLoading] = useState(false);
@@ -21,30 +21,46 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
 
     console.log('Posts:', JSON.stringify(posts));
 
-    const handleApply = async (postId, senderId, receiverId, postDetails) => {
-
-      console.log(postId, senderId, receiverId )
+    const handleApply = async (postId, senderId, receiverId) => {
       try {
-        setLoading(true);
-        if (receiverId) {
-          const response = await axios.post("/hiring/send-application", {
-            senderId,
-            receiverId,
-            postId,
-            postDetails // Include post details in the request body
-          });
-          setLoading(false);
-          Alert.alert("Success", response.data.message);
-        } else {
-          setLoading(false);
-          Alert.alert("Error", "Failed to send application. Receiver ID not found.");
-        }
+          // Check if user is logged in by verifying the JWT token
+          const token = await SecureStore.getItemAsync('jwtToken');
+          if (!token) {
+              Alert.alert('Login Required', 'You must log in first.');
+              return;
+          }
+  
+          console.log(`THIS IS POST ID: ${postId}, ${senderId}, ${receiverId}`);
+  
+          if (senderId === receiverId) {
+              Alert.alert("Error", "You cannot send an application to yourself.");
+              return;
+          }
+  
+          setLoading(true);
+          if (receiverId) {
+              const response = await axios.post("/hiring/send-application", {
+                  senderId,
+                  receiverId,
+                  postId,
+              });
+              setLoading(false);
+              Alert.alert("Success", response.data.message);
+          } else {
+              setLoading(false);
+              Alert.alert("Error", "Failed to send application. Receiver ID not found.");
+          }
       } catch (error) {
-        setLoading(false);
-        console.error(error);
-        Alert.alert("Error", "Failed to send application. Please try again later.");
+          setLoading(false);
+          if (error.response && error.response.status === 409) {
+              // Application already exists
+              Alert.alert("Error", "You have already sent an application for this post.");
+          } else {
+              console.error(`THIS IS THE ERROR: ${error}`);
+              Alert.alert("Error", "Failed to send application. Please try again later.");
+          }
       }
-    };
+  };
 
     const toggleModal = (post) => {
         setSelectedPost(post);
@@ -150,7 +166,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
                 <Ionicons name="location-sharp" size={20} color="#00CCAA" />
                 <Text style={{ color: "#e4e4e4", fontSize: 14 }}>
-                {post?.postedBy?.barangay.name}, {post?.postedBy?.city.name} {post?.postedBy?.province.name}
+                {post?.postedBy?.barangay?.name}, {post?.postedBy?.city?.name} {post?.postedBy?.province?.name}
                 </Text>
               </View>
 
@@ -228,7 +244,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
                 ))}
         </View>
         <Text style={{fontSize: 14, marginTop: 10, color: '#939393'}}>
-          Location: {selectedPost?.postedBy?.location}
+          {selectedPost?.postedBy?.barangay?.name}, {selectedPost?.postedBy?.city?.name} {selectedPost?.postedBy?.province?.name}
         </Text>
       </View>
       

@@ -1,12 +1,15 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import {Modal, View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, Image, TextInput, ScrollView, TouchableHighlight,} from 'react-native';
 import FooterMenu from '../../../components/Menus/FooterMenu';
-import { MaterialCommunityIcons, Feather , FontAwesome , Ionicons, SimpleLineIcons  } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather , FontAwesome , Ionicons, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PostContext } from '../../../context/postContext';
 import PostCard from '../../../components/PostCard';
 import CustomCard from '../../../components/CustomCard';
 import CustomModal from '../../../components/CustomModal';
+import { Alert } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Home = ({navigation}) => {
     //global state
@@ -14,6 +17,7 @@ const Home = ({navigation}) => {
     const [refreshing, setRefreshing] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [token, setToken] = useState(null); // State to store the token
     const postsPerPage = 10;
 
     console.log(posts);
@@ -39,6 +43,23 @@ const Home = ({navigation}) => {
         // Function to handle navigation to next page
         const goToNextPage = () => {
             setCurrentPage(currentPage => currentPage + 1);
+        };
+
+        useFocusEffect(() => {
+            // Check for JWT token when component mounts
+            checkJWTToken();
+            
+        });
+
+        const checkJWTToken = async () => {
+            try {
+                // Retrieve the JWT token from secure storage
+                const token = await SecureStore.getItemAsync('jwtToken');
+                // Set the token in state
+                setToken(token);
+            } catch (error) {
+                console.error('Error retrieving JWT token:', error);
+            }
         };
 
     const getFilteredPosts = () => {
@@ -70,6 +91,24 @@ const Home = ({navigation}) => {
         }, 500);
     }, []);
 
+    const handleAddPost = async () => {
+        try {
+            // Retrieve the JWT token from secure storage
+            const token = await SecureStore.getItemAsync('jwtToken');
+            console.log(`+++++++++++++++++++++++`)
+            console.log(`THIS IS THE WORKING TOKEN FOR GUEST MODE: ${token}`)
+            // Check if token exists
+            if (token) {
+                // User is logged in, navigate to CreatePost screen
+                navigation.navigate('CreatePost');
+            } else {
+                // Token does not exist, show alert to prompt user to log in
+                Alert.alert('Login Required', 'You must log in first.');
+            }
+        } catch (error) {
+            console.error('Error retrieving JWT token:', error);
+        }
+    };
 
     return (
         
@@ -79,10 +118,11 @@ const Home = ({navigation}) => {
         <View style={styleS.header}>
         
         {/* Subscribe**/}
+        {!token ? (
         <TouchableHighlight
             activeOpacity={0.8}
             underlayColor="#fff"
-            onPress={() => alert('Pressed!')}>
+            onPress={() => navigation.navigate('Login')}>
             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center', 
@@ -90,13 +130,38 @@ const Home = ({navigation}) => {
                                 gap: 4, 
                                 backgroundColor: '#343434', 
                                 padding: 10, 
-                                borderRadius: 10,                     
+                                borderRadius: 10,
+                                width: 90                    
                                 }}>
-                                    <SimpleLineIcons name="diamond" size={18} color="white" />
+                                    <MaterialIcons name="login" size={18} color="white" />
                                 
-                                <Text style={{color: 'white', fontSize: 12}}>Get Pro</Text>
+                                <Text style={{color: 'white', fontSize: 12}}>Login</Text>
              </View>
         </TouchableHighlight>
+        ): null}
+
+        {/* Get Pro - Conditionally render based on JWT token existence */}
+        {token ? (
+            <TouchableHighlight
+                activeOpacity={0.8}
+                underlayColor="#fff"
+                onPress={() => alert('Pressed!')}>
+                <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center', 
+                                    justifyContent: 'center', 
+                                    gap: 4, 
+                                    backgroundColor: '#343434', 
+                                    padding: 10, 
+                                    borderRadius: 10,                     
+                                    }}>
+                                        <SimpleLineIcons name="diamond" size={18} color="white" />
+                                    
+                                    <Text style={{color: 'white', fontSize: 12}}>Get Pro</Text>
+                </View>
+            </TouchableHighlight>
+        ) : null}
+        
         <View>
             <Image source={require('../../../assets/image/logoblack.png')} style={{ width: 32, height: 32, }} />
         </View>
@@ -104,7 +169,7 @@ const Home = ({navigation}) => {
         <TouchableHighlight
             activeOpacity={0.8}
             underlayColor="#fff"
-            onPress={() => navigation.navigate('CreatePost')}>
+            onPress={handleAddPost}>
             <View style={{
                             flexDirection: 'row', 
                             alignItems: 'center', 
@@ -220,9 +285,7 @@ const Home = ({navigation}) => {
 
             </ScrollView>
             </View>
-            <View style = {{backgroundColor: '#ffffff', borderWidth: .5, borderColor:'gray', paddingHorizontal: 20, borderTopRightRadius: 20, borderTopLeftRadius: 20, paddingTop:5}}>
-                <FooterMenu />
-            </View>
+            <FooterMenu />
         </SafeAreaView>
 
        

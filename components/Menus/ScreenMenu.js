@@ -5,7 +5,7 @@ import Home from "../../screens/main/HomeScreen/Home";
 import Register from "../../screens/auth/RegisterScreen/Register";
 import Login from "../../screens/auth/LoginScreen/Login";
 import { AuthContext } from "../../context/authContext";
-import Message from "../../screens/Message";
+import Message from "../../screens/main/NotificationScreen/Message";
 import Favorite from "../../screens/main/FavoritesScreen/Favorite";
 import Account from "../../screens/main/ProfileScreen/Account";
 import SplashScreen from "../../screens/auth/SplashScreen/SplashScreen";
@@ -39,13 +39,48 @@ const ScreenMenu = () => {
 
     return(
         <Stack.Navigator initialRouteName="Login">
-        {authenticatedUser ? (
-          <>
           <Stack.Screen 
           name= "Home" 
           component={Home} 
           options={{headerShown: false}}
           />
+          <Stack.Screen 
+          name= "Carpenter" 
+          component={Carpenter} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Technician" 
+          component={Technician} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Driver" 
+          component={Driver} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Maid" 
+          component={Maid} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Electrician" 
+          component={Electrician} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Plumber" 
+          component={Plumber} 
+          options={{headerShown: false}}
+          />
+            <Stack.Screen 
+          name= "ViewProfile" 
+          component={ViewProfile} 
+          options={{headerShown: false}}
+          />
+        {authenticatedUser ? (
+          <>
           <Stack.Screen 
           name= "Process" 
           component={Process} 
@@ -98,46 +133,10 @@ const ScreenMenu = () => {
           options={{headerShown: false}}
           />
           <Stack.Screen 
-          name= "Carpenter" 
-          component={Carpenter} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Technician" 
-          component={Technician} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Driver" 
-          component={Driver} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Maid" 
-          component={Maid} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Electrician" 
-          component={Electrician} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
-          name= "Plumber" 
-          component={Plumber} 
-          options={{headerShown: false}}
-          />
-          <Stack.Screen 
           name= "Chat" 
           component={Chat} 
           options={{headerShown: false}}
           />
-          <Stack.Screen 
-          name= "ViewProfile" 
-          component={ViewProfile} 
-          options={{headerShown: false}}
-          />
-
         </>) : 
         (
           <>

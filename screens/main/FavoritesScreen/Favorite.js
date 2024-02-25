@@ -54,10 +54,7 @@ const Favorite = () => {
           </View>
         ))}
       </View>
-
-      <View style={styles.footer}>
         <FooterMenu />
-      </View>
     </SafeAreaView>
   );
 };

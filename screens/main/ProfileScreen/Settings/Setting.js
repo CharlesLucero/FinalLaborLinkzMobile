@@ -7,17 +7,27 @@ import {MaterialIcons} from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import {AuthContext} from '../../../../context/authContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as SecureStore from 'expo-secure-store';
 
 const Setting = ({navigation}) => {
     const [state, setState] = useContext(AuthContext);
 
-     //logout
-     const handleLogout = async () => {
-        setState ({token: '', user : null});
-        await AsyncStorage.removeItem('@auth');
-
-        navigation.navigate('Login')
+    const handleLogout = async () => {
+        try {
+            // Clear the token from SecureStore
+            await SecureStore.deleteItemAsync('jwtToken');
+            
+            // Clear the token and user data from state
+            setState({ token: '', user: null });
+    
+            // Remove any other relevant data from AsyncStorage if needed
+            await AsyncStorage.removeItem('@auth');
+    
+            // Navigate to the Login screen
+            navigation.navigate('Login');
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
     };
 
     return(
