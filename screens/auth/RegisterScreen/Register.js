@@ -137,7 +137,6 @@ const Register = ({ navigation }) => {
         !lastName ||
         !contactNumber ||
         !gender ||
-        !location ||
         !email ||
         !password ||
         !selectedRegion ||

@@ -25,11 +25,6 @@ const userSchema = new mongoose.Schema({
         required: [true, 'please add gender'],
         trim: true,
     },
-    location:{
-        type: String,
-        required: [true, 'please add location'],
-        trim: true,
-    },
     email:{
         type: String,
         required: [true, 'please add email'],
