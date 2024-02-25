@@ -220,9 +220,7 @@ const Home = ({navigation}) => {
 
             </ScrollView>
             </View>
-            <View style = {{backgroundColor: '#ffffff', borderWidth: .5, borderColor:'gray', paddingHorizontal: 20, borderTopRightRadius: 20, borderTopLeftRadius: 20, paddingTop:5}}>
-                <FooterMenu />
-            </View>
+            <FooterMenu />
         </SafeAreaView>
 
        
