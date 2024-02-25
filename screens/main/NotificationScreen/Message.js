@@ -61,6 +61,8 @@ const Message = () => {
     const formattedDate = createdAt.format("MMMM Do YYYY");
     const formattedTime = createdAt.format("h:mm:ss a");
 
+    const isSentByUser = isSent && item.senderId._id === user._id;
+    
     return (
       <TouchableOpacity onPress={() => handleApplicationPress(item)}>
         <View style={styles.itemContainer}>
@@ -73,14 +75,21 @@ const Message = () => {
           <Text style={styles.name}>
             {isSent ? `${item.receiverId.firstName} ${item.receiverId.lastName}` : `${item.senderId.firstName} ${item.senderId.lastName}`}
           </Text>
-
-          
-
-          
           <View style={styles.rowContainer}>
             <Text style={styles.date}>{formattedDate}</Text>
             <Text style={styles.time}>{formattedTime}</Text>
           </View>
+          {/* Conditionally render accept and decline buttons */}
+          {isSent && !isSentByUser && (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.acceptButton} onPress={() => handleAccept(item)}>
+                <Text style={styles.buttonText}>Accept</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.declineButton} onPress={() => handleDecline(item)}>
+                <Text style={styles.buttonText}>Decline</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </TouchableOpacity>
     );
@@ -96,9 +105,12 @@ const Message = () => {
         <Text style={styles.headerTitle}>Notifications</Text>
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          data={[...sentApplications.map(app => ({ ...app, isSent: true })), ...receivedApplications.map(app => ({ ...app, isSent: false }))]}
+          data={[
+            ...sentApplications.map((app) => ({ ...app, isSent: true, key: `${app._id}_sent` })),
+            ...receivedApplications.map((app) => ({ ...app, isSent: false, key: `${app._id}_received` })),
+          ]}
           renderItem={({ item }) => renderApplicationItem({ item, isSent: item.isSent })}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => item.key}
           contentContainerStyle={styles.flatListContainer}
         />
       </View>

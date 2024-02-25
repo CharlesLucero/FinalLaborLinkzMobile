@@ -23,7 +23,8 @@ const fetchChats = async (req, res) => {
               { senderId: userId, receiverId: receiverId },
               { senderId: receiverId, receiverId: userId }
           ]
-      }).sort({ createdAt: 'asc' });
+      })
+      .sort({ createdAt: 'asc' });
 
       res.json({ chats });
   } catch (error) {

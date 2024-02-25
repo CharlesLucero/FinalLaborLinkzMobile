@@ -76,8 +76,6 @@ const Login = ({navigation}) => {
        };
        getLocalStorageData();
 
-
-   
     const dismissKeyboard = () => {
         Keyboard.dismiss();
       };
@@ -131,18 +129,18 @@ const Login = ({navigation}) => {
 
           </View>
 
-          <View style={styles.dividerContainer}>
+          {/* <View style={styles.dividerContainer}>
             <View style={styles.divider} />
             <BodyText text="or" color="black" fontSize={14} />
             <View style={styles.divider} />
-          </View>
+          </View> */}
 
-          <View style={styles.googleSignInContainer}>
-            <TouchableOpacity onPress={() => {/* Handle Google Sign-In here */}} style={styles.googleSignInButton}>
+          {/* <View style={styles.googleSignInContainer}>
+            <TouchableOpacity style={styles.googleSignInButton}>
               <Image source={require("../../../assets/image/googleIcon.png")} style={styles.googleIcon} />
               <Text style={styles.googleButtonText}>Sign in with Google</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <View style={styles.signupContainer}>
             <BodyText text="Don't have an account?" color="black" fontSize={14} />

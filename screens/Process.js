@@ -19,6 +19,8 @@ const Process = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { application } = route.params;
+  console.log('----------------------')
+  console.log(JSON.stringify(application));
 
   const [state, setState] = useContext(AuthContext);
   const [message, setMessage] = useState("");

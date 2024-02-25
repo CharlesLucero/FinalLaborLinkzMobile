@@ -251,7 +251,7 @@ const Register = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                 <Entypo name="chevron-left" size={32} color="#A9A9A9" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -286,7 +286,7 @@ const Register = ({ navigation }) => {
               <View style={{ flex: 1 }}>
                 <InputBox
                   placeholder="First Name"
-                  height={70}
+                  height={50}
                   value={firstName}
                   setValue={setFirstName}
                 />
@@ -294,7 +294,7 @@ const Register = ({ navigation }) => {
               <View style={{ flex: 1 }}>
                 <InputBox
                   placeholder="Last Name"
-                  height={70}
+                  height={50}
                   value={lastName}
                   setValue={setLastName}
                 />
@@ -312,22 +312,22 @@ const Register = ({ navigation }) => {
               <View style={{ flex: 1 }}>
                 <InputBox
                   placeholder="Contact Number"
-                  height={70}
+                  height={50}
                   value={contactNumber}
                   setValue={setContactNumber}
                 />
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, marginTop: 8 }}>
                 {renderLabel()}
                 <Dropdown
-                  style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+                  mode="default"
+                  style={[styles.dropdown, isFocus]}
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
                   inputSearchStyle={styles.inputSearchStyle}
-                  iconStyle={styles.iconStyle}
+                  containerStyle={{backgroundColor: '#f6f6f6', borderRadius: 8, marginTop: 4, padding: 6}}
                   data={data}
                   search
-                  maxHeight={300}
                   labelField="label"
                   valueField="gender"
                   placeholder={!isFocus ? "Gender" : "..."}
@@ -339,14 +339,6 @@ const Register = ({ navigation }) => {
                     setGender(item.gender);
                     setIsFocus(false);
                   }}
-                  renderLeftIcon={() => (
-                    <AntDesign
-                      style={styles.icon}
-                      color={isFocus ? "blue" : "black"}
-                      name="Safety"
-                      size={20}
-                    />
-                  )}
                 />
               </View>
             </View>
@@ -367,9 +359,8 @@ const Register = ({ navigation }) => {
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
+                    containerStyle={{backgroundColor: '#f6f6f6', borderRadius: 8, marginTop: 4, padding: 6}}
                     data={onlyCagayanV}
-                    search
-                    searchPlaceholder="Search..."
                     labelField="name"
                     valueField="code"
                     placeholder="Select Region"
@@ -383,6 +374,7 @@ const Register = ({ navigation }) => {
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
+                    containerStyle={{backgroundColor: '#f6f6f6', borderRadius: 8, marginTop: 4, padding: 6}}
                     data={provinces}
                     search
                     searchPlaceholder="Search..."
@@ -407,6 +399,7 @@ const Register = ({ navigation }) => {
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
+                    containerStyle={{backgroundColor: '#f6f6f6', borderRadius: 8, marginTop: 4, padding: 6}}
                     data={cities}
                     search
                     searchPlaceholder="Search..."
@@ -423,6 +416,7 @@ const Register = ({ navigation }) => {
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
+                    containerStyle={{backgroundColor: '#f6f6f6', borderRadius: 8, marginTop: 4, padding: 6}}
                     data={barangays}
                     search
                     searchPlaceholder="Search..."
@@ -436,20 +430,14 @@ const Register = ({ navigation }) => {
               </View>
 
               <InputBox
-                placeholder="Location"
-                height={70}
-                value={location}
-                setValue={setLocation}
-              />
-              <InputBox
                 placeholder="Email"
-                height={70}
+                height={50}
                 value={email}
                 setValue={setEmail}
               />
               <InputBox
                 placeholder="Password"
-                height={70}
+                height={50}
                 secureTextEntry={!showPassword}
                 showPasswordToggle={true}
                 value={password}
@@ -457,8 +445,8 @@ const Register = ({ navigation }) => {
               />
             </View>
 
-            <View style={{ paddingHorizontal: 32, marginTop: 24 }}>
-              <TouchableOpacity onPress={() => {}}>
+            {/* <View style={{ paddingHorizontal: 32, marginTop: 24 }}>
+              <TouchableOpacity>
                 <View
                   style={{
                     backgroundColor: "#000000",
@@ -478,7 +466,7 @@ const Register = ({ navigation }) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             <View
               style={{
@@ -510,10 +498,9 @@ const Register = ({ navigation }) => {
 const styles = StyleSheet.create({
   dropdown: {
     height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
+    backgroundColor: '#F6F6F6',
     borderRadius: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
   },
   icon: {
     marginRight: 5,
@@ -528,10 +515,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 14,
+    color: '#c8c8c8'
   },
+  
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: 14,
   },
   iconStyle: {
     width: 20,

@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F6F6F6',
     marginTop: 10,
-    borderRadius: 15,
+    borderRadius: 8,
   },
   input: {
     flex: 1,
     color: '#C8C8C8',
-    padding: 14,
+    paddingHorizontal: 14
   },
   icon: {
     paddingHorizontal: 20,
