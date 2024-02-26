@@ -59,29 +59,29 @@ const Favorite = () => {
 
       <View style={{ flex: 1, paddingHorizontal: 30}}>
         {favoriteUsers.map((favorite, index) => (
-          <View style={styles.background} key={index}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.card} key={index}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             <Image
                 source={{ uri: host + favorite?.receiverId?.image }}
                 style={{
                   height: 60,
                   width: 60,
                   borderRadius: 100,
-                  borderWidth: 5,
+                  borderWidth: 1,
                   borderColor: "black",
                 }}
               />
               <View style={{ marginLeft: 10 }}>
-                <Text style={styles.info}>
+                <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: 500}}>
                   {favorite?.receiverId?.firstName} {favorite?.receiverId?.lastName}
                 </Text>
-                <Text style={styles.info}>{favorite?.receiverId?.barangay?.name} {favorite?.receiverId?.city?.name} {favorite?.receiverId?.province?.name}</Text>
+                <Text style={{marginTop: 2, fontSize: 14, color: 'white'}}>{favorite?.receiverId?.barangay?.name}, {favorite?.receiverId?.city?.name} {favorite?.receiverId?.province?.name}</Text>
               </View>
             </View>
             <View>
-            <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
+            {/* <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
             <Feather name="trash-2" size={18} color="#F02" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             </View>
           </View>
         ))}
@@ -127,6 +127,16 @@ const styles = StyleSheet.create({
   },
   remove: {
     left: 30,
+  },
+  card: {
+    width: "100%",
+    backgroundColor: "#343434",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginVertical: 10,
+    height: 'auto',
   },
 });
 

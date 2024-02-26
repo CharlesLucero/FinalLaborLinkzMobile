@@ -227,7 +227,7 @@ const ViewProfile = ({ route, navigation }) => {
                 justifyContent: "center",
                 borderRadius: 20,
               }}
-              onPress={addFavorite} // Add onPress handler to call addFavorite function
+              onPress={addFavorite} 
             >
               <AntDesign name="hearto" size={32} color="#00CCAA" />
             </TouchableOpacity>
