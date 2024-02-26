@@ -135,9 +135,13 @@ const ViewProfile = ({ route, navigation }) => {
       // Display a success message or perform any other action upon successful addition
       Alert.alert("Success", "User added to favorites successfully");
     } catch (error) {
-      console.error("Error adding user to favorites", error);
-      // Display an error message or handle the error in an appropriate way
-      Alert.alert("Error", "Failed to add user to favorites");
+      if (error.response && error.response.status === 409) {
+        Alert.alert("Error", "The user is already in your favorites!");
+      } else {
+        console.error("Error adding user to favorites", error);
+        // Display an error message or handle the error in an appropriate way
+        Alert.alert("Error", "Failed to add user to favorites");
+      }
     }
   };
 
