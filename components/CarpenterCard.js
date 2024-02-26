@@ -70,7 +70,6 @@ const CarpenterCard = ({ info }) => {
 const styles = StyleSheet.create({
   total: {
     color: "black",
-    marginTop: 10,
     textAlign: "center",
     marginBottom: 20
   },
@@ -113,11 +112,14 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     backgroundColor: "#343434",
-    padding: 20,
-    borderRadius: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 20,
     marginBottom: 10,
-    marginVertical: 10,
     height: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
 });
 export default CarpenterCard;

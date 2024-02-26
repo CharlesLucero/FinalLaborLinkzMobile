@@ -27,7 +27,7 @@ const Carpenter = ({navigation}) =>{
         onRefresh();
     }, []);
     return (
-        <SafeAreaView style = {{flex:1, marginTop: 20, backgroundColor: '#ffffff'}}>
+        <SafeAreaView style = {{flex:1, marginTop: 20, backgroundColor: 'white'}}>
             <View style = {{flex:1 , marginTop: 20}}>
                 <ScrollView  showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
 
@@ -37,11 +37,11 @@ const Carpenter = ({navigation}) =>{
                         </TouchableOpacity>
                     </View>  
 
-                    <View style = {{ alignSelf:'center', marginTop: 10}}>
+                    <View style = {{ alignSelf:'center', paddingBottom: 10}}>
                         <Text style = {styles.Carpenter}>Carpenters</Text>
                     </View>
 
-                    <View style = {{paddingHorizontal: 20}}>
+                    <View style = {{paddingHorizontal: 20, backgroundColor: 'white', height: '100vh'}}>
                             <CarpenterCard  info = {info} navigation={navigation} />
                     </View>
 
