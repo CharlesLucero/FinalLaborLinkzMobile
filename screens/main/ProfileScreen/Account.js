@@ -15,7 +15,7 @@ import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import PostCard from "../../../components/PostCard";
 import InformationCards from "../../../components/InformationCards";
-import { ImageF } from "../../../APIRoutes";
+import { host } from "../../../APIRoutes";
 
 const Account = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
@@ -78,14 +78,14 @@ const Account = ({ navigation }) => {
             <Image
               source={{
                 uri:
-                state?.user.image || ImageF
+                host+state?.user.image 
                                 }}
               style={{
-                height: 120,
-                width: 120,
+                height: 150,
+                width: 150,
                 borderRadius: 100,
-                borderWidth: 5,
-                borderColor: "black",
+                borderWidth: 2,
+                borderColor: "#343434",
               }}
             />
             <Text style={styles.username}>

@@ -1,15 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const favoriteController = require('../controllers/favoriteController');
+
+const { getAllFavoriteUsers, removeFavorite, addFavorite } = require("../controllers/favoriteController");
 const { requireSignIn } = require("../controllers/userController");
 
 // Add a favorite
-router.post('/add', requireSignIn, favoriteController.addFavorite );
+router.post("/add", requireSignIn, addFavorite);
 
 // Remove a favorite
-router.delete('/:id', requireSignIn, favoriteController.removeFavorite );
+router.delete("/:id", requireSignIn, removeFavorite);
 
-// Get all users
-router.get('/users', requireSignIn, favoriteController.getAllUsers);
+// Get all users added as favorites by the current user
+router.get("/favorite-users/:userId", requireSignIn, getAllFavoriteUsers );
 
 module.exports = router;

@@ -336,12 +336,85 @@ const updateRating = async (req, res) => {
   }
 };
 
+
+const updatePasswordController = async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+
+
+    // Find the user by email
+    const user = await userModel.findOne({ email });
+
+
+    // If user is not found, return an error
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided email.",
+      });
+    }
+
+
+    // Compare the old password with the hashed password stored in the database
+    const isMatch = await comparePassword(oldPassword, user.password);
+
+
+    // If old password does not match, return an error
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect old password.",
+      });
+    }
+
+
+    if (newPassword.length < 6) {
+      return res.status(400).send({
+        success: false,
+        message: "Password must be at least 6 characters long",
+      });
+    }
+
+
+    // Hash the new password
+    const hashedPassword = await hashPassword(newPassword);
+
+
+    // Update the password in the database
+    const updatedUser = await userModel.findOneAndUpdate(
+      { email },
+      { password: hashedPassword },
+      { new: true }
+    );
+
+
+    // Remove password from the response
+    updatedUser.password = undefined;
+
+
+    // Send success response
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully.",
+      updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error in updating password.",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = { 
     requireSignIn, 
     registerController, 
     loginController, 
     updateUserController,
     upload,
+    updatePasswordController,
     uploadImage ,
     getAllUsersController,
     getTotalUsersController,

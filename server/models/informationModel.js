@@ -17,10 +17,6 @@ const informationSchema = new mongoose.Schema(
         required: true,
       },
     ],
-    address: {
-      type: String,
-      required: [true, "please add address"],
-    },
     createdBy: {
       type: mongoose.Schema.ObjectId,
       ref: "User",

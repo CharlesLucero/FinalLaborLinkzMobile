@@ -15,6 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../context/authContext";
 import { FontAwesome, Feather, Entypo, AntDesign } from "@expo/vector-icons";
 import { Dropdown } from "react-native-element-dropdown";
+
 const Process = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -109,7 +110,7 @@ const Process = () => {
       );
     }
   };
-
+  
   const handleDecline = async () => {
     try {
       const response = await axios.put(
@@ -227,10 +228,6 @@ const Process = () => {
             <Text
               style={styles.name}
             >{`${application.senderId.firstName} ${application.senderId.lastName}`}</Text>
-            <Text style={styles.active}>{`Status: ${application.status}`}</Text>
-            <Text
-              style={styles.name}
-            >{`${application.receiverId.firstName} ${application.receiverId.lastName}`}</Text>
             <Text style={styles.active}>{`Status: ${application.status}`}</Text>
           </View>
         </View>

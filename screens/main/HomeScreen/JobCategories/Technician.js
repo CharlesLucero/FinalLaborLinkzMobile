@@ -58,7 +58,7 @@ const Technician = ({navigation}) =>{
 }
 const styles = StyleSheet.create({
     Technician:{
-        color: '#00CCAA',
+        color: '#343434',
         fontWeight: 'bold',
         fontSize: 25,
         textShadowColor: 'gray',
