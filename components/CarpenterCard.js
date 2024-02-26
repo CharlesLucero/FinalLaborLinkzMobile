@@ -63,6 +63,8 @@ const CarpenterCard = ({ info }) => {
                   <Text style={styles.info1}>{infos?.bio}</Text>
                   </Text>
                 </View>
+                {"\n"}
+              
 
               
               </Text>

@@ -9,7 +9,7 @@ import {
   Image,
   Alert
 } from "react-native";
-import { AntDesign, MaterialCommunityIcons ,  Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialCommunityIcons ,  Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import moment from "moment";
 import { Modal } from "react-native";
@@ -180,6 +180,15 @@ const ViewProfile = ({ route, navigation }) => {
                 <Text style={styles.infoText}>
                   {userData.userAdditionalInfo.age} years old
                 </Text>
+
+                <Text style={styles.infoText}>
+                <Feather name="map-pin" size={19} color="#343434" />
+                {" "}
+                    {userData?.userInfo?.barangay?.name},{" "}
+                    {userData?.userInfo?.city?.name}{" "}
+                    {userData?.userInfo?.province?.name}
+                </Text>
+                
               </View>
             )}
           </View>
@@ -219,6 +228,16 @@ const ViewProfile = ({ route, navigation }) => {
               <MaterialCommunityIcons name="chat" size={32} color="#00CCAA" />
             </TouchableOpacity>
           </View>
+          <View style={{ flexDirection: 'row',     alignSelf: "center", marginTop: 10 }}>
+                {[...Array(5)].map((_, index) => (
+                  <FontAwesome
+                    key={index}
+                    name={index < userData?.userInfo?.rating ? 'star' : 'star-o'} // Use 'star' for filled stars and 'star-o' for outline stars
+                    size={18}
+                    color="yellow"
+                  />
+                ))}
+              </View>
           <Text style={styles.user}>User Information</Text>
           <View>
             {userData && (
