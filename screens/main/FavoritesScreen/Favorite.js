@@ -5,6 +5,7 @@ import { useAuth } from '../../../context/FavContext';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { ImageF, host } from "../../../APIRoutes";
 
 
 const Favorite = () => {
@@ -26,7 +27,7 @@ const Favorite = () => {
       try {
         const response = await axios.get(`/favorite/favorite-users/${userId}`);
         setFavoriteUsers(response.data.data); // Update state with response.data
-        console.log(favoriteUsers);
+        console.log(`TESTER ESROARORW WOA : ${JSON.stringify(favoriteUsers)}`);
 
       } catch (error) {
         console.error("Error fetching favorite users:", error);
@@ -61,7 +62,7 @@ const Favorite = () => {
           <View style={styles.background} key={index}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
-                source={{ uri: favorite?.receiverId?.image }}
+                source={{ uri: host + favorite?.receiverId?.image }}
                 style={{
                   height: 60,
                   width: 60,
