@@ -411,6 +411,45 @@ const updatePasswordController = async (req, res) => {
   }
 };
 
+const getUserDetailsController = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+
+    // Find the user by ID
+    const user = await userModel.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Omit sensitive information from the user object
+    user.password = undefined;
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching user details",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = { 
     requireSignIn, 
     registerController, 
@@ -421,5 +460,6 @@ module.exports = {
     uploadImage ,
     getAllUsersController,
     getTotalUsersController,
-    updateRating
-    };
+    updateRating,
+    getUserDetailsController // Add this line to export the controller
+};

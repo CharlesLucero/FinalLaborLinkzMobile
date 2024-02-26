@@ -16,6 +16,7 @@ import { Feather } from "@expo/vector-icons";
 import PostCard from "../../../components/PostCard";
 import InformationCards from "../../../components/InformationCards";
 import { host } from "../../../APIRoutes";
+import * as SecureStore from 'expo-secure-store';
 
 const Account = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
@@ -23,14 +24,49 @@ const Account = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState([]);
+  const [data, setData] = useState([]);
+
+  console.log(`SHET++++++++==++++++++++++++++++++++++++++++++++: ${JSON.stringify(posts)}`);
+  const [userInfo, setUserInfo] = useState(null); // State to store user details
+
+  // Function to fetch user details
+  // Function to fetch user details
+const getUserDetails = async () => {
+  try {
+    // Retrieve user ID from secure storage
+    const userId = await SecureStore.getItemAsync('userId');
+
+    // Validate user ID presence
+    if (!userId) {
+      throw new Error('User ID not found in secure storage');
+    }
+
+    // Fetch user details using POST request with userId in body
+    const response = await axios.post('/auth/get-user', { id: userId }); // Send 'id' instead of 'userId'
+
+    // Handle success response
+    if (response.status === 200) {
+      const user = response.data.user;
+      setData(user);
+      console.log(`DATADATADATADATA:: ${JSON.stringify(response.data.user)}`);
+    } else {
+      throw new Error('Failed to fetch user details: ' + response.statusText);
+    }
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    // Handle errors appropriately (e.g., display user-friendly error messages)
+  }
+};
+
 
   //get user post
-  const getUserPosts = async () => {
+  const getUserPosts = async (navigation) => {
     try {
       setLoading(true);
       const { data } = await axios.get("/post/get-user-post");
       setLoading(false);
       setPosts(data?.userPosts);
+      console.log(`AJ RAMOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS: ${JSON.stringify(data?.userPosts)}`);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -39,6 +75,8 @@ const Account = ({ navigation }) => {
   };
   //initial
   useEffect(() => {
+    console.log(`__+_+_+_+_+_+_+_+_+__+`);
+    getUserDetails();
     getUserPosts();
   }, []);
 
@@ -49,6 +87,7 @@ const Account = ({ navigation }) => {
       const { data } = await axios.get("/information/get-user-info");
       setLoading(false);
       setInfo(data?.userInfo);
+      console.log(`JASPER CALDERONNNN:N:N:N:N:N::N: ${JSON.stringify(data?.userInfo)}`);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -81,34 +120,33 @@ const Account = ({ navigation }) => {
                 host+state?.user.image 
                                 }}
               style={{
-                height: 150,
-                width: 150,
+                height: 120,
+                width: 120,
                 borderRadius: 100,
-                borderWidth: 2,
+                borderWidth: 1,
                 borderColor: "#343434",
               }}
             />
-            <Text style={styles.username}>
+            <Text style={{fontSize: 18, color: '#00CCAA', marginTop: 20, fontWeight: 500}}>
               {state?.user.firstName} {state?.user.lastName} 
             </Text>
           </View>
      
           <View style={{ paddingHorizontal: 20 }}>
-            <Text style={styles.user}>User Information</Text>
+            <Text style={{color: '#343434', fontSize: 16, fontWeight: 500, marginTop: 14}}>User Information</Text>
           </View>
 
           <View>
             <InformationCards info={info} />
           </View>
 
-          <View style={{ marginTop: 20, paddingHorizontal: 10 }}>
-            <Text style={{ fontSize: 16, fontWeight: "600", color: "#00CCAA" }}>
+          <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
+            <Text style={{color: '#343434', fontSize: 16, fontWeight: 500, marginTop: 14}}>
               Active Job Listings
             </Text>
           </View>
-
           <View style={{ paddingHorizontal: 10 }}>
-            <PostCard posts={posts} Account={true} />
+            <PostCard posts={posts} Account={true} location={true} data={data} />
           </View>
         </ScrollView>
       </View>

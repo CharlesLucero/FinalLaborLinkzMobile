@@ -53,6 +53,7 @@ const Login = ({navigation}) => {
 
         const token = data.token;
         const user = data.user._id;
+        
         await SecureStore.setItemAsync('userId', user);
         console.log(`USER MATTHEW PUNZALAN: ${JSON.stringify(user)}`);
         await SecureStore.setItemAsync('jwtToken', token);
@@ -68,11 +69,6 @@ const Login = ({navigation}) => {
         console.log(error);
     }
 };
-
-
-  
-
-
 
        //temp function to check local storage data
        const getLocalStorageData = async () => {
