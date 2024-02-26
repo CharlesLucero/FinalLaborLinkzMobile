@@ -4,6 +4,7 @@ const userModel = require("../models/userModel");
 var { expressjwt: jwt } = require("express-jwt");
 const multer = require('multer');
 
+
 //middleware
 const requireSignIn = jwt({
     secret: process.env.JWT_SECRET,
@@ -136,12 +137,13 @@ const loginController = async (req, res) => {
             });
         }
 
-        //find user
-        const user = await userModel.findOne({ email })
-        if(!user){
-            return res.status(500).send({
+
+        // Find the user by email
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
                 success: false,
-                message: 'User not found please provide a correct Username or register first'
+                message: 'User not found',
             });
         }
         //match password
@@ -157,8 +159,9 @@ const loginController = async (req, res) => {
             expiresIn: "7d",
           });
 
-        //undefined password
-        user.password = undefined;
+          // Omit sensitive information from the user object
+          user.password = undefined;
+
         res.status(200).send({
             success: true,
             token,
