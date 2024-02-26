@@ -17,6 +17,7 @@ import { Picker } from "@react-native-picker/picker";
 import { TextInput } from "react-native-paper";
 import { AuthContext } from "../context/authContext"; 
 import { host } from "../APIRoutes";
+import * as SecureStore from 'expo-secure-store';
 
 
 const ViewProfile = ({ route, navigation }) => {
@@ -28,6 +29,9 @@ const ViewProfile = ({ route, navigation }) => {
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [state, setState] = useContext(AuthContext);
+  const [jwtToken, setJwtToken] = useState(null); // State to store JWT token
+  const [userId, setUserId] = useState(null); // State to store user ID
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -55,6 +59,24 @@ const ViewProfile = ({ route, navigation }) => {
   const togglePicker = () => {
     setShowPicker(!showPicker);
   };
+
+  useEffect(() => {
+    // Function to retrieve JWT token and user ID
+    const retrieveUserData = async () => {
+      try {
+        const token = await SecureStore.getItemAsync('jwtToken');
+        const userId = await SecureStore.getItemAsync('userId'); 
+        setJwtToken(token);
+        setUserId(userId);
+        console.log(`This is the token for favorites: ${token}`);
+        console.log(`This is the id for favorites: ${userId}`);
+      } catch (error) {
+        console.error("Error retrieving user data from SecureStorage:", error);
+      }
+    };
+    
+    retrieveUserData(); // Call the function
+  }, []);
 
   const showReportModal = () => {
     setReportModalVisible(true);
@@ -106,16 +128,20 @@ const ViewProfile = ({ route, navigation }) => {
 
   const addFavorite = async () => {
     try {
-      const senderId = 'YOUR_USER_ID'; // Replace 'YOUR_USER_ID' with the actual sender's ID
+      const senderId = userId; 
       const receiverId = userData.userInfo._id; // Assuming userData is populated
       await axios.post("/favorite/add", { senderId, receiverId });
       
       // Display a success message or perform any other action upon successful addition
       Alert.alert("Success", "User added to favorites successfully");
     } catch (error) {
-      console.error("Error adding user to favorites", error);
-      // Display an error message or handle the error in an appropriate way
-      Alert.alert("Error", "Failed to add user to favorites");
+      if (error.response && error.response.status === 409) {
+        Alert.alert("Error", "The user is already in your favorites!");
+      } else {
+        console.error("Error adding user to favorites", error);
+        // Display an error message or handle the error in an appropriate way
+        Alert.alert("Error", "Failed to add user to favorites");
+      }
     }
   };
 
@@ -201,7 +227,7 @@ const ViewProfile = ({ route, navigation }) => {
                 justifyContent: "center",
                 borderRadius: 20,
               }}
-              onPress={addFavorite} // Add onPress handler to call addFavorite function
+              onPress={addFavorite} 
             >
               <AntDesign name="hearto" size={32} color="#00CCAA" />
             </TouchableOpacity>

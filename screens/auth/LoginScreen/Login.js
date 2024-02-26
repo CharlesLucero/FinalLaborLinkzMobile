@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginRoutes } from '../../../APIRoutes';
 import * as SecureStore from 'expo-secure-store';
 
+
 const Login = ({navigation}) => {
   //global state
   const [state, setState] = useContext(AuthContext)
@@ -25,7 +26,7 @@ const Login = ({navigation}) => {
           try {
               const token = await AsyncStorage.getItem('jwtToken');
               console.log('======================================================================================');
-              console.log("Token:", token);
+              console.log("Tokenn::::::", token);
               if (token) {
                   navigation.navigate('Home');
               }
@@ -34,7 +35,7 @@ const Login = ({navigation}) => {
           }
       };
       checkToken();
-  }, [handleSubmit]);
+  }, [state]);
 
   const handleSubmit = async () => {
     try {
@@ -51,8 +52,12 @@ const Login = ({navigation}) => {
         });
 
         const token = data.token;
+        const user = data.user._id;
+        
+        await SecureStore.setItemAsync('userId', user);
+        console.log(`USER MATTHEW PUNZALAN: ${JSON.stringify(user)}`);
         await SecureStore.setItemAsync('jwtToken', token);
-        console.log("Stored Token:", token); // Log the token directly
+        console.log("Stored Token:", token); 
         setState(data);
         navigation.navigate('Home');
         setLoading(false);
@@ -64,11 +69,6 @@ const Login = ({navigation}) => {
         console.log(error);
     }
 };
-
-
-  
-
-
 
        //temp function to check local storage data
        const getLocalStorageData = async () => {

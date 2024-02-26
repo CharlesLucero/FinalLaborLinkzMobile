@@ -75,21 +75,14 @@ const Message = () => {
           <Text style={styles.name}>
             {isSent ? `${item.receiverId.firstName} ${item.receiverId.lastName}` : `${item.senderId.firstName} ${item.senderId.lastName}`}
           </Text>
+
+          
+
+          
           <View style={styles.rowContainer}>
             <Text style={styles.date}>{formattedDate}</Text>
             <Text style={styles.time}>{formattedTime}</Text>
           </View>
-          {/* Conditionally render accept and decline buttons */}
-          {isSent && !isSentByUser && (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.acceptButton} onPress={() => handleAccept(item)}>
-                <Text style={styles.buttonText}>Accept</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.declineButton} onPress={() => handleDecline(item)}>
-                <Text style={styles.buttonText}>Decline</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </TouchableOpacity>
     );

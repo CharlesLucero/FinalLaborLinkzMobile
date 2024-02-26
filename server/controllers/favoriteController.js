@@ -5,17 +5,23 @@ const User = require("../models/userModel");
 const addFavorite = async (req, res) => {
   try {
     const { senderId, receiverId } = req.body;
+    
+    // Check if the favorite already exists
     const existingFavorite = await Favorite.findOne({ senderId, receiverId });
     if (existingFavorite) {
-      return res.status(400).json({ error: "Favorite already exists" });
+      return res.status(409).json({ error: "Favorite already exists" });
     }
+    
+    // Create and save the new favorite
     const favorite = new Favorite({ senderId, receiverId });
     await favorite.save();
+    
     res.status(201).json({ message: "Favorite added successfully", favorite });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Remove a favorite
 const removeFavorite = async (req, res) => {
