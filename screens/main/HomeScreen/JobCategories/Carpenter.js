@@ -38,7 +38,7 @@ const Carpenter = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Carpenter}>CARPENTERS</Text>
+                        <Text style = {styles.Carpenter}>Carpenters</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
@@ -55,12 +55,9 @@ const Carpenter = ({navigation}) =>{
 }
 const styles = StyleSheet.create({
     Carpenter:{
-        color: '#00CCAA',
+        color: '#343434',
         fontWeight: 'bold',
-        fontSize: 25,
-        textShadowColor: 'gray',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 2,
+        fontSize: 18,
     }
 })
 export default Carpenter;

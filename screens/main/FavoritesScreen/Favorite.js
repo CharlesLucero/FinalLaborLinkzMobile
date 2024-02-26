@@ -51,21 +51,21 @@ const Favorite = () => {
   
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <Text style={{ color: '#343434', fontSize: 25, fontWeight: 'bold', marginBottom: 10 }}>
-          Your Favoriteswqwrwrqwrq
-        </Text>
-        <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
+          <Text style={{ color: '#343434', fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' }}>
+            Your Favorites
+          </Text>
+        <AntDesign style={{ marginTop: 4 }} name="heart" size={18} color="#00CCAA" />
       </View>
 
-      <View style={{ flex: 1, paddingHorizontal: 30}}>
+      <View style={{ flex: 1, paddingHorizontal: 30, backgroundColor: '#f6f6f6'}}>
         {favoriteUsers.map((favorite, index) => (
           <View style={styles.card} key={index}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             <Image
                 source={{ uri: host + favorite?.receiverId?.image }}
                 style={{
-                  height: 60,
-                  width: 60,
+                  height: 50,
+                  width: 50,
                   borderRadius: 100,
                   borderWidth: 1,
                   borderColor: "black",
@@ -79,6 +79,7 @@ const Favorite = () => {
               </View>
             </View>
             <View>
+            <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
             {/* <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
             <Feather name="trash-2" size={18} color="#F02" />
             </TouchableOpacity> */}
@@ -94,8 +95,11 @@ const Favorite = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginTop: 40,
     paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: 'white',
+    gap: 6,
+    justifyContent: 'center'
   },
   background: {
     marginTop: 20,
@@ -133,10 +137,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#343434",
     paddingHorizontal: 20,
     paddingVertical: 14,
-    borderRadius: 5,
+    borderRadius: 20,
     marginBottom: 10,
     marginVertical: 10,
     height: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 20
   },
 });
 
