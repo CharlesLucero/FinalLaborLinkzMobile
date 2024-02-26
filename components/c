@@ -1,0 +1,194 @@
+////////// MESSAGE //////////////////
+import React, { useContext, useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  RefreshControl,
+} from "react-native";
+import axios from "axios";
+import { AuthContext } from "../context/authContext";
+import moment from "moment";
+import { useNavigation } from "@react-navigation/native";
+
+const Message = () => {
+  const [state, setState] = useContext(AuthContext);
+  const { token, user } = state;
+
+  const [receivedApplications, setReceivedApplications] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
+///double check kung may nagbago
+  useEffect(() => {
+    fetchReceivedApplications();
+  }, []);
+
+  const fetchReceivedApplications = async () => {
+    try {
+      const response = await axios.get(
+        `/hiring/received-applications/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setReceivedApplications(response.data.data);
+    } catch (error) {
+      console.error("Error fetching received applications:", error);
+      Alert.alert("Error", "Failed to fetch received applications.");
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const handleApplicationPress = (application) => {
+    navigation.navigate("Process", { application }); // Navigate to Process screen with application data
+  };
+/// Inserted
+  const renderApplicationItem = ({ item }) => {
+    const createdAt = moment(item.createdAt);
+    const formattedDate = createdAt.format("MMMM Do YYYY");
+    const formattedTime = createdAt.format("h:mm:ss a");
+  
+    let statusColor = "#C8C8C8"; // Default color for status
+    if (item.status === "accepted") {
+      statusColor = "#00CCAA"; // Color for accepted status
+    } else if (item.status === "declined") {
+      statusColor = "red"; // Color for declined status
+    }
+
+    return (
+      <TouchableOpacity onPress={() => handleApplicationPress(item)}>
+        <View style={styles.itemContainer}>
+          <View style={styles.contentContainer}>
+            <Text style={styles.textStatus}>You Received an Application to:</Text>
+            <Text style={[styles.status, { color: statusColor }]}>
+            {item.status}
+          </Text>
+          </View>
+          <Text
+              style={styles.name}
+            >{`${item.senderId.firstName} ${item.senderId.lastName}`}</Text>
+          <Text style={styles.date}>{formattedDate}</Text>
+          <Text style={styles.time}>{formattedTime}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchReceivedApplications();
+  };
+/// end here
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListHeaderComponent={
+            <View style={styles.headerContainer}>
+              <Image
+                source={require("../../client/assets/image/logoblack.png")}
+                style={{ width: 45, height: 45 }}
+              />
+              <Text style={styles.headerTitle}>Request Application </Text>
+            </View>
+          }
+          data={receivedApplications}
+          renderItem={renderApplicationItem}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.flatListContainer}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    padding: 25,
+    marginLeft: 15,
+  },
+  headerTitle: {
+    alignSelf: "center",
+    left: "50%",
+    color: "#00CCAA",
+    fontSize: 24,
+    fontWeight: "500",
+    textShadowColor: "gray",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+  },
+  postContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    height: "100%",
+    marginTop: 15,
+    borderRadius: 40,
+    flex: 1,
+  },
+  userContainer: {
+    top: "3%",
+    margin: 15,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 5,
+    marginLeft: 15,
+  },
+  date: {
+    fontSize: 16,
+    fontWeight: "400",
+    marginBottom: 5,
+    marginLeft: 15,
+  },
+  time: {
+    fontSize: 16,
+    fontWeight: "400",
+    marginBottom: 13,
+    marginRight: 20,
+    alignSelf: "flex-end",
+    color: "#C8C8C8",
+  },
+  itemContainer: {
+    padding: 10,
+    marginTop: 15,
+    borderBottomWidth: 2.5,
+    borderBottomColor: "#C8C8C8",
+    elevation: 2,
+    borderEndEndRadius: 10,
+    borderBottomLeftRadius: 10,
+  },
+  textStatus:{
+    marginLeft: "4%",
+    fontSize: 13,
+    fontWeight: "600",
+    marginBottom: 7,
+  },
+  status: {
+    fontSize: 13,
+    fontWeight: "600",
+    marginRight: 20,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
+  },
+});
+
+export default Message;

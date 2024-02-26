@@ -27,7 +27,9 @@ import Chat from "../../screens/Chat"
 import Process from "../../screens/Process";
 import Notifications from "../../screens/main/NotificationScreen/Notifications";
 import Chats from "../../screens/Chats";
-
+import Security from "../../screens/main/ProfileScreen/Settings/Security/Security";
+import AccountVerification from "../../screens/main/ProfileScreen/Settings/AccountVerification/AccountVerification";
+import Verification from "../../screens/main/ProfileScreen/Settings/AccountVerification/Verification";
 
 
 const ScreenMenu = () => {
@@ -65,6 +67,16 @@ const ScreenMenu = () => {
           options={{headerShown: false}}
           />
           <Stack.Screen 
+          name= "AccountVerification" 
+          component={AccountVerification} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
+          name= "Verification" 
+          component={Verification} 
+          options={{headerShown: false}}
+          />
+          <Stack.Screen 
           name= "Electrician" 
           component={Electrician} 
           options={{headerShown: false}}
@@ -96,6 +108,12 @@ const ScreenMenu = () => {
           component={Notifications} 
           options={{headerShown: false}}
           />
+          <Stack.Screen 
+          name= "Security" 
+          component={Security} 
+          options={{headerShown: false}}
+          />
+       
        
           <Stack.Screen 
           name= "Message" 

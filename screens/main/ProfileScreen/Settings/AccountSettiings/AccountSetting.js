@@ -1,25 +1,48 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-import { AuthContext } from '../../../../../context/authContext';
-import { ImageF } from '../../../../../APIRoutes';
+import React, { useContext, useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { Entypo } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import { AuthContext } from "../../../../../context/authContext";
+import { ImageF } from "../../../../../APIRoutes";
+import { Dropdown } from "react-native-element-dropdown";
+import { host } from "../../../../../APIRoutes";
 
 const AccountSetting = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
   const { user, token } = state;
 
-  const [firstName, setFirstName] = useState(user?.firstName);
-  const [lastName, setLastName] = useState(user?.lastName);
-  const [contactNumber, setContactNumber] = useState(user?.contactNumber);
-  const [location, setLocation] = useState(user?.location);
-  const [gender, setGender] = useState(user?.gender);
-  const [password, setPassword] = useState(user?.password);
-  const [email] = useState(user?.email);
-  const [image, setImage] = useState(user?.image);
+  const [firstName, setFirstName] = useState(user?.firstName || "");
+  const [lastName, setLastName] = useState(user?.lastName || "");
+  const [contactNumber, setContactNumber] = useState(user?.contactNumber || "");
+  const [location, setLocation] = useState(user?.location || "");
+  const [regions, setRegions] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [barangays, setBarangays] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState(user?.region.name || "");
+  const [selectedProvince, setSelectedProvince] = useState(
+    user?.province.name || ""
+  );
+  const [selectedCity, setSelectedCity] = useState(user?.city.name || "");
+  const [selectedBarangay, setSelectedBarangay] = useState(
+    user?.barangay.name || ""
+  );
+  const [gender, setGender] = useState(user?.gender || "");
+  const [password, setPassword] = useState(user?.password || "");
+  const [email] = useState(user?.email || "");
+  const [image, setImage] = useState(user?.image || "");
   const [loading, setLoading] = useState(false);
-  const [newProfilePic, setNewProfilePic] = useState('');
+  const [newProfilePic, setNewProfilePic] = useState(image); // Initialize with current image
   const [isUpdatingProfilePic, setIsUpdatingProfilePic] = useState(false);
 
   useEffect(() => {
@@ -27,9 +50,10 @@ const AccountSetting = ({ navigation }) => {
   }, [newProfilePic]);
 
   const getPermissionAsync = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
+      alert("Permission to access camera roll is required!");
     }
   };
 
@@ -50,15 +74,15 @@ const AccountSetting = ({ navigation }) => {
   const handleProfilePicAction = () => {
     if (image && !isUpdatingProfilePic) {
       Alert.alert(
-        'Confirm Image Replacement',
-        'Are you sure you want to replace the existing image?',
+        "Confirm Image Replacement",
+        "Are you sure you want to replace the existing image?",
         [
           {
-            text: 'Cancel',
-            style: 'cancel',
+            text: "Cancel",
+            style: "cancel",
           },
           {
-            text: 'OK',
+            text: "OK",
             onPress: () => {
               setIsUpdatingProfilePic(true);
               selectImage();
@@ -76,33 +100,32 @@ const AccountSetting = ({ navigation }) => {
       setLoading(true);
 
       const formData = new FormData();
-      formData.append('firstName', firstName);
-      formData.append('lastName', lastName);
-      formData.append('contactNumber', contactNumber);
-      formData.append('gender', gender);
-      formData.append('location', location);
-      formData.append('email', email);
+      formData.append("email", email);
 
       if (newProfilePic !== image) {
-        const uriParts = newProfilePic.split('.');
+        const uriParts = newProfilePic.split(".");
         const fileType = uriParts[uriParts.length - 1];
         const profilepicFileName = `image.${fileType}`;
-        formData.append('image', {
+        formData.append("image", {
           uri: newProfilePic,
           name: profilepicFileName,
           type: `image/${fileType}`,
         });
       }
 
-      const { data } = await axios.put('/auth/update-user', formData, {
+      const { data } = await axios.put("/auth/update-user", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
 
       setLoading(false);
-      setState({ ...state, user: data?.updatedUser, image: data?.updatedUser?.image }); // Update the image state
+      setState({
+        ...state,
+        user: data?.updatedUser,
+        image: data?.updatedUser?.image,
+      }); // Update the image state
       alert(data && data.message);
     } catch (error) {
       alert(error.response.data.message);
@@ -116,166 +139,195 @@ const AccountSetting = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingHorizontal: 20 }}>
           <TouchableOpacity>
-            <Entypo name="chevron-left" size={24} color="black" onPress={() => navigation.navigate('Setting')} />
+            <Entypo
+              name="chevron-left"
+              size={24}
+              color="black"
+              onPress={() => navigation.navigate("Setting")}
+            />
           </TouchableOpacity>
         </View>
 
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: "center" }}>
           <TouchableOpacity onPress={handleProfilePicAction}>
-            <Image style={styles.imageborder} source={{ uri: newProfilePic || image }} />
+            <Image style={styles.imageborder} source={{ uri: host + image }} />
           </TouchableOpacity>
-          <Text style={styles.username}>{state?.user.firstName} {state?.user.lastName}</Text>
+          <Text style={styles.username}>
+            {state?.user.firstName} {state?.user.lastName}
+          </Text>
         </View>
 
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ fontSize: 16, fontWeight: '600' }}>Edit Information</Text>
+          <Text style={{ fontSize: 16, fontWeight: "600" }}>
+            Edit Information
+          </Text>
         </View>
-        {/* <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ fontSize: 16, fontWeight: '600' }}>{image}</Text>
-        </View> */}
 
-            <View style={{ paddingHorizontal: 32, flexDirection: 'row', alignItems: 'center', gap: 14}}>
-                <View style={{ flex: 1 }}>
-                <TextInput style = {styles.inputBox}
-                value={firstName}
-                onChangeText={(text) => setFirstName(text)}
-                editable= {false}
-                />
-                </View>
+        <View
+          style={{
+            paddingHorizontal: 32,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 14,
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <TextInput
+              style={styles.inputBox}
+              value={firstName}
+              editable={false}
+            />
+          </View>
 
-                <View style={{ flex: 1 }}>
-                <TextInput style = {styles.inputBox}
-                value={lastName}
-                onChangeText={(text) => setLastName(text)}
-                editable= {false}
-                />
-                </View>
-            </View>
-
-            <View style={{ paddingHorizontal: 32, flexDirection: 'row', alignItems: 'center', gap: 14}}>
-                <View>
-                <TextInput style = {styles.inputBox}
-                value={contactNumber}
-                onChangeText={(text) => setContactNumber(text)}
-                editable= {false}
-                />
-                </View>
-
-                <View style={{ flex: 1 }}>
-                <TextInput style = {styles.inputBox}
-                value={gender}
-                onChangeText={(text) => setGender(text)}
-                editable= {false}
-                />
-                </View>
-            </View>
-
-            
-
-            <View style={{ paddingHorizontal: 32}}>
-                <View>
-                    <TextInput style = {styles.inputBoxLong}
-                    value={location}
-                    onChangeText={(text) => setLocation(text)}
-                    editable= {false}
-                    />
-                </View>
-
-                <View>
-                    <TextInput style = {styles.inputBoxLong}
-                    value={email}
-                    editable ={false}
-                    />
-                </View>
-
-                <View>
-                    <TextInput style={styles.inputBoxLong}
-                        value={password}
-                        placeholder='-------------------------- change password here -----------------------'
-                        onChangeText={(text) => setPassword(text)}
-                        secureTextEntry={true}
-                        placeholderTextColor='#00CCAA' // Setting the placeholder text color to green
-                    />
-                </View>
-
-
-                <View>
-                    <TextInput style = {styles.inputBoxLong}
-                    value={state?.user.role}
-                    editable= {false}
-                    />
-                </View>
-            </View>
-
-            <View style = {{alignItems:'center'}}>
-                <TouchableOpacity style = {styles.btnsave} onPress={handleUpdate}>
-                <Text style = {styles.btntext}>{loading ? 'Please Wait' : "Save"}</Text>
-                </TouchableOpacity>
-            </View>
-
-            </ScrollView>
+          <View style={{ flex: 1 }}>
+            <TextInput
+              style={styles.inputBox}
+              value={lastName}
+              editable={false}
+            />
+          </View>
         </View>
-    );
+
+        <View
+          style={{
+            paddingHorizontal: 32,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 14,
+          }}
+        >
+          <View>
+            <TextInput
+              style={styles.inputBox}
+              value={contactNumber}
+              onChangeText={(text) => setContactNumber(text)}
+              editable={false}
+            />
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <TextInput
+              style={styles.inputBox}
+              value={gender}
+              editable={false}
+            />
+          </View>
+        </View>
+
+        <View style={{ paddingHorizontal: 32 }}>
+          <View>
+            <TextInput
+              style={styles.inputBoxLong}
+              value={selectedBarangay + ", " +  selectedCity + ", " + selectedProvince + ", " + selectedRegion } 
+              editable={false}
+            />
+          </View>
+          
+
+          <View>
+            <TextInput
+              style={styles.inputBoxLong}
+              value={email}
+              editable={false}
+            />
+          </View>
+
+          <View>
+            <TextInput
+              style={styles.inputBoxLong}
+              value={state?.user.role}
+              editable={false}
+            />
+          </View>
+        </View>
+
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity style={styles.btnsave} onPress={handleUpdate}>
+            <Text style={styles.btntext}>
+              {loading ? "Please Wait" : "Save"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container:{ 
-        flex:1,
-        justifyContent: 'space-between',
-        margin:10,
-        marginTop: 40,
-    },
-    username:{
-        color: '#00CCAA',
-        fontSize: 32,
-        fontWeight: '600',
-    },
-    inputBox:{
-        backgroundColor: 'white',
-        fontSize: 10,
-        height: 50,
-        borderRadius: 20,
-        borderColor: '#D2CECE',
-        borderWidth: 1,
-        fontSize: 15,
-        paddingHorizontal: 15,
-        marginTop: 5
-    },
-    inputBoxLong:{
-        backgroundColor: 'white',
-        fontSize: 10,
-        height: 50,
-        borderRadius: 20,
-        borderColor: '#D2CECE',
-        borderWidth: 1,
-        fontSize: 15,
-        paddingHorizontal: 15,
-        marginTop: 10
-    },
-    btnsave:{
-        backgroundColor: '#343434',
-        borderRadius: 15,
-        height: 50,
-        width: 250,
-        marginTop: 50,
-        justifyContent:'center',
-        alignItems:'center',
-        
-        
-    },
-    btntext:{
-        color:'#00CCAA',
-        fontSize: 18,
-        fontWeight: '600'
-
-    },
-    imageborder: {
-        height: 170,
-        width: 170,
-        borderRadius: 100,
-        borderWidth: 5,
-        borderColor: "black",
-      },    
-})
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+    margin: 10,
+    marginTop: 40,
+  },
+  username: {
+    color: "#00CCAA",
+    fontSize: 32,
+    fontWeight: "600",
+  },
+  inputBox: {
+    backgroundColor: "white",
+    fontSize: 10,
+    height: 50,
+    borderRadius: 20,
+    borderColor: "#D2CECE",
+    borderWidth: 1,
+    fontSize: 15,
+    paddingHorizontal: 15,
+    marginTop: 5,
+  },
+  inputBoxLong: {
+    backgroundColor: "white",
+    fontSize: 10,
+    height: 50,
+    borderRadius: 20,
+    borderColor: "#D2CECE",
+    borderWidth: 1,
+    fontSize: 15,
+    paddingHorizontal: 15,
+    marginTop: 10,
+  },
+  btnsave: {
+    backgroundColor: "#343434",
+    borderRadius: 15,
+    height: 50,
+    width: 250,
+    marginTop: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btntext: {
+    color: "#00CCAA",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  imageborder: {
+    height: 150,
+      width: 150,
+      borderRadius: 100,
+      borderWidth: 2,
+      borderColor: "#343434",
+  },
+  placeholderStyle: {
+    fontSize: 15,
+  },
+  selectedTextStyle: {
+    fontSize: 15,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  dropdown: {
+    backgroundColor: "white",
+    // height: 30,
+    // width: 175,
+    borderColor: "#D2CECE",
+    borderWidth: 1,
+    borderRadius: 15,
+    paddingHorizontal: 8,
+    paddingLeft: 15,
+  },
+});
 
 export default AccountSetting;

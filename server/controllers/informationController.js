@@ -12,9 +12,9 @@ const createInformationController = async (req, res) => {
     }
 
 
-    const { bio, age, job, address } = req.body;
+    const { bio, age, job } = req.body;
     //validate
-    if (!bio || !age || !job || !address) {
+    if (!bio || !age || !job ) {
       return res.status(500).send({
         success: false,
         message: "Please Provide All Fields",
@@ -24,7 +24,6 @@ const createInformationController = async (req, res) => {
       bio,
       age,
       job,
-      address,
       createdBy: req.auth._id,
     }).save();
 
@@ -49,8 +48,16 @@ const createInformationController = async (req, res) => {
   const getCarpenterController = async (req, res) => {
     try {
         const info = await informationModel.find({ job: { $regex: /Carpenter/i } })
-            .populate("createdBy", "_id firstName lastName image")
-            .sort({ createdAt: -1 });
+        .populate({
+          path: "createdBy",
+          select: "_id firstName lastName location image contactNumber rating",
+          populate: [
+            { path: "province", select: "name" },
+            { path: "city", select: "name" },
+            { path: "barangay", select: "name" }
+          ]
+        })
+        .sort({ createdAt: -1 });
 
         res.status(200).send({
             success: true,
@@ -71,8 +78,16 @@ const createInformationController = async (req, res) => {
 const getTechnicianController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Technician/i } })
-          .populate("createdBy", "_id firstName lastName image")
-          .sort({ createdAt: -1 });
+      .populate({
+        path: "createdBy",
+        select: "_id firstName lastName location image contactNumber rating",
+        populate: [
+          { path: "province", select: "name" },
+          { path: "city", select: "name" },
+          { path: "barangay", select: "name" }
+        ]
+      })
+      .sort({ createdAt: -1 });
 
       res.status(200).send({
           success: true,
@@ -94,8 +109,16 @@ const getTechnicianController = async (req, res) => {
 const getDriverController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Driver/i } })
-          .populate("createdBy", "_id firstName lastName image")
-          .sort({ createdAt: -1 });
+      .populate({
+        path: "createdBy",
+        select: "_id firstName lastName location image contactNumber rating",
+        populate: [
+          { path: "province", select: "name" },
+          { path: "city", select: "name" },
+          { path: "barangay", select: "name" }
+        ]
+      })
+      .sort({ createdAt: -1 });
 
       res.status(200).send({
           success: true,
@@ -117,8 +140,16 @@ const getDriverController = async (req, res) => {
 const getElectricianController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Electrician/i } })
-          .populate("createdBy", "_id firstName lastName image")
-          .sort({ createdAt: -1 });
+      .populate({
+        path: "createdBy",
+        select: "_id firstName lastName location image contactNumber rating",
+        populate: [
+          { path: "province", select: "name" },
+          { path: "city", select: "name" },
+          { path: "barangay", select: "name" }
+        ]
+      })
+      .sort({ createdAt: -1 });
 
       res.status(200).send({
           success: true,
@@ -140,8 +171,16 @@ const getElectricianController = async (req, res) => {
 const getPlumberController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Plumber/i } })
-          .populate("createdBy", "_id firstName lastName image")
-          .sort({ createdAt: -1 });
+      .populate({
+        path: "createdBy",
+        select: "_id firstName lastName location image contactNumber rating",
+        populate: [
+          { path: "province", select: "name" },
+          { path: "city", select: "name" },
+          { path: "barangay", select: "name" }
+        ]
+      })
+      .sort({ createdAt: -1 });
 
       res.status(200).send({
           success: true,
@@ -163,8 +202,16 @@ const getPlumberController = async (req, res) => {
 const getMaidController = async (req, res) => {
   try {
       const info = await informationModel.find({ job: { $regex: /Maid/i } })
-          .populate("createdBy", "_id firstName lastName image")
-          .sort({ createdAt: -1 });
+      .populate({
+        path: "createdBy",
+        select: "_id firstName lastName location image contactNumber rating",
+        populate: [
+          { path: "province", select: "name" },
+          { path: "city", select: "name" },
+          { path: "barangay", select: "name" }
+        ]
+      })
+      .sort({ createdAt: -1 });
 
       res.status(200).send({
           success: true,

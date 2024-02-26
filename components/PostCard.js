@@ -17,7 +17,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   const [state, setState] = useContext(AuthContext);
   const { user, token } = state;
   const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
     console.log('Posts:', JSON.stringify(posts));
 
@@ -228,7 +228,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   <View>
     <View style={[styles.modalContent, { zIndex: 10 }]}>
       {/* Post title */}
-      <Text style={{marginTop: 16, fontSize: 14}}>Posted by: {selectedPost?.postedBy.firstName} {selectedPost?.postedBy.lastName}</Text>
+      <Text style={{marginTop: 16, fontSize: 14}}>Posted by: {selectedPost?.postedBy?.firstName} {selectedPost?.postedBy?.lastName}</Text>
       <Text style={{fontSize: 18, marginTop: 24}}>{selectedPost?.title}</Text>
       
       {/* Author information */}

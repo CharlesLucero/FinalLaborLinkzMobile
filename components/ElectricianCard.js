@@ -8,11 +8,12 @@ import {
   Entypo,
   MaterialIcons,
   Octicons,
+  Feather
 } from "@expo/vector-icons";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 
-const TechnicianCard = ({ info }) => {
+const ElectricianCard = ({ info }) => {
   const navigation = useNavigation();
   const [state, setState] = useContext(AuthContext);
   const { user, token } = state;
@@ -27,58 +28,44 @@ const TechnicianCard = ({ info }) => {
   return (
     <View>
       <Text style={styles.total}>
-        There are {info?.length} Available Electricians
+        There are {info?.length} Available Carpenters
       </Text>
       {info?.map((infos, i) => (
         <View style={styles.card} key={i}>
           <TouchableOpacity onPress={() => handleView(infos)}>
             <View style={styles.alignEverything}>
-            <Image style={styles.imageborder} source={{ uri: infos?.createdBy?.image }} />
+              {/* <Image
+                style={styles.imageborder}
+                source={{ uri: infos?.createdBy?.image }}
+              /> */}
 
-              <Text style={{ fontSize: 20, marginBottom: 10 }}>
-                {""}
-                {infos?.createdBy?.firstName} {infos?.createdBy?.lastName}{" "}
-
-                {"\n"}
-                  <Text style={{ fontSize: 12, paddingLeft: 6 }}>
-                    {" "}
-                    {infos?.job}
-                  </Text>{" "}
-                  {"\n"}
-                  <Text style={{ fontSize: 12, paddingLeft: 6 }}>
-                    {" "}
-                    {infos?.address}
-                  </Text>
+              <Text style={styles.name}>
+                {infos?.createdBy?.firstName} {infos?.createdBy?.lastName}{infos?.createdBy?.contactNumber}{" "}
               </Text>
-
-              {/* <Text style = {{borderBottomWidth: .5}}></Text> */}
             </View>
-
-            {/* <View style = {{marginTop: 15, flexDirection:'row'}}>
-                            <Entypo name="info-with-circle" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 18, paddingLeft: 6}}>Bio: {infos?.bio}</Text>
-                        </View>
-
-                        <Text style = {{borderBottomWidth: .5, borderColor: 'black'}}></Text>
-                        
-                        <View style = {{marginTop: 15, flexDirection:'row'}}>
-                            <Octicons name="number" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 18, paddingLeft: 6}}>Age: {infos?.age}</Text>
-                        </View>
-
-                        <Text style = {{borderBottomWidth: .5, borderColor: 'black'}}></Text>
-
-            <View style = {{marginTop: 5, flexDirection:'row'}}>
-                            <MaterialIcons name="hardware" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 12, paddingLeft: 6}}> {infos?.job}</Text>
-                        </View>
-
-            <Text style = {{borderBottomWidth: .5, borderColor: 'black'}}></Text>
-
-            <View style = {{marginTop: 2, flexDirection:'row'}}>
-                            <Entypo name="address" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 12, paddingLeft: 6}}> {infos?.address}</Text>
-                        </View> */}
+            <View style={styles.icon}>
+            <Feather name="map-pin" size={24} color="#00CCAA" />
+              <Text style={styles.info}>{" "}{infos?.address}
+              </Text>
+            </View>
+            <View style={styles.icon}>
+              <Text style={styles.info}>
+                Job: {infos?.job}
+              </Text>
+            </View>
+            <View style={styles.icon}>
+              <Text style={styles.info}>
+                Age: {infos?.age}
+              </Text>
+            </View>
+            <View style={styles.icon}>
+                <Text style={styles.info}>
+                  Contact Number: {infos?.createdBy?.contactNumber}
+                </Text>
+            </View>
+            <View style={styles.icon1}>
+              <Text style={styles.info1}>Bio: {infos?.bio}</Text>
+            </View>
           </TouchableOpacity>
         </View>
       ))}
@@ -94,9 +81,9 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "100%",
-    backgroundColor: "#F6F6F6",
+    backgroundColor: "#343434",
     padding: 20,
-    borderRadius: 5,
+    borderRadius: 10,
     marginBottom: 10,
     marginVertical: 10,
     paddingHorizontal: 40,
@@ -109,7 +96,39 @@ const styles = StyleSheet.create({
     // borderColor: "black",
   },
   alignEverything: {
-flexDirection: "row",
-  }
+    flexDirection: "row",
+  },
+  name: {
+    fontSize: 20,
+    marginLeft: 5,
+    marginTop: 10,
+    fontWeight: "500",
+    color: "#FFFFFF",
+    
+  },
+  icon: {
+    flexDirection: "row",
+    marginTop: 10,
+    marginLeft: 10,
+  },
+  info: {
+    fontSize: 15,
+    alignSelf: "center",
+    color: "#FFFFFF",
+  },
+  icon1: {
+    borderBottomWidth: 1,
+    color: "#000000",
+    marginLeft: 5,
+    textDecorationLine: "underline",
+  },
+  info1: {
+    fontSize: 13,
+    alignSelf: "baseline",
+    color: "#FFFFFF",
+    marginTop: 20,
+    marginBottom: 5,
+    marginLeft: 7,
+  },
 });
-export default TechnicianCard;
+export default ElectricianCard;

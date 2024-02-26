@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { ImageF } from "../APIRoutes";
+import { ImageF, host } from "../APIRoutes";
 import { AuthContext } from "../context/authContext";
 import React, { useState, useContext } from "react";
 import {
@@ -8,16 +8,16 @@ import {
   Entypo,
   MaterialIcons,
   Octicons,
+  Feather,
 } from "@expo/vector-icons";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 
-const TechnicianCard = ({ info }) => {
+const CarpenterCard = ({ info }) => {
   const navigation = useNavigation();
   const [state, setState] = useContext(AuthContext);
   const { user, token } = state;
   const [image, setImage] = useState(user?.image);
-
 
   const handleView = (infos) => {
     navigation.navigate("ViewProfile", { profileData: infos });
@@ -33,52 +33,42 @@ const TechnicianCard = ({ info }) => {
         <View style={styles.card} key={i}>
           <TouchableOpacity onPress={() => handleView(infos)}>
             <View style={styles.alignEverything}>
-            <Image style={styles.imageborder} source={{ uri: infos?.createdBy?.image }} />
+              <Image
+                style={styles.imageborder}
+                source={{ uri: host + infos?.createdBy?.image }}
+              />
 
-              <Text style={{ fontSize: 20, marginBottom: 10 }}>
-                {""}
+              <Text style={styles.name}>
                 {infos?.createdBy?.firstName} {infos?.createdBy?.lastName}{" "}
-
                 {"\n"}
-                  <Text style={{ fontSize: 12, paddingLeft: 6 }}>
-                    {" "}
-                    {infos?.job}
-                  </Text>{" "}
-                  {"\n"}
-                  <Text style={{ fontSize: 12, paddingLeft: 6 }}>
-                    {" "}
-                    {infos?.address}
+                <View>
+                  <Text style={styles.info}>
+                    <Feather name="map-pin" size={24} color="#00CCAA" />{" "}
+                    {infos?.createdBy?.barangay?.name},{" "}
+                    {infos?.createdBy?.city?.name}{" "}
+                    {infos?.createdBy?.province?.name}
                   </Text>
+                </View>
+                {"\n"}
+                <View>
+                  <Text style={styles.info}>
+                    <AntDesign name="contacts" size={24} color="#00CCAA" />
+                    <Text style={styles.info1}> {infos?.createdBy?.contactNumber}</Text>
+                  </Text>
+                </View>
+                {"\n"}
+                <View>
+                  <Text style={styles.info}>
+                  <Feather name="file-text" size={24} color="#00CCAA" />
+                  <Text style={styles.info1}>{infos?.bio}</Text>
+                  </Text>
+                </View>
+
+              
               </Text>
 
-              {/* <Text style = {{borderBottomWidth: .5}}></Text> */}
+
             </View>
-
-            {/* <View style = {{marginTop: 15, flexDirection:'row'}}>
-                            <Entypo name="info-with-circle" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 18, paddingLeft: 6}}>Bio: {infos?.bio}</Text>
-                        </View>
-
-                        <Text style = {{borderBottomWidth: .5, borderColor: 'black'}}></Text>
-                        
-                        <View style = {{marginTop: 15, flexDirection:'row'}}>
-                            <Octicons name="number" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 18, paddingLeft: 6}}>Age: {infos?.age}</Text>
-                        </View>
-
-                        <Text style = {{borderBottomWidth: .5, borderColor: 'black'}}></Text>
-
-            <View style = {{marginTop: 5, flexDirection:'row'}}>
-                            <MaterialIcons name="hardware" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 12, paddingLeft: 6}}> {infos?.job}</Text>
-                        </View>
-
-            <Text style = {{borderBottomWidth: .5, borderColor: 'black'}}></Text>
-
-            <View style = {{marginTop: 2, flexDirection:'row'}}>
-                            <Entypo name="address" size={24} color="#00CCAA" />
-                            <Text style = {{fontSize: 12, paddingLeft: 6}}> {infos?.address}</Text>
-                        </View> */}
           </TouchableOpacity>
         </View>
       ))}
@@ -94,22 +84,48 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "100%",
-    backgroundColor: "#F6F6F6",
-    padding: 20,
-    borderRadius: 5,
+    backgroundColor: "#343434",
+    padding: 12,
+    borderRadius: 10,
     marginBottom: 10,
     marginVertical: 10,
     paddingHorizontal: 40,
   },
   imageborder: {
-    height: 60,
-    width: 60,
+    height: 80,
+    width: 80,
     borderRadius: 100,
     borderWidth: 1,
-    // borderColor: "black",
+    borderColor: "#00CCAA",
+    marginTop: 20,
+  
+  },
+  name: {
+    fontSize: 20,
+    marginTop: 5,
+    fontWeight: "500",
+    color: "#FFFFFF",
+    paddingLeft: 10,
+  },
+  icon: {
+    flexDirection: "row",
+    marginTop: 10,
+  },
+  info: {
+    fontSize: 13,
+    color: "#FFFFFF",
+    paddingLeft: 10,
+    marginTop: 5,
+  },
+
+  info1: {
+    fontSize: 13,
+    color: "#FFFFFF",
+    marginTop: 10,
+    marginLeft: 14,
   },
   alignEverything: {
-flexDirection: "row",
-  }
+    flexDirection: "row",
+  },
 });
-export default TechnicianCard;
+export default CarpenterCard;

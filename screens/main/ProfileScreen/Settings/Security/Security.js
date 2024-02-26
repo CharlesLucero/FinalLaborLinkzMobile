@@ -82,7 +82,7 @@ const Security = ({ navigation }) => {
         </View>
 
         <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text style={{ fontSize: 16, fontWeight: "600" }}>
+          <Text style={{ fontSize: 25, fontWeight: "600" }}>
             Change Password
           </Text>
         </View>

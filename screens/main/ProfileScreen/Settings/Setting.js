@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import {Text, TouchableOpacity,TouchableWithoutFeedback, View, StyleSheet, Image, TextInput, ImageBackground, ScrollView} from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import HeaderText from '../../../../components/HeaderText';
 import BodyText from '../../../../components/BodyText'
 import {MaterialIcons} from '@expo/vector-icons';
@@ -47,14 +47,14 @@ const Setting = ({navigation}) => {
             <View style = {{paddingHorizontal:20, marginTop: 35}}>
                 <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
                     <View style = {styles.format}>
-                        <MaterialIcons name="person" size={27} color="#00CCAA"/>
+                    <MaterialCommunityIcons name="account-edit-outline" size={27} color="#00CCAA" />
                             <BodyText
                             text = 'Edit Profile'
                             fontSize={18}
                             fontWeight={600}
                             color = "#F6F6F6"  
                             />
-                           
+            
                     </View>
                 </TouchableOpacity>
             </View>
@@ -62,7 +62,8 @@ const Setting = ({navigation}) => {
             <View style = {{paddingHorizontal:20, marginTop: 5}}>
                 <TouchableOpacity onPress={() => navigation.navigate('AccountSetting')}>
                     <View style = {styles.format}>
-                    <Ionicons name="settings" size={24} color="#00CCAA" />
+                    <MaterialCommunityIcons name="account-cog-outline" size={27} color="#00CCAA" />
+                 
                             <BodyText
                             text = 'Account Settings'
                             fontSize={18}
@@ -73,6 +74,36 @@ const Setting = ({navigation}) => {
                     </View>
                 </TouchableOpacity>
             </View>
+            <View style = {{paddingHorizontal:20, marginTop: 5}}>
+                <TouchableOpacity onPress={() => navigation.navigate('Security')}>
+                    <View style = {styles.format}>
+                    <MaterialCommunityIcons name="account-lock-open-outline" size={27} color="#00CCAA" />
+                            <BodyText
+                            text = 'Security'
+                            fontSize={18}
+                            fontWeight={600}
+                            color = "#F6F6F6"  
+                            />
+                         
+                    </View>
+                </TouchableOpacity>
+            </View>
+
+            <View style={{ paddingHorizontal: 20, marginTop: 5 }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("AccountVerification")}
+        >
+          <View style={styles.format}>
+          <MaterialCommunityIcons name="account-multiple-check-outline" size={27} color="#00CCAA" />
+            <BodyText
+              text="Account Verification"
+              fontSize={18}
+              fontWeight={600}
+              color="#F6F6F6"
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
 
 
             <View style={{ paddingHorizontal: 32, marginTop: 40, alignItems: 'center', flex:1, justifyContent:'flex-end' , marginBottom: 20}}>

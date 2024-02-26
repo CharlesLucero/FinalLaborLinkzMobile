@@ -9,9 +9,9 @@ export const useAuth = () => {
 export const FavProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
 
-  const addToFavorites = (profileData, profilepost) => {
+  const addToFavorites = (userData, profilepost) => {
     // Add the new favorite to the existing favorites array
-    setFavorites([...favorites, { profileData, profilepost }]);
+    setFavorites([...favorites, { userData, profilepost }]);
   };
 
   const removeFromFavorites = (index) => {

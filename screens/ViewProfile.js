@@ -2,57 +2,45 @@ import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
-  Alert,
-  SafeAreaView,
-  Image,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
+  Image,
+  Alert
 } from "react-native";
-import {
-  AntDesign,
-  MaterialCommunityIcons,
-  Entypo,
-  MaterialIcons,
-  Octicons,
-  FontAwesome5,
-  Feather,
-} from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons ,  Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
 import axios from "axios";
-import { useAuth } from "../context/FavContext";
 import moment from "moment";
 import { Modal } from "react-native";
-import { useFonts } from "expo-font";
+import { Picker } from "@react-native-picker/picker";
+import { TextInput } from "react-native-paper";
+import { AuthContext } from "../context/authContext"; 
+import { host } from "../APIRoutes";
+
 
 const ViewProfile = ({ route, navigation }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { addToFavorites, favorites } = useAuth();
-  const [isFavorite, setIsFavorite] = useState(false);
-  const { profilepost } = route.params;
   const [violation, setViolation] = useState("");
+  const { profilepost } = route.params;
   const [description, setDescription] = useState("");
   const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [state, setState] = useContext(AuthContext);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const userId =
           route.params?.profilepost?.postedBy?._id ||
           route.params?.profileData?.createdBy?._id;
-  
+
         if (userId) {
           const response = await axios.get(
             `/viewprofile/users/${userId}/profile`
           );
           setUserData(response.data);
           setLoading(false);
-  
-          // Check if the user is in favorites when the component mounts
-          const isInFavorites = favorites.some(
-            (favorite) => favorite.profilepost.postedBy._id === userId
-          );
-          setIsFavorite(isInFavorites);
         } else {
           console.log("User ID not found in route parameters.");
         }
@@ -60,38 +48,12 @@ const ViewProfile = ({ route, navigation }) => {
         console.error("Error fetching user data:", error);
       }
     };
-  
+
     fetchUserData();
-  }, [favorites, route.params]);
+  }, [route.params]);
 
-  const addToFavoritesHandler = async () => {
-    if (isFavorite) {
-      // If the user is already in favorites, do nothing
-      Alert.alert('Already in Favorites', 'This user is already in your favorites.');
-    } else {
-      addToFavorites(userData, profilepost);
-      try {
-        // Make a POST request to your backend API to add the user to favorites
-        await axios.post('/favorites/add', {
-          senderId: userData.userInfo._id, // Assuming this is the ID of the current user
-          receiverId: profilepost.postedBy._id, // Assuming this is the ID of the user whose profile is being viewed
-        });
-        
-        // If the request is successful, update the local state and show a success message
-        setIsFavorite(true);
-      } catch (error) {
-        console.error('Error adding to favorites:', error);
-        // Show an error message if something goes wrong
-        Alert.alert('Error', 'Failed to add user to favorites. Please try again later.');
-      }
-    }
-  };
-  const navigateToChat = () => {
-    const dataToSend = { userData, profilepost };
-
-    navigation.navigate("Chat", {
-      data: dataToSend,
-    });
+  const togglePicker = () => {
+    setShowPicker(!showPicker);
   };
 
   const showReportModal = () => {
@@ -117,7 +79,7 @@ const ViewProfile = ({ route, navigation }) => {
     setViolation("");
     setDescription("");
 
-    const reportedUserId = `${userData?.userInfo?._id || ""}-${userData?._id || ""}`;
+    const reportedUserId = `${userData?.userInfo?._id || ""}`;
 
     try {
       await axios.post("/report/report-user", {
@@ -141,6 +103,29 @@ const ViewProfile = ({ route, navigation }) => {
       console.error("Error submitting report", error);
     }
   };
+
+  const addFavorite = async () => {
+    try {
+      const senderId = 'YOUR_USER_ID'; // Replace 'YOUR_USER_ID' with the actual sender's ID
+      const receiverId = userData.userInfo._id; // Assuming userData is populated
+      await axios.post("/favorite/add", { senderId, receiverId });
+      
+      // Display a success message or perform any other action upon successful addition
+      Alert.alert("Success", "User added to favorites successfully");
+    } catch (error) {
+      console.error("Error adding user to favorites", error);
+      // Display an error message or handle the error in an appropriate way
+      Alert.alert("Error", "Failed to add user to favorites");
+    }
+  };
+
+  const violationOptions = [
+    "Spam",
+    "Scam",
+    "Fake User",
+    "Trolling",
+    "Others (please specify)",
+  ];
 
   return (
     <SafeAreaView style={{ backgroundColor: "#FFFFFF" }}>
@@ -169,7 +154,7 @@ const ViewProfile = ({ route, navigation }) => {
           <View style={{ marginTop: 20, alignSelf: "center" }}>
             <Image
               source={{
-                uri: "https://www.pngall.com/wp-content/uploads/5/Profile-Transparent.png",
+                uri: host+userData?.userInfo?.image,
               }}
               style={{
                 height: 120,
@@ -216,13 +201,9 @@ const ViewProfile = ({ route, navigation }) => {
                 justifyContent: "center",
                 borderRadius: 20,
               }}
-              onPress={addToFavoritesHandler}
+              onPress={addFavorite} // Add onPress handler to call addFavorite function
             >
-              {isFavorite ? (
-                <AntDesign name="heart" size={32} color="#00CCAA" />
-              ) : (
-                <AntDesign name="hearto" size={32} color="#00CCAA" />
-              )}
+              <AntDesign name="hearto" size={32} color="#00CCAA" />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -264,8 +245,10 @@ const ViewProfile = ({ route, navigation }) => {
                 <View style={styles.userContent}>
                   <Feather name="map-pin" size={24} color="#00CCAA" />
                   <Text style={styles.userText}>
-                    {" "}
-                    {userData.userInfo.location}
+                  {" "}
+                    {userData?.userInfo?.barangay?.name},{" "}
+                    {userData?.userInfo?.city?.name}{" "}
+                    {userData?.userInfo?.province?.name}
                   </Text>
                 </View>
                 <View style={styles.userContent}>
@@ -293,13 +276,18 @@ const ViewProfile = ({ route, navigation }) => {
                       Rate: {post.minRate} - {post.maxRate}
                     </Text>
                     <Text style={styles.rate}>
-                      Location: {profilepost?.postedBy?.location}{" "}
+                      Location: {" "}
+                    {userData?.userInfo?.barangay?.name},{" "}
+                    {userData?.userInfo?.city?.name}{" "}
+                    {userData?.userInfo?.province?.name}
                     </Text>
+                    <View style={styles.descriptionContainer}>
                     <Text style={styles.description}>{post.description}</Text>
+                    </View>
                     <View>
                       <Text
                         style={{
-                          color: "gray",
+                          color: "#FFFFFF",
                           marginTop: 15,
                           fontSize: 13,
                           textAlign: "right",
@@ -318,40 +306,63 @@ const ViewProfile = ({ route, navigation }) => {
                   </View>
                 ))}
           </View>
-
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={reportModalVisible}
           >
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>Report User</Text>
+                <TouchableOpacity
+                  onPress={togglePicker}
+                  style={styles.violationInput}
+                >
+                  <Text>{violation || "Select Violation"}</Text>
+                  <Feather name="chevron-down" size={24} color="black" />
+                </TouchableOpacity>
+                {showPicker && (
+                  <Picker
+                    selectedValue={violation}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setViolation(itemValue);
+                      togglePicker(); // Hide picker after selection
+                    }}
+                    style={{ width: "100%" }}
+                    itemStyle={{ fontSize: 12, height: 50 }} // Adjust font size and height of dropdown item
+                  >
+                    {violationOptions.map((option, index) => (
+                      <Picker.Item label={option} value={option} key={index} />
+                    ))}
+                  </Picker>
+                )}
                 <TextInput
-                  style={styles.input}
-                  placeholder="Violation"
-                  value={violation}
-                  onChangeText={(text) => setViolation(text)}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Description"
+                  mode="outlined"
+                  label="Description"
+                  placeholder="Type something"
+                  right={<TextInput.Affix text="/100" />}
+                  style={styles.DescriptionInput}
                   value={description}
                   onChangeText={(text) => setDescription(text)}
-                  multiline
                 />
-                <TouchableOpacity
-                  style={styles.reportButton}
-                  onPress={reportUserHandler}
-                >
-                  <Text style={{ color: "#fff" }}>Submit Report</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={hideReportModal}
-                >
-                  <Text style={{ color: "#000" }}>Cancel</Text>
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.reportButton}
+                    onPress={reportUserHandler}
+                  >
+                    <Text style={{ color: "#FFFFFF", fontWeight: "700" }}>
+                      Submit
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={hideReportModal}
+                  >
+                    <Text style={{ color: "#000000", fontWeight: "700" }}>
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </Modal>
@@ -385,7 +396,7 @@ const styles = StyleSheet.create({
   },
   userInfoContainer: {
     marginTop: 20,
-    backgroundColor: "#F6F6F6",
+    backgroundColor: "#343434",
     padding: 20,
     borderRadius: 5,
   },
@@ -397,10 +408,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: "center",
     marginLeft: 6,
+    color: "#FFFFFF",
   },
   card: {
     width: "100%",
-    backgroundColor: "#F6F6F6",
+    backgroundColor: "#343434",
     borderWidth: 0.2,
     borderColor: "gray",
     padding: 20,
@@ -413,55 +425,82 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    color: "#262626",
+    color: "#FFFFFF"
   },
   rate: {
     fontSize: 12,
-    color: "#939393",
+    color: "#00CCAA",
+  },
+  descriptionContainer: {
+    textDecorationLine: "underline",
+    borderBottomWidth: 1,
   },
   description: {
     fontSize: 13,
-    color: "#000000",
+    color: "#FFFFFF",
     marginTop: 10,
+    marginBottom: 5,
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
-    justifyContent: "center",
+    backgroundColor: "#ffffff",
+    padding: 20,
     borderRadius: 10,
-    elevation: 5,
     width: "80%",
-    height: "45%",
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
   },
-  input: {
-    borderBottomWidth: 1,
+  violationInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
     marginBottom: 10,
   },
+  DescriptionInput: {
+    fontSize: 12,
+    backgroundColor: "#FFFFFF",
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 10,
+    minHeight: 100, // Adjust the height if needed
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   reportButton: {
-    backgroundColor: "#343434",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    padding: 10,
+    padding: 15,
+    backgroundColor: "#00CCAA",
+    marginRight: 10,
+    borderRadius: 15,
     marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 5,
+    flex: 1,
+    alignItems: "center",
   },
   cancelButton: {
-    backgroundColor: "#eee",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    padding: 10,
+    padding: 15,
+    backgroundColor: "#C8C8C8",
+    marginRight: 10,
+    borderRadius: 15,
     marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 5,
+    flex: 1,
+    alignItems: "center",
   },
 });
 

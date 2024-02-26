@@ -11,6 +11,7 @@ const socket = require("socket.io");
 require("dotenv").config();
 const connectDB = require("./config/db");
 const hiringRoutes = require('./routes/hiringRoutes');
+const path = require("path"); // Import path module
 // dotenv
 dotenv.config();
 
@@ -28,7 +29,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 const jwt = require ("jsonwebtoken")
-
+app.use(express.static(path.join(__dirname, 'filesUpload'))); // Serve static files
+app.use("/filesUpload", express.static("/filesUpload"));
 // routes
 // routes
 app.use("/ap1/v1/auth", require("./routes/userRoutes"));
@@ -40,7 +42,7 @@ app.use("/ap1/v1/chats", require("./routes/chatRoutes"));
 app.use("/ap1/v1/message", require("./routes/messageRoutes"));
 app.use("/ap1/v1/hiring", hiringRoutes);
 app.use("/ap1/v1/viewprofile", require("./routes/viewprofileRoutes"));
-
+app.use("/ap1/v1/favorite", require("./routes/FavoriteRoute"));
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
