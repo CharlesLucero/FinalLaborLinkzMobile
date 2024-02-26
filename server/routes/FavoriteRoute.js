@@ -12,5 +12,4 @@ router.delete("/:id", requireSignIn, removeFavorite);
 
 // Get all users added as favorites by the current user
 router.get("/favorite-users/:userId", requireSignIn, getAllFavoriteUsers );
-
 module.exports = router;

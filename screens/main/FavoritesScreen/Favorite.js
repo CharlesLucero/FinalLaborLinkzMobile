@@ -1,55 +1,88 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import React, { useContext, useState, useEffect} from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, Alert} from 'react-native';
 import FooterMenu from '../../../components/Menus/FooterMenu';
 import { useAuth } from '../../../context/FavContext';
 import { AntDesign, Feather } from '@expo/vector-icons';
+import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+import { ImageF, host } from "../../../APIRoutes";
+
 
 const Favorite = () => {
-  const { favorites, removeFromFavorites } = useAuth();
+    const { favorites, removeFromFavorites } = useAuth();
+    const [favoriteUsers, setFavoriteUsers] = useState([]);
+    const [userId, setUserId] = useState(null); // State to store user ID
 
-  const handleRemoveFavorite = (index) => {
-    removeFromFavorites(index);
-  };
+    useEffect(() => {
+      console.log(`USE EFFECT+++++++++++++++++++++++`);
+      console.log('Inside useEffect'); 
+      fetchFavoriteUsers();
+    }, []);
+  
+    const fetchFavoriteUsers = async () => {
+      
+      const userId = await SecureStore.getItemAsync('userId');
+
+      console.log(`THIS IS THE USER ID FOR FAVORITES: ${userId}`)
+      try {
+        const response = await axios.get(`/favorite/favorite-users/${userId}`);
+        setFavoriteUsers(response.data.data); // Update state with response.data
+        console.log(`TESTER ESROARORW WOA : ${JSON.stringify(favoriteUsers)}`);
+
+      } catch (error) {
+        console.error("Error fetching favorite users:", error);
+        Alert.alert("Error", "Failed to fetch favorite users");
+      }
+    };
+  
+    const handleRemoveFavorite = async (index, favoriteId) => {
+      try {
+        await axios.delete(`/favorite/remove/${favoriteId}`);
+        removeFromFavorites(index);
+        fetchFavoriteUsers();
+        Alert.alert("Success", "Favorite removed successfully");
+      } catch (error) {
+        console.error("Error removing favorite:", error);
+        Alert.alert("Error", "Failed to remove favorite");
+      }
+    };
 
   return (
   
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <Text style={{ color: '#343434', fontSize: 25, fontWeight: 'bold', marginBottom: 10 }}>
-          Your Favorites
-        </Text>
-        <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
+          <Text style={{ color: '#343434', fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' }}>
+            Your Favorites
+          </Text>
+        <AntDesign style={{ marginTop: 4 }} name="heart" size={18} color="#00CCAA" />
       </View>
 
-      <View style={{ flex: 1, paddingHorizontal: 30}}>
-        {favorites.map((favorite, index) => (
-          <View style={styles.background} key={index}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{ flex: 1, paddingHorizontal: 30, backgroundColor: '#f6f6f6'}}>
+        {favoriteUsers.map((favorite, index) => (
+          <View style={styles.card} key={index}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             <Image
-                source={{ uri: favorite.profilepost.postedBy?.image }}
+                source={{ uri: host + favorite?.receiverId?.image }}
                 style={{
-                  height: 60,
-                  width: 60,
+                  height: 50,
+                  width: 50,
                   borderRadius: 100,
-                  borderWidth: 5,
+                  borderWidth: 1,
                   borderColor: "black",
                 }}
               />
               <View style={{ marginLeft: 10 }}>
-                <Text style={styles.info}>
-                  {favorite.profilepost.postedBy?.firstName} {favorite.profilepost.postedBy?.lastName}
+                <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: 500}}>
+                  {favorite?.receiverId?.firstName} {favorite?.receiverId?.lastName}
                 </Text>
-                <Text style={styles.info}>Location: {favorite.profilepost.postedBy?.location}</Text>
-                <Text style={styles.info}>
-                  Rate: {favorite.profilepost.minRate} - {favorite.profilepost.maxRate}
-                </Text>
-                <Text style={styles.info}>Description: {favorite.profilepost.description}</Text>
+                <Text style={{marginTop: 2, fontSize: 14, color: 'white'}}>{favorite?.receiverId?.barangay?.name}, {favorite?.receiverId?.city?.name} {favorite?.receiverId?.province?.name}</Text>
               </View>
             </View>
             <View>
-            <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
+            <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
+            {/* <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
             <Feather name="trash-2" size={18} color="#F02" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             </View>
           </View>
         ))}
@@ -62,12 +95,15 @@ const Favorite = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginTop: 40,
     paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: 'white',
+    gap: 6,
+    justifyContent: 'center'
   },
   background: {
     marginTop: 20,
-    backgroundColor: 'black',
+    backgroundColor: '#343434',
     borderRadius: 20,
     paddingHorizontal: 30,
     paddingVertical: 18,
@@ -95,6 +131,20 @@ const styles = StyleSheet.create({
   },
   remove: {
     left: 30,
+  },
+  card: {
+    width: "100%",
+    backgroundColor: "#343434",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 20,
+    marginBottom: 10,
+    marginVertical: 10,
+    height: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 20
   },
 });
 

@@ -8,7 +8,7 @@ import CustomButton from "./CustomButton";
 import { AuthContext } from '../context/authContext';
 import * as SecureStore from 'expo-secure-store';
 
-const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
+const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, location, data }) => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [post, setPost] = useState({});
@@ -19,7 +19,9 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
 
+    
     console.log('Posts:', JSON.stringify(posts));
+    console.log(`DATA @ POST CARD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: ${JSON.stringify(data)}`);
 
     const handleApply = async (postId, senderId, receiverId) => {
       try {
@@ -166,7 +168,8 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
               <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
                 <Ionicons name="location-sharp" size={20} color="#00CCAA" />
                 <Text style={{ color: "#e4e4e4", fontSize: 14 }}>
-                {post?.postedBy?.barangay?.name}, {post?.postedBy?.city?.name} {post?.postedBy?.province?.name}
+                {post?.postedBy?.barangay?.name} {post?.postedBy?.city?.name} {post?.postedBy?.province?.name}
+                {data?.barangay?.name} {data?.city?.name} {data?.province?.name}
                 </Text>
               </View>
 
@@ -237,7 +240,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites }) => {
                 {[...Array(5)].map((_, index) => (
                   <FontAwesome
                     key={index}
-                    name={index < selectedPost?.postedBy?.rating ? 'star' : 'star-o'} // Use 'star' for filled stars and 'star-o' for outline stars
+                    name={index < selectedPost?.postedBy?.rating ? 'star' : 'star-o'} 
                     size={18}
                     color="yellow"
                   />
@@ -297,7 +300,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     marginVertical: 10,
-    height: 240,
+    height: 'auto',
   },
   modalContainer: {
     position: 'absolute',

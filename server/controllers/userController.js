@@ -4,6 +4,7 @@ const userModel = require("../models/userModel");
 var { expressjwt: jwt } = require("express-jwt");
 const multer = require('multer');
 
+
 //middleware
 const requireSignIn = jwt({
     secret: process.env.JWT_SECRET,
@@ -136,12 +137,13 @@ const loginController = async (req, res) => {
             });
         }
 
-        //find user
-        const user = await userModel.findOne({ email })
-        if(!user){
-            return res.status(500).send({
+
+        // Find the user by email
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
                 success: false,
-                message: 'User not found please provide a correct Username or register first'
+                message: 'User not found',
             });
         }
         //match password
@@ -157,8 +159,9 @@ const loginController = async (req, res) => {
             expiresIn: "7d",
           });
 
-        //undefined password
-        user.password = undefined;
+          // Omit sensitive information from the user object
+          user.password = undefined;
+
         res.status(200).send({
             success: true,
             token,
@@ -408,6 +411,45 @@ const updatePasswordController = async (req, res) => {
   }
 };
 
+const getUserDetailsController = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+
+    // Find the user by ID
+    const user = await userModel.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Omit sensitive information from the user object
+    user.password = undefined;
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching user details",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = { 
     requireSignIn, 
     registerController, 
@@ -418,5 +460,6 @@ module.exports = {
     uploadImage ,
     getAllUsersController,
     getTotalUsersController,
-    updateRating
-    };
+    updateRating,
+    getUserDetailsController // Add this line to export the controller
+};
