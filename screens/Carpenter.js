@@ -1,18 +1,19 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, Image, SafeAreaView, ScrollView} from 'react-native';
+import React, { useContext, useState, useEffect } from "react";
+import { View, StyleSheet, Text , RefreshControl , TouchableOpacity, Image, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { InfoTechnicianContext } from "../../../../context/infoTechnicianContext";
-import TechnicianCard from "../../../../components/TechnicianCard";
+import { InfoCarpenterContext } from "../context/infoCarpenterContext";
+import CarpenterCard from "../components/CarpenterCard";
 import axios from 'axios';
 
-const Technician = ({navigation}) =>{
-    const [info, setInfo] = useContext(InfoTechnicianContext)
+
+const Carpenter = ({navigation}) =>{
+    const [info, setInfo] = useContext(InfoCarpenterContext);
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
         try {
         setRefreshing(true);
-        const {data} = await axios.get('/information/getinfotechnician')
+        const {data} = await axios.get('/information/getinfocarpenter')
         setRefreshing(false)
         setInfo(data?.info)
         } catch (error) {
@@ -25,11 +26,10 @@ const Technician = ({navigation}) =>{
     useEffect(() => {
         onRefresh();
     }, []);
-
     return (
         <SafeAreaView style = {{flex:1, marginTop: 20, backgroundColor: '#ffffff'}}>
             <View style = {{flex:1 , marginTop: 20}}>
-            <ScrollView  showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
+                <ScrollView  showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} >
 
                     <View style = {{paddingHorizontal: 20}}>
                         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
@@ -38,30 +38,30 @@ const Technician = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Technician}>Technician</Text>
+                        <Text style = {styles.Carpenter}>CARPENTERS</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
-                        <TechnicianCard info={info} />
+                            <CarpenterCard  info = {info} navigation={navigation} />
                     </View>
 
                     <View>
-                        
+                        <Text>{JSON.stringify(info, null, 4)}</Text>
                     </View>
-                        
-                
-
                 </ScrollView>
             </View>
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
-    Technician:{
-        color: '#343434',
+    Carpenter:{
+        color: '#00CCAA',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 25,
+        textShadowColor: 'gray',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     }
 })
-export default Technician;
+export default Carpenter;
 

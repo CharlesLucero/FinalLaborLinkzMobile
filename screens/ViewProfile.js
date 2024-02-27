@@ -9,7 +9,7 @@ import {
   Image,
   Alert
 } from "react-native";
-import { AntDesign, MaterialCommunityIcons ,  Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialCommunityIcons ,  Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import moment from "moment";
 import { Modal } from "react-native";
@@ -37,6 +37,7 @@ const ViewProfile = ({ route, navigation }) => {
       try {
         const userId =
           route.params?.profilepost?.postedBy?._id ||
+          route.params?.profilepost?.receiverId?._id || //Addded for favorites
           route.params?.profileData?.createdBy?._id;
 
         if (userId) {
@@ -186,7 +187,7 @@ const ViewProfile = ({ route, navigation }) => {
                 height: 120,
                 width: 120,
                 borderRadius: 100,
-                borderWidth: 5,
+                borderWidth: 1,
                 borderColor: "black",
               }}
             ></Image>
@@ -196,16 +197,29 @@ const ViewProfile = ({ route, navigation }) => {
             {userData && (
               <View>
                 <View style={styles.nameContainer}>
+
                   <Text style={styles.completeName}>
                     {userData.userInfo.firstName} {userData.userInfo.lastName}
                   </Text>
+
+
                 </View>
+
                 <Text style={styles.infoText}>
                   {userData.userAdditionalInfo.job}
                 </Text>
                 <Text style={styles.infoText}>
                   {userData.userAdditionalInfo.age} years old
                 </Text>
+
+                <Text style={styles.infoText}>
+                <Feather name="map-pin" size={19} color="#343434" />
+                {" "}
+                    {userData?.userInfo?.barangay?.name},{" "}
+                    {userData?.userInfo?.city?.name}{" "}
+                    {userData?.userInfo?.province?.name}
+                </Text>
+                
               </View>
             )}
           </View>
@@ -245,6 +259,16 @@ const ViewProfile = ({ route, navigation }) => {
               <MaterialCommunityIcons name="chat" size={32} color="#00CCAA" />
             </TouchableOpacity>
           </View>
+          <View style={{ flexDirection: 'row',     alignSelf: "center", marginTop: 10 }}>
+                {[...Array(5)].map((_, index) => (
+                  <FontAwesome
+                    key={index}
+                    name={index < userData?.userInfo?.rating ? 'star' : 'star-o'} // Use 'star' for filled stars and 'star-o' for outline stars
+                    size={18}
+                    color="yellow"
+                  />
+                ))}
+              </View>
           <Text style={styles.user}>User Information</Text>
           <View>
             {userData && (
@@ -400,12 +424,13 @@ const ViewProfile = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   nameContainer: {
-    flexDirection: "row",
+    alignSelf:'center'
   },
   completeName: {
     color: "#00CCAA",
     fontSize: 32,
     fontWeight: "600",
+
   },
   infoText: {
     fontSize: 18,

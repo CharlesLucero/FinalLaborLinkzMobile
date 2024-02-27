@@ -323,14 +323,13 @@ const Register = ({ navigation }) => {
                   style={[styles.dropdown, isFocus]}
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
-                  inputSearchStyle={styles.inputSearchStyle}
+
                   containerStyle={{backgroundColor: '#f6f6f6', borderRadius: 8, marginTop: 4, padding: 6}}
                   data={data}
-                  search
                   labelField="label"
                   valueField="gender"
                   placeholder={!isFocus ? "Gender" : "..."}
-                  searchPlaceholder="Search..."
+               
                   value={gender}
                   onFocus={() => setIsFocus(true)}
                   onBlur={() => setIsFocus(false)}

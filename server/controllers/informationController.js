@@ -249,7 +249,7 @@ const getUserInfoController = async (req, res) =>{
 //get all post
 const getAllInfoController =  async (req, res) => {
   try{
-    const infos = await informationModel.find().populate("createdBy", "_id firstName lastName location" ).sort({ createdAt: -1 });
+    const infos = await informationModel.find().populate("createdBy", "_id firstName lastName image" ).sort({ createdAt: -1 });
       res.status(200).send({
         success: true,
         message: "All Infos Data",

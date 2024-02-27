@@ -1,14 +1,15 @@
 import React, { useContext, useState, useEffect} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, Alert} from 'react-native';
-import FooterMenu from '../../../components/Menus/FooterMenu';
+import { useNavigation } from '@react-navigation/native'; // Add this import
 import { useAuth } from '../../../context/FavContext';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { ImageF, host } from "../../../APIRoutes";
-
+import FooterMenu from '../../../components/Menus/FooterMenu';
 
 const Favorite = () => {
+    const navigation = useNavigation(); // Initialize useNavigation hook
     const { favorites, removeFromFavorites } = useAuth();
     const [favoriteUsers, setFavoriteUsers] = useState([]);
     const [userId, setUserId] = useState(null); // State to store user ID
@@ -59,35 +60,37 @@ const Favorite = () => {
 
       <View style={{ flex: 1, paddingHorizontal: 30, backgroundColor: '#f6f6f6'}}>
         {favoriteUsers.map((favorite, index) => (
-          <View style={styles.card} key={index}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <Image
-                source={{ uri: host + favorite?.receiverId?.image }}
-                style={{
-                  height: 50,
-                  width: 50,
-                  borderRadius: 100,
-                  borderWidth: 1,
-                  borderColor: "black",
-                }}
-              />
-              <View style={{ marginLeft: 10 }}>
-                <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: 500}}>
-                  {favorite?.receiverId?.firstName} {favorite?.receiverId?.lastName}
-                </Text>
-                <Text style={{marginTop: 2, fontSize: 14, color: 'white'}}>{favorite?.receiverId?.barangay?.name}, {favorite?.receiverId?.city?.name} {favorite?.receiverId?.province?.name}</Text>
+          <TouchableOpacity key={index} onPress={() => navigation.navigate('ViewProfile', { profilepost: favorite })}> 
+            <View style={styles.card}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                  source={{ uri: host + favorite?.receiverId?.image }}
+                  style={{
+                    height: 50,
+                    width: 50,
+                    borderRadius: 100,
+                    borderWidth: 1,
+                    borderColor: "black",
+                  }}
+                />
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: 500}}>
+                    {favorite?.receiverId?.firstName} {favorite?.receiverId?.lastName}
+                  </Text>
+                  <Text style={{marginTop: 2, fontSize: 14, color: 'white'}}>{favorite?.receiverId?.barangay?.name}, {favorite?.receiverId?.city?.name} {favorite?.receiverId?.province?.name}</Text>
+                </View>
+              </View>
+              <View>
+              <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
+              {/* <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
+              <Feather name="trash-2" size={18} color="#F02" />
+              </TouchableOpacity> */}
               </View>
             </View>
-            <View>
-            <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
-            {/* <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
-            <Feather name="trash-2" size={18} color="#F02" />
-            </TouchableOpacity> */}
-            </View>
-          </View>
+          </TouchableOpacity> 
         ))}
       </View>
-        <FooterMenu />
+      <FooterMenu />
     </SafeAreaView>
   );
 };

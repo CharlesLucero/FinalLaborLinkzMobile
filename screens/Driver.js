@@ -1,18 +1,17 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, Image, SafeAreaView, ScrollView} from 'react-native';
+import React, { useContext, useState, useEffect } from "react";
+import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { InfoTechnicianContext } from "../../../../context/infoTechnicianContext";
-import TechnicianCard from "../../../../components/TechnicianCard";
+import DriverCard from "../components/DriverCard"
+import {InfoDriverContext} from "../context/infoDriverContext"
 import axios from 'axios';
-
-const Technician = ({navigation}) =>{
-    const [info, setInfo] = useContext(InfoTechnicianContext)
+const Driver = ({navigation}) =>{
+    const [info, setInfo] = useContext(InfoDriverContext)
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
         try {
         setRefreshing(true);
-        const {data} = await axios.get('/information/getinfotechnician')
+        const {data} = await axios.get('/information/getinfodriver')
         setRefreshing(false)
         setInfo(data?.info)
         } catch (error) {
@@ -26,6 +25,7 @@ const Technician = ({navigation}) =>{
         onRefresh();
     }, []);
 
+
     return (
         <SafeAreaView style = {{flex:1, marginTop: 20, backgroundColor: '#ffffff'}}>
             <View style = {{flex:1 , marginTop: 20}}>
@@ -38,30 +38,32 @@ const Technician = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Technician}>Technician</Text>
+                        <Text style = {styles.Driver}>DRIVER</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
-                        <TechnicianCard info={info} />
+                    <DriverCard info = {info}/>
                     </View>
 
                     <View>
                         
                     </View>
                         
-                
-
+        
                 </ScrollView>
             </View>
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
-    Technician:{
-        color: '#343434',
+    Driver:{
+        color: '#00CCAA',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 25,
+        textShadowColor: 'gray',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     }
 })
-export default Technician;
+export default Driver;
 

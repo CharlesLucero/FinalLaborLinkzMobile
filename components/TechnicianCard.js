@@ -27,46 +27,37 @@ const TechnicianCard = ({ info }) => {
   return (
     <View>
       <Text style={styles.total}>
-        There are {info?.length} Available Carpenters
+        There are <Text style={{color: '#00CCAA', fontWeight: 500}}>{info?.length}</Text> Available Carpenters
       </Text>
       {info?.map((infos, i) => (
         <View style={styles.card} key={i}>
           <TouchableOpacity onPress={() => handleView(infos)}>
-            <View style={styles.alignEverything}>
-              <Image
-                style={styles.imageborder}
-                source={{ uri: host + infos?.createdBy?.image }}
-              />
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+              <View>
+                <Image
+                  style={{
+                    height: 50,
+                    width: 50,
+                    borderRadius: 100,
+                    borderWidth: 1,
+                    borderColor: "black",
+                  }}
+                  source={{ uri: host + infos?.createdBy?.image }}
+                />
+              </View>
+                <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: 500}}>
+                  {infos?.createdBy?.firstName} {infos?.createdBy?.lastName}{" "}
+                </Text>
 
-              <Text style={styles.name}>
-                {infos?.createdBy?.firstName} {infos?.createdBy?.lastName}{" "}
-                {"\n"}
                 <View>
-                  <Text style={styles.info}>
-                    <Feather name="map-pin" size={24} color="#00CCAA" />{" "}
+                  <Text style={{marginTop: 2, fontSize: 14, color: 'white'}}>
                     {infos?.createdBy?.barangay?.name},{" "}
                     {infos?.createdBy?.city?.name}{" "}
                     {infos?.createdBy?.province?.name}
                   </Text>
                 </View>
-                {"\n"}
-                <View>
-                  <Text style={styles.info}>
-                    <AntDesign name="contacts" size={24} color="#00CCAA" />
-                    <Text style={styles.info1}> {infos?.createdBy?.contactNumber}</Text>
-                  </Text>
-                </View>
-                {"\n"}
-                <View>
-                  <Text style={styles.info}>
-                  <Feather name="file-text" size={24} color="#00CCAA" />
-                  <Text style={styles.info1}>{infos?.bio}</Text>
-                  </Text>
-                </View>
-
-              
-              </Text>
-
+              </View>
 
             </View>
           </TouchableOpacity>
@@ -78,22 +69,13 @@ const TechnicianCard = ({ info }) => {
 
 const styles = StyleSheet.create({
   total: {
-    color: "green",
-    marginTop: 20,
+    color: "black",
     textAlign: "center",
-  },
-  card: {
-    width: "100%",
-    backgroundColor: "#343434",
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 10,
-    marginVertical: 10,
-    paddingHorizontal: 40,
+    marginBottom: 20
   },
   imageborder: {
-    height: 80,
-    width: 80,
+    height: 50,
+    width: 50,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: "#00CCAA",
@@ -126,6 +108,18 @@ const styles = StyleSheet.create({
   },
   alignEverything: {
     flexDirection: "row",
+  },
+  card: {
+    width: "100%",
+    backgroundColor: "#343434",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 20,
+    marginBottom: 10,
+    height: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
 });
 export default TechnicianCard;

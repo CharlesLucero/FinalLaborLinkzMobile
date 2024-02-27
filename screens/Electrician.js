@@ -1,18 +1,18 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, Image, SafeAreaView, ScrollView} from 'react-native';
+import React, { useContext, useState, useEffect } from "react";
+import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { InfoTechnicianContext } from "../../../../context/infoTechnicianContext";
-import TechnicianCard from "../../../../components/TechnicianCard";
+import ElectricianCard from "../components/ElectricianCard";
+import {InfoElectricianContext} from "../context/infoElectricianContext"
 import axios from 'axios';
 
-const Technician = ({navigation}) =>{
-    const [info, setInfo] = useContext(InfoTechnicianContext)
+const Electrician = ({navigation}) =>{
+    const [info, setInfo] = useContext(InfoElectricianContext)
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
         try {
         setRefreshing(true);
-        const {data} = await axios.get('/information/getinfotechnician')
+        const {data} = await axios.get('/information/getinfoelectrician')
         setRefreshing(false)
         setInfo(data?.info)
         } catch (error) {
@@ -38,18 +38,27 @@ const Technician = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Technician}>Technician</Text>
+                        <Text style = {styles.Electrician}>ELECTRICIANS</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
-                        <TechnicianCard info={info} />
+                    <ElectricianCard info = {info}/>
                     </View>
 
                     <View>
-                        
+                        <Text>{JSON.stringify(info, null, 4)}</Text>
                     </View>
                         
-                
+                    
+
+
+
+
+
+
+
+
+
 
                 </ScrollView>
             </View>
@@ -57,11 +66,14 @@ const Technician = ({navigation}) =>{
     )
 }
 const styles = StyleSheet.create({
-    Technician:{
-        color: '#343434',
+    Electrician:{
+        color: '#00CCAA',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 25,
+        textShadowColor: 'gray',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     }
 })
-export default Technician;
+export default Electrician;
 

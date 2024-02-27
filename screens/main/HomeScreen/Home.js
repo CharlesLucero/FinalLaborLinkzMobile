@@ -189,15 +189,20 @@ const Home = ({navigation}) => {
         <ScrollView showsVerticalScrollIndicator={false}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 
         {/* Search Bar**/}
+        <TouchableOpacity onPress={() => navigation.navigate('SearchScreen')}>
         <View style = {{flexDirection: 'row', backgroundColor: '#f0f0f0', borderRadius: 20, padding: 14, marginHorizontal: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 12}}>
+       
                 <Feather style = {{paddingHorizontal: 5}} name="search" size={18} color="#00CCAA" />
-                <TextInput
-                    style={{fontSize: 13}} 
-                    placeholder='What service are you looking for?'
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)} >
-                </TextInput>
+         
+                    <TextInput
+                        style={{fontSize: 13}} 
+                        placeholder='What service are you looking for?'
+                        value={searchText}
+                        onChangeText={(text) => setSearchText(text)} >
+                    </TextInput>
+              
         </View>
+        </TouchableOpacity>
         {/* Search Desc**/}
         <View>
             <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 20}}> Search from 
