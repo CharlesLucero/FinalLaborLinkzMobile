@@ -43,12 +43,12 @@ const EditProfile = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const [checkboxes, setCheckboxes] = useState([
-    { id: 1, label: "Carpenter", value: "Carpenter", checked: false },
-    { id: 2, label: "Plumber", value: "Plumber", checked: false },
-    { id: 3, label: "Electrician", value: "Electrician", checked: false },
-    { id: 4, label: "Maid", value: "Maid", checked: false },
-    { id: 5, label: "Driver", value: "Driver", checked: false },
-    { id: 6, label: "Technician", value: "Technician", checked: false },
+    { id: 1, label: "Carpenter", value: "Carpenter ", checked: false },
+    { id: 2, label: "Plumber", value: "Plumber ", checked: false },
+    { id: 3, label: "Electrician", value: "Electrician ", checked: false },
+    { id: 4, label: "Maid", value: "Maid ", checked: false },
+    { id: 5, label: "Driver", value: "Driver ", checked: false },
+    { id: 6, label: "Technician", value: "Technician ", checked: false },
   ]);
 
   // const data = [
@@ -84,43 +84,45 @@ const EditProfile = ({ navigation }) => {
   };
 
   //handle form data info data
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      if (!bio) {
-        alert("Please add bio ");
-      }
-      if (!age) {
-        alert("Please add age");
-      }
-
-      const checkedJobs = checkboxes
-        .filter((checkbox) => checkbox.checked)
-        .map((checkbox) => checkbox.label);
-
-      if (checkedJobs.length === 0) {
-        alert("Please select at least one job");
-        setLoading(false);
-        return;
-      }
-
-      const { data } = await axios.post("/information/create-info", {
-        bio,
-        age,
-        job: checkedJobs,
-
-      });
-      setLoading(false);
-      setInfo([...info, data?.info]);
-      alert(data?.message);
-
-      navigation.navigate("Home");
-    } catch (error) {
-      alert(error.response.data.message || error.message);
-      setLoading(false);
-      console.log(error);
+  //handle form data info data
+const handleSubmit = async () => {
+  try {
+    setLoading(true);
+    if (!bio) {
+      alert("Please add bio ");
     }
-  };
+    if (!age) {
+      alert("Please add age");
+    }
+
+    const checkedJobs = checkboxes
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.label)
+      .join(", "); // Concatenate selected job labels with comma and space
+
+    if (!checkedJobs) {
+      alert("Please select at least one job");
+      setLoading(false);
+      return;
+    }
+
+    const { data } = await axios.post("/information/create-info", {
+      bio,
+      age,
+      job: checkedJobs,
+    });
+    setLoading(false);
+    setInfo([...info, data?.info]);
+    alert(data?.message);
+
+    navigation.navigate("Home");
+  } catch (error) {
+    alert(error.response.data.message || error.message);
+    setLoading(false);
+    console.log(error);
+  }
+};
+
 
   return (
     <SafeAreaView

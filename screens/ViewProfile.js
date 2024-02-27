@@ -37,6 +37,7 @@ const ViewProfile = ({ route, navigation }) => {
       try {
         const userId =
           route.params?.profilepost?.postedBy?._id ||
+          route.params?.profilepost?.receiverId?._id || //Addded for favorites
           route.params?.profileData?.createdBy?._id;
 
         if (userId) {
@@ -186,7 +187,7 @@ const ViewProfile = ({ route, navigation }) => {
                 height: 120,
                 width: 120,
                 borderRadius: 100,
-                borderWidth: 5,
+                borderWidth: 1,
                 borderColor: "black",
               }}
             ></Image>
@@ -196,10 +197,14 @@ const ViewProfile = ({ route, navigation }) => {
             {userData && (
               <View>
                 <View style={styles.nameContainer}>
+
                   <Text style={styles.completeName}>
                     {userData.userInfo.firstName} {userData.userInfo.lastName}
                   </Text>
+
+
                 </View>
+
                 <Text style={styles.infoText}>
                   {userData.userAdditionalInfo.job}
                 </Text>
@@ -419,12 +424,13 @@ const ViewProfile = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   nameContainer: {
-    flexDirection: "row",
+    alignSelf:'center'
   },
   completeName: {
     color: "#00CCAA",
     fontSize: 32,
     fontWeight: "600",
+
   },
   infoText: {
     fontSize: 18,

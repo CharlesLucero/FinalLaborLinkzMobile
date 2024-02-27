@@ -30,6 +30,7 @@ import Chats from "../../screens/Chats";
 import Security from "../../screens/main/ProfileScreen/Settings/Security/Security";
 import AccountVerification from "../../screens/main/ProfileScreen/Settings/AccountVerification/AccountVerification";
 import Verification from "../../screens/main/ProfileScreen/Settings/AccountVerification/Verification";
+import SearchScreen from "../../screens/main/HomeScreen/SearchScreen";
 
 
 const ScreenMenu = () => {
@@ -71,6 +72,13 @@ const ScreenMenu = () => {
           component={AccountVerification} 
           options={{headerShown: false}}
           />
+           <Stack.Screen 
+          name= "SearchScreen" 
+          component={SearchScreen} 
+          options={{headerShown: false}}
+          />
+          
+
           <Stack.Screen 
           name= "Verification" 
           component={Verification} 

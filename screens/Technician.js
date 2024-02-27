@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, Text , TouchableOpacity, RefreshControl, Image, SafeAreaView, ScrollView} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { InfoTechnicianContext } from "../../../../context/infoTechnicianContext";
-import TechnicianCard from "../../../../components/TechnicianCard";
+import { InfoTechnicianContext } from "../context/infoTechnicianContext";
+import TechnicianCard from "../components/TechnicianCard";
 import axios from 'axios';
 
 const Technician = ({navigation}) =>{
@@ -38,7 +38,7 @@ const Technician = ({navigation}) =>{
                     </View>  
 
                     <View style = {{ alignSelf:'center', marginTop: 10}}>
-                        <Text style = {styles.Technician}>Technician</Text>
+                        <Text style = {styles.Technician}>TECHNICIAN</Text>
                     </View>
 
                     <View style = {{paddingHorizontal: 20}}>
@@ -58,9 +58,12 @@ const Technician = ({navigation}) =>{
 }
 const styles = StyleSheet.create({
     Technician:{
-        color: '#343434',
+        color: '#00CCAA',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 25,
+        textShadowColor: 'gray',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     }
 })
 export default Technician;

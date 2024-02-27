@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { ImageF } from "../APIRoutes";
+import { ImageF, host } from "../APIRoutes";
 import { AuthContext } from "../context/authContext";
 import React, { useState, useContext } from "react";
 import {
@@ -8,7 +8,7 @@ import {
   Entypo,
   MaterialIcons,
   Octicons,
-  Feather
+  Feather,
 } from "@expo/vector-icons";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
@@ -19,7 +19,6 @@ const ElectricianCard = ({ info }) => {
   const { user, token } = state;
   const [image, setImage] = useState(user?.image);
 
-
   const handleView = (infos) => {
     navigation.navigate("ViewProfile", { profileData: infos });
     console.log(infos);
@@ -28,43 +27,38 @@ const ElectricianCard = ({ info }) => {
   return (
     <View>
       <Text style={styles.total}>
-        There are {info?.length} Available Carpenters
+        There are <Text style={{color: '#00CCAA', fontWeight: 500}}>{info?.length}</Text> Available Carpenters
       </Text>
       {info?.map((infos, i) => (
         <View style={styles.card} key={i}>
           <TouchableOpacity onPress={() => handleView(infos)}>
-            <View style={styles.alignEverything}>
-              {/* <Image
-                style={styles.imageborder}
-                source={{ uri: infos?.createdBy?.image }}
-              /> */}
-
-              <Text style={styles.name}>
-                {infos?.createdBy?.firstName} {infos?.createdBy?.lastName}{infos?.createdBy?.contactNumber}{" "}
-              </Text>
-            </View>
-            <View style={styles.icon}>
-            <Feather name="map-pin" size={24} color="#00CCAA" />
-              <Text style={styles.info}>{" "}{infos?.address}
-              </Text>
-            </View>
-            <View style={styles.icon}>
-              <Text style={styles.info}>
-                Job: {infos?.job}
-              </Text>
-            </View>
-            <View style={styles.icon}>
-              <Text style={styles.info}>
-                Age: {infos?.age}
-              </Text>
-            </View>
-            <View style={styles.icon}>
-                <Text style={styles.info}>
-                  Contact Number: {infos?.createdBy?.contactNumber}
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+              <View>
+                <Image
+                  style={{
+                    height: 50,
+                    width: 50,
+                    borderRadius: 100,
+                    borderWidth: 1,
+                    borderColor: "black",
+                  }}
+                  source={{ uri: host + infos?.createdBy?.image }}
+                />
+              </View>
+                <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: 500}}>
+                  {infos?.createdBy?.firstName} {infos?.createdBy?.lastName}{" "}
                 </Text>
-            </View>
-            <View style={styles.icon1}>
-              <Text style={styles.info1}>Bio: {infos?.bio}</Text>
+
+                <View>
+                  <Text style={{marginTop: 2, fontSize: 14, color: 'white'}}>
+                    {infos?.createdBy?.barangay?.name},{" "}
+                    {infos?.createdBy?.city?.name}{" "}
+                    {infos?.createdBy?.province?.name}
+                  </Text>
+                </View>
+              </View>
+
             </View>
           </TouchableOpacity>
         </View>
@@ -75,60 +69,57 @@ const ElectricianCard = ({ info }) => {
 
 const styles = StyleSheet.create({
   total: {
-    color: "green",
-    marginTop: 20,
+    color: "black",
     textAlign: "center",
-  },
-  card: {
-    width: "100%",
-    backgroundColor: "#343434",
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 10,
-    marginVertical: 10,
-    paddingHorizontal: 40,
+    marginBottom: 20
   },
   imageborder: {
-    height: 60,
-    width: 60,
+    height: 50,
+    width: 50,
     borderRadius: 100,
     borderWidth: 1,
-    // borderColor: "black",
-  },
-  alignEverything: {
-    flexDirection: "row",
+    borderColor: "#00CCAA",
+    marginTop: 20,
+  
   },
   name: {
     fontSize: 20,
-    marginLeft: 5,
-    marginTop: 10,
+    marginTop: 5,
     fontWeight: "500",
     color: "#FFFFFF",
-    
+    paddingLeft: 10,
   },
   icon: {
     flexDirection: "row",
     marginTop: 10,
-    marginLeft: 10,
   },
   info: {
-    fontSize: 15,
-    alignSelf: "center",
+    fontSize: 13,
     color: "#FFFFFF",
+    paddingLeft: 10,
+    marginTop: 5,
   },
-  icon1: {
-    borderBottomWidth: 1,
-    color: "#000000",
-    marginLeft: 5,
-    textDecorationLine: "underline",
-  },
+
   info1: {
     fontSize: 13,
-    alignSelf: "baseline",
     color: "#FFFFFF",
-    marginTop: 20,
-    marginBottom: 5,
-    marginLeft: 7,
+    marginTop: 10,
+    marginLeft: 14,
+  },
+  alignEverything: {
+    flexDirection: "row",
+  },
+  card: {
+    width: "100%",
+    backgroundColor: "#343434",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 20,
+    marginBottom: 10,
+    height: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
 });
 export default ElectricianCard;
