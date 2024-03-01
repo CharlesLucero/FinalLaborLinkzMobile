@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { host } from "../../../APIRoutes";
@@ -8,6 +17,7 @@ const SearchScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [infos, setInfos] = useState([]);
   const [originalInfos, setOriginalInfos] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     fetchAllInfo();
@@ -25,25 +35,44 @@ const SearchScreen = ({ navigation }) => {
 
   const handleSearch = (text) => {
     setSearch(text);
+    setSearchText(text); // Update the search text
     if (text.trim() === "") {
       // If search query is empty, reset to show all original infos
       setInfos(originalInfos);
     } else {
       // Filter the original infos based on search query
-      const filtered = originalInfos.filter((info) =>
-        info.job && typeof info.job === 'string' && info.job.toLowerCase().includes(text.toLowerCase())
+      const filtered = originalInfos.filter(
+        (info) =>
+          info.job &&
+          info.job.some(
+            (job) =>
+              typeof job === "string" &&
+              job.toLowerCase().includes(text.toLowerCase())
+          )
       );
       setInfos(filtered);
     }
   };
-  
+
+  const handleView = (info) => {
+    navigation.navigate("ViewProfile", { profileData: info });
+    console.log(info);
+  };
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#F6F6F6', flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: "#F6F6F6", flex: 1 }}>
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ paddingHorizontal: 8, flexDirection: "row", backgroundColor: '#FFFFFF' }}>
-            <View style={{ paddingTop: 20, paddingRight: 5, flexDirection: "row" }}>
+          <View
+            style={{
+              paddingHorizontal: 8,
+              flexDirection: "row",
+              backgroundColor: "#FFFFFF",
+            }}
+          >
+            <View
+              style={{ paddingTop: 20, paddingRight: 5, flexDirection: "row" }}
+            >
               <TouchableOpacity>
                 <Entypo
                   name="chevron-left"
@@ -64,30 +93,59 @@ const SearchScreen = ({ navigation }) => {
           </View>
 
           <View style={{ marginTop: 20, paddingHorizontal: 10 }}>
-            {infos.map((info) => (
-              <View key={info._id} style={{ marginBottom: 20, paddingHorizontal: 30, backgroundColor: '#FFFFFF', paddingVertical: 20, borderRadius: 15 }}>
-                <View style={{ flexDirection: 'row', gap: 8 }}>
-                  <Image
-                    style={{
-                      height: 60,
-                      width: 60,
-                      borderRadius: 100,
-                      borderWidth: 1,
-                      borderColor: "black",
-                    }}
-                    source={{ uri: host + info?.createdBy?.image }}
-                  />
-                  <View style={{ flexDirection: 'column', marginTop: 7 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "600", color: '#000000' }}>
-                      {info?.createdBy?.firstName} {info?.createdBy?.lastName}
-                    </Text>
-                    <Text style={{ color: '#00CCAA', fontSize: 12, fontWeight: '500' }}>{info?.job}</Text>
-                  </View>
+            {infos.length === 0 ? (
+              // Display "No results found" when there are no matching search results
+              <Text style={{ textAlign: "center" }}>No results found for "{searchText}"</Text>
+            ) : (
+              infos.map((info) => (
+                <View
+                  key={info._id}
+                  style={{
+                    marginBottom: 20,
+                    paddingHorizontal: 30,
+                    backgroundColor: "#FFFFFF",
+                    paddingVertical: 20,
+                    borderRadius: 15,
+                  }}
+                >
+                  <TouchableOpacity onPress={() => handleView(info)}>
+                    <View style={{ flexDirection: "row", gap: 8 }}>
+                      <Image
+                        style={{
+                          height: 60,
+                          width: 60,
+                          borderRadius: 100,
+                          borderWidth: 1,
+                          borderColor: "black",
+                        }}
+                        source={{ uri: host + info?.createdBy?.image }}
+                      />
+                      <View style={{ flexDirection: "column", marginTop: 7 }}>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            fontWeight: "600",
+                            color: "#000000",
+                          }}
+                        >
+                          {info?.createdBy?.firstName} {info?.createdBy?.lastName}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#00CCAA",
+                            fontSize: 12,
+                            fontWeight: "500",
+                          }}
+                        >
+                          {info?.job}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </View>
-            ))}
+              ))
+            )}
           </View>
-
         </ScrollView>
       </View>
     </SafeAreaView>

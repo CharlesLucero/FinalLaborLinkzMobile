@@ -15,7 +15,6 @@ const Home = ({navigation}) => {
     //global state
     const [posts, getAllPosts] = useContext(PostContext);
     const [refreshing, setRefreshing] = useState(false);
-    const [searchText, setSearchText] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [token, setToken] = useState(null); // State to store the token
     const postsPerPage = 10;
@@ -62,25 +61,8 @@ const Home = ({navigation}) => {
             }
         };
 
-    const getFilteredPosts = () => {
-        return posts.filter(post =>
-            post.title.toLowerCase().includes(searchText.toLowerCase()) ||
-            post.description.toLowerCase().includes(searchText.toLowerCase())
-        );
-    };
 
-    const highlightSearchText = (text, search) => {
-        if (!search) {
-            return text; // No search text, return the original text
-        }
-    
-        const regex = new RegExp(`(${search})`, 'gi');
-        const parts = text.split(regex);
-    
-        return parts.map((part, index) => (
-            regex.test(part) ? <Text key={index} style={{ backgroundColor: '#B1ACAC', fontWeight: 'bold' }}>{part}</Text> : part
-        ));
-    };
+ 
     
      //fresh controll
      const onRefresh = useCallback(() => {
@@ -194,12 +176,7 @@ const Home = ({navigation}) => {
        
                 <Feather style = {{paddingHorizontal: 5}} name="search" size={18} color="#00CCAA" />
          
-                    <TextInput
-                        style={{fontSize: 13}} 
-                        placeholder='What service are you looking for?'
-                        value={searchText}
-                        onChangeText={(text) => setSearchText(text)} >
-                    </TextInput>
+                    <Text  style={{fontSize: 13}}>What service are you looking for?</Text>
               
         </View>
         </TouchableOpacity>
@@ -262,20 +239,14 @@ const Home = ({navigation}) => {
                         navigation={navigation}
                         posts={[{
                             ...post,
-                            title: highlightSearchText(post.title, searchText),
-                            description: highlightSearchText(post.description, searchText),
+                       
                         }]}
                     />
                 </TouchableOpacity>
             ))}
         </View>
 
-                {getFilteredPosts().length === 0 && (
-                    <Text style={{ textAlign: 'center', marginTop: 10, color: 'red' }}>
-                        No results found for "{searchText}"
-                    </Text>
-                )}
-           
+            
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10}}>
                         <TouchableOpacity onPress={goToPreviousPage}>
                             <FontAwesome name="chevron-left" size={24} color="#00CCAA" />

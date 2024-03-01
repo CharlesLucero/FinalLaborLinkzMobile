@@ -1,3 +1,4 @@
+
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { AntDesign, FontAwesome, Entypo, MaterialIcons, EvilIcons, Octicons   } from '@expo/vector-icons';
@@ -34,7 +35,10 @@ const InformationCards = ({info, navigation }) => {
 
                  <View style = {{flexDirection:'row', paddingVertical: 15}}>
                     <Entypo name="address" size={24} color="#00CCAA" />
-                    <Text style = {styles.info}>   Address:   {infos?.address}</Text>
+                    <Text style = {styles.info}>  Location: {" "}
+                    {infos?.createdBy?.barangay?.name},{" "}
+                    {infos?.createdBy?.city?.name}{" "}
+                    {infos?.createdBy?.province?.name} </Text>
                 </View>
                 </View>
             ))}
@@ -49,30 +53,19 @@ const styles = StyleSheet.create({
         fontWeight:'500'
     },
     card:{
-        paddingHorizontal: 50
-    }
+        paddingHorizontal: 50,
+        backgroundColor: "#343434",
+        padding: 20,
+        borderRadius: 5,
+        color: "#FFFFFF",
+        marginHorizontal: 10,
+        marginTop: 10,
+    },
+    info:{
+        textAlign:'center',
+        color:'#FFFFFF',
+        fontWeight:'500'
+    },
     
 })
 export default InformationCards;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

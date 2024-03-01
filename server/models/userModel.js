@@ -63,6 +63,12 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    identification: {
+        
+        idType: { type: String, default: false },
+        front: { type: String, default: false },
+        back: { type: String, default: false },
+      },
     region: {
         code: { trim: true, type: String },
         name: { trim: true, type: String },
@@ -79,6 +85,8 @@ const userSchema = new mongoose.Schema({
           code: { trim: true, type: String },
           name: { trim: true, type: String },
         },
+      
+      
   
 },{timestamps: true}
 );

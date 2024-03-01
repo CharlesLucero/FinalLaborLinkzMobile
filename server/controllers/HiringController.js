@@ -24,6 +24,26 @@ const sendApplication = async (req, res) => {
 };
 
 
+const sendHire = async (req, res) => {
+    const { senderId, receiverId } = req.body;
+
+    try {
+        // Check if the hiring process already exists
+        const existingProcess = await HiringProcess.findOne({ senderId, receiverId });
+        if (existingProcess) {
+            return res.status(409).json({ message: 'Application already sent.' });
+        }
+
+        // Create a new hiring process with senderId and receiverId
+        const newHiringProcess = await HiringProcess.create({ senderId, receiverId });
+        return res.status(201).json({ message: 'Hiring process initiated successfully.', data: newHiringProcess });
+    } catch (error) {
+        console.error('Error initiating hiring process:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+};
+
+
 // // Controller function for user2 to accept an application
 // const acceptApplication = async (req, res) => {
 //     const { hiringProcessId } = req.params;
@@ -87,7 +107,27 @@ const declineApplication = async (req, res) => {
         console.error('Error declining application:', error);
         return res.status(500).json({ message: 'Internal server error.' });
     }
-};
+    };
+    
+    const doneApplication = async (req, res) => {
+        const { hiringProcessId } = req.params;
+
+        try {
+            // Find the hiring process by ID
+            const hiringProcess = await HiringProcess.findById(hiringProcessId);
+            if (!hiringProcess) {
+                return res.status(404).json({ message: 'Hiring process not found.' });
+            }
+
+            // Done the application
+            await hiringProcess.done();
+            return res.status(200).json({ message: 'Application done successfully.', data: hiringProcess });
+        } catch (error) {
+            console.error('Error done application:', error);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+    };
+
 
 const getReceivedApplications = async (req, res) => {
     const { userId } = req.params;
@@ -119,4 +159,4 @@ const getSentApplications = async (req, res) => {
     }
 };
 
-module.exports = {declineApplication,getSentApplications, getReceivedApplications, acceptApplication, sendApplication}
+module.exports = {declineApplication,getSentApplications, sendHire, getReceivedApplications, acceptApplication, sendApplication, doneApplication}

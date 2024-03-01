@@ -9,7 +9,7 @@ import {
   Image,
   Alert
 } from "react-native";
-import { AntDesign, FontAwesome, MaterialCommunityIcons ,  Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { AntDesign, FontAwesome6 , FontAwesome, MaterialCommunityIcons ,  Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import moment from "moment";
 import { Modal } from "react-native";
@@ -31,6 +31,7 @@ const ViewProfile = ({ route, navigation }) => {
   const [state, setState] = useContext(AuthContext);
   const [jwtToken, setJwtToken] = useState(null); // State to store JWT token
   const [userId, setUserId] = useState(null); // State to store user ID
+  const [favorite, setFavorite] = useState(false); // Define favorite state
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -87,6 +88,8 @@ const ViewProfile = ({ route, navigation }) => {
     setReportModalVisible(false);
   };
 
+  
+
   const reportUserHandler = async () => {
     // Check if violation and description are not empty
     if (!violation.trim() || !description.trim()) {
@@ -127,24 +130,46 @@ const ViewProfile = ({ route, navigation }) => {
     }
   };
 
-  const addFavorite = async () => {
-    try {
-      const senderId = userId; 
-      const receiverId = userData.userInfo._id; // Assuming userData is populated
-      await axios.post("/favorite/add", { senderId, receiverId });
-      
-      // Display a success message or perform any other action upon successful addition
-      Alert.alert("Success", "User added to favorites successfully");
-    } catch (error) {
-      if (error.response && error.response.status === 409) {
-        Alert.alert("Error", "The user is already in your favorites!");
-      } else {
-        console.error("Error adding user to favorites", error);
-        // Display an error message or handle the error in an appropriate way
-        Alert.alert("Error", "Failed to add user to favorites");
-      }
+ // Add a favorite
+const addFavorite = async () => {
+  try {
+    const senderId = userId; 
+    const receiverId = userData.userInfo._id; // Assuming userData is populated
+    await axios.post("/favorite/add", { senderId, receiverId });
+    
+    // Update state to indicate that the user is now a favorite
+    setFavorite(true);
+    
+    // Display a success message or perform any other action upon successful addition
+    Alert.alert("Success", "User added to favorites successfully");
+  } catch (error) {
+    if (error.response && error.response.status === 409) {
+      Alert.alert("Error", "The user is already in your favorites!");
+    } else {
+      console.error("Error adding user to favorites", error);
+      // Display an error message or handle the error in an appropriate way
+      Alert.alert("Error", "Failed to add user to favorites");
     }
-  };
+  }
+};
+
+const sendHire = async () => {
+  try {
+    const senderId = userId;
+    const receiverId = userData?.userInfo?._id;
+    await axios.post("/hiring/send-hire", { senderId, receiverId });
+    // Display success message upon successful hire request
+    Alert.alert("Success", "Hire request sent successfully");
+  } catch (error) {
+    // Handle error
+    console.error("Error sending hire request", error);
+    Alert.alert("Error", "Failed to send hire request");
+  }
+};
+
+// In your ViewProfile component, update the heart icon rendering:
+
+
 
   const violationOptions = [
     "Spam",
@@ -219,6 +244,16 @@ const ViewProfile = ({ route, navigation }) => {
                     {userData?.userInfo?.city?.name}{" "}
                     {userData?.userInfo?.province?.name}
                 </Text>
+                <View style={{ flexDirection: 'row',     alignSelf: "center", marginTop: 10 }}>
+                {[...Array(5)].map((_, index) => (
+                  <FontAwesome
+                    key={index}
+                    name={index < userData?.userInfo?.rating ? 'star' : 'star-o'} // Use 'star' for filled stars and 'star-o' for outline stars
+                    size={18}
+                    color="yellow"
+                  />
+                ))}
+              </View>
                 
               </View>
             )}
@@ -233,6 +268,7 @@ const ViewProfile = ({ route, navigation }) => {
               marginTop: 20,
             }}
           >
+          
             <TouchableOpacity
               style={{
                 backgroundColor: "#343434",
@@ -243,7 +279,7 @@ const ViewProfile = ({ route, navigation }) => {
               }}
               onPress={addFavorite} 
             >
-              <AntDesign name="hearto" size={32} color="#00CCAA" />
+              <AntDesign name={favorite ? "heart" : "hearto"} size={32} color="#00CCAA" />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -254,21 +290,12 @@ const ViewProfile = ({ route, navigation }) => {
                 justifyContent: "center",
                 borderRadius: 20,
               }}
-              onPress={() => navigation.navigate("Message")}
+              onPress={sendHire}
             >
-              <MaterialCommunityIcons name="chat" size={32} color="#00CCAA" />
+              <Text style = {{color: "#00CCAA", fontSize: 20, fontWeight: 'bold' }}>Hire</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: 'row',     alignSelf: "center", marginTop: 10 }}>
-                {[...Array(5)].map((_, index) => (
-                  <FontAwesome
-                    key={index}
-                    name={index < userData?.userInfo?.rating ? 'star' : 'star-o'} // Use 'star' for filled stars and 'star-o' for outline stars
-                    size={18}
-                    color="yellow"
-                  />
-                ))}
-              </View>
+      
           <Text style={styles.user}>User Information</Text>
           <View>
             {userData && (

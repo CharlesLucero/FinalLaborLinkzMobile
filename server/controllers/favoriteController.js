@@ -13,7 +13,7 @@ const addFavorite = async (req, res) => {
     }
     
     // Create and save the new favorite
-    const favorite = new Favorite({ senderId, receiverId });
+    const favorite = new Favorite({ senderId, receiverId, liked: true }); // Set liked to true
     await favorite.save();
     
     res.status(201).json({ message: "Favorite added successfully", favorite });
@@ -27,7 +27,8 @@ const addFavorite = async (req, res) => {
 const removeFavorite = async (req, res) => {
   try {
     const { id } = req.params;
-    await Favorite.findByIdAndDelete(id);
+    // Find the favorite by ID and update the liked field to false
+    await Favorite.findByIdAndUpdate(id, { liked: false });
     res.json({ message: "Favorite removed successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -47,7 +48,5 @@ const getAllFavoriteUsers = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error.' });
     }
 };
-
-
 
 module.exports = { addFavorite, removeFavorite, getAllFavoriteUsers };

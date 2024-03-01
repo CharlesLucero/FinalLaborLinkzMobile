@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around', // Changed to evenly space the icons
         backgroundColor: 'white',
-        position: 'absolute',
         bottom: 0,
         width: '100%',
         paddingHorizontal: 20,
