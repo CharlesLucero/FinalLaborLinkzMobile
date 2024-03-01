@@ -450,12 +450,105 @@ const getUserDetailsController = async (req, res) => {
   }
 };
 
+const verificationController = async (req, res) => {
+  try {
+    const { email, idType } = req.body;
+
+
+    if (!idType) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide ID type.",
+      });
+    }
+
+
+    // Check if frontImage and backImage are uploaded
+    if (!req.files || req.files.length !== 2) {
+      if (!req.files) {
+        return res.status(400).json({
+          success: false,
+          message: "Please upload both front and back images of the ID.",
+        });
+      } else if (req.files.length === 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Please upload both front and back images of the ID.",
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Please upload both front and back images of the ID.",
+        });
+      }
+    }
+
+
+
+
+    // Get the user from the database
+    const user = await userModel.findOne({ email });
+
+
+    // Handle image updates for front and back IDs
+    let frontImage = ""; // Initialize front image
+    let backImage = ""; // Initialize back image
+
+
+    // Check if both front and back images are uploaded
+    if (req.files.length === 2) {
+      // Assuming req.files[0] is for the front image and req.files[1] is for the back image
+      frontImage = req.files[0].filename;
+      backImage = req.files[1].filename;
+    } else {
+      // Handle the case where both images are not uploaded
+      return res.status(400).json({
+        success: false,
+        message: "Please upload both front and back images of the ID.",
+      });
+    }
+
+
+    // Update user information including the updated image paths and ID type
+    const updatedUser = await userModel.findOneAndUpdate(
+      { email },
+      {
+        "identification.idType": idType,
+        "identification.front": frontImage, // Update the front image path
+        "identification.back": backImage, // Update the back image path
+      },
+      { new: true }
+    );
+
+
+    // Remove password from the response
+    updatedUser.password = undefined;
+
+
+    res.status(200).send({
+      success: true,
+      message: "Profile Updated Successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in user update",
+      error: error.message,
+    });
+  }
+};
+
+
+
 module.exports = { 
     requireSignIn, 
     registerController, 
     loginController, 
     updateUserController,
     upload,
+    verificationController,
     updatePasswordController,
     uploadImage ,
     getAllUsersController,

@@ -11,7 +11,8 @@ const {
     getTotalUsersController,
     updateRating,
     updatePasswordController,
-    getUserDetailsController
+    getUserDetailsController,
+    verificationController
 
 } = require('../controllers/userController');
 
@@ -36,4 +37,6 @@ router.post("/ratings", updateRating)
 router.put("/update-pass", requireSignIn, updatePasswordController);
 
 router.post("/get-user", requireSignIn, getUserDetailsController );
+
+router.put("/update-veri", upload.array('idImages', 2), requireSignIn, verificationController);
 module.exports = router;

@@ -11,6 +11,10 @@ const favoriteSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  liked: {
+    type: Boolean,
+    default: false, // Initially, the favorite is not liked
+  },
 });
 
 module.exports = mongoose.model("Favorite", favoriteSchema);

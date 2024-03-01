@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -6,17 +6,40 @@ import {
   Image,
   StyleSheet,
   SafeAreaView,
+  Alert
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
+import { Dropdown } from "react-native-element-dropdown";
+import { AuthContext } from "../../../../../context/authContext";
+import { host } from "../../../../../APIRoutes";
+import axios from "axios";
+import { useNavigation } from '@react-navigation/native';
 
 const Verification = () => {
+
+  const [state, setState] = useContext(AuthContext);
+  const { user, token } = state;
+
+
   const [idType, setIdType] = useState("");
   const [frontId, setFrontId] = useState(null);
   const [backId, setBackId] = useState(null);
+  const [email] = useState(user?.email || "");
   const [showIdDropdown, setShowIdDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+
+  
+
+  const typeData = [
+    { label: "Passport", value: "Passport" },
+    { label: "Driver's License", value: "Driver's License" },
+    { label: "National ID", value: "National ID" },
+  ];
 
   const handleFrontIdUpload = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -44,18 +67,79 @@ const Verification = () => {
     }
   };
 
-  const handleVerifyAccount = () => {
-    // Implement your logic for verifying account
+  const handleVerifyAccount = async () => {
+    try {
+      setLoading(true);
+
+
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("idType", idType); // Add the selected ID type
+
+      // Append front and back images if they are selected
+      if (frontId) {
+        const frontUriParts = frontId.split(".");
+        const frontFileType = frontUriParts[frontUriParts.length - 1];
+        const frontFileName = `frontId.${frontFileType}`;
+        formData.append("idImages", {
+          uri: frontId,
+          name: frontFileName,
+          type: `image/${frontFileType}`,
+        });
+      }
+
+      if (backId) {
+        const backUriParts = backId.split(".");
+        const backFileType = backUriParts[backUriParts.length - 1];
+        const backFileName = `backId.${backFileType}`;
+        formData.append("idImages", {
+          uri: backId,
+          name: backFileName,
+          type: `image/${backFileType}`,
+        });
+      }
+
+      // Make the PUT request to update user information
+      const response = await axios.put("/auth/update-veri", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        Alert.alert("Success", response.data.message, [
+          {
+            text: "OK",
+            onPress: () => {
+            },
+            
+          },
+        ]);
+      } else {
+        Alert.alert("Error", response.data.message);
+      }
+  
+
+      // Handle response
+      console.log(response.data);
+      // Handle success response
+    } catch (error) {
+      console.error(error);
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const toggleIdDropdown = () => {
-    setShowIdDropdown(!showIdDropdown);
-  };
+  // const toggleIdDropdown = () => {
+  //   setShowIdDropdown(!showIdDropdown);
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Verify Account</Text>
-      <View style={styles.maindropContainer}>
+      {/* <View style={styles.maindropContainer}>
         <TouchableOpacity
           onPress={toggleIdDropdown}
           style={styles.dropdownContainer}
@@ -81,24 +165,48 @@ const Verification = () => {
             </Picker>
           )}
         </TouchableOpacity>
-      </View>
-      <Text style={styles.Text}>Front Identication Card</Text>
+
+      </View> */}
+
+      <Dropdown
+        style={styles.maindropContainer}
+        placeholderStyle={styles.selectedIdType}
+        selectedTextStyle={styles.selectedIdType}
+        inputSearchStyle={styles.inputSearchStyle}
+        containerStyle={{
+          backgroundColor: "#f6f6f6",
+          borderRadius: 8,
+          marginTop: 4,
+          padding: 6,
+        }}
+        data={typeData}
+        labelField="label"
+        valueField="value"
+        placeholder="Select ID Type"
+        value={idType}
+        onChange={(item) => setIdType(item.value)}
+      />
+
+      <Text style={styles.Text}>Front Identification Card</Text>
+
       <View style={styles.uploadContainer}>
-          <View style={styles.icontext}>
+        <TouchableOpacity
+          style={styles.uploadButton}
+          onPress={handleFrontIdUpload}
+        >
+          <View>
             <Feather
               name="upload"
               size={24}
               color="#00CCAA"
               style={styles.icon1}
             />
-
           </View>
-          <TouchableOpacity style={styles.uploadButton} onPress={handleFrontIdUpload}>
-            <Text style={styles.uploadText}>Upload</Text>
-          </TouchableOpacity>
+          <Text style={styles.uploadText}>Upload</Text>
           {frontId && <Image source={{ uri: frontId }} style={styles.image} />}
+        </TouchableOpacity>
       </View>
-      <Text style={styles.Text}>Back Identication Card</Text>
+      <Text style={styles.Text}>Back Identification Card</Text>
       <View style={styles.uploadContainer}>
         <View style={styles.icontext}>
           <Feather
@@ -118,11 +226,9 @@ const Verification = () => {
       </View>
 
       <TouchableOpacity
-        style={[
-          styles.submitButton,
-        ]}
+        style={[styles.submitButton]}
         onPress={handleVerifyAccount}
-        disabled={!idType || !frontId || !backId}
+        // disabled={!idType || !frontId || !backId}
       >
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
@@ -163,7 +269,6 @@ const styles = StyleSheet.create({
   icon1: {
     left: "43%",
     paddingTop: 15,
-
   },
   uploadText: {
     color: "#00CCAA",
@@ -190,7 +295,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     padding: 10,
     borderRadius: 10,
-
   },
   Text: {
     color: "#A9A9A9",

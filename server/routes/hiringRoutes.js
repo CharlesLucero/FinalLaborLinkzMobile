@@ -6,6 +6,7 @@ const {
     declineApplication,
     getReceivedApplications,
     getSentApplications,
+    doneApplication,
 
 
 
@@ -15,8 +16,12 @@ const { requireSignIn } = require('../controllers/userController');
 // Route to send an application from user1 to user2
 router.post('/send-application', requireSignIn, sendApplication);
 
+router.post('/send-hire', requireSignIn, sendApplication);
+
 // Route for user2 to accept an application
 router.put('/accept-application/:hiringProcessId', requireSignIn, acceptApplication);
+
+router.put('/done-application/:hiringProcessId', requireSignIn, doneApplication);
 
 // Route for user2 to decline an application
 router.put('/decline-application/:hiringProcessId', requireSignIn, declineApplication);

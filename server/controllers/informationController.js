@@ -232,6 +232,16 @@ const getMaidController = async (req, res) => {
 const getUserInfoController = async (req, res) =>{
     try {
       const userInfo = await informationModel.find({createdBy:req.auth._id})
+      .populate({
+        path: "createdBy",
+        select: "_id   location ",
+        populate: [
+          { path: "province", select: "name" },
+          { path: "city", select: "name" },
+          { path: "barangay", select: "name" }
+        ]
+      })
+      .sort({ createdAt: -1 });
       res.status(200).send({
         success: true,
         message:"user information",

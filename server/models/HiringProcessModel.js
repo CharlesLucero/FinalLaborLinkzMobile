@@ -11,7 +11,7 @@ const HiringProcessSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'accepted', 'declined'],
+        enum: ['pending', 'accepted', 'declined', 'done'],
         default: 'pending'
     }
 }, {
@@ -26,6 +26,10 @@ HiringProcessSchema.methods.accept = function() {
 
 HiringProcessSchema.methods.decline = function() {
     this.status = 'declined';
+    return this.save();
+};
+HiringProcessSchema.methods.done = function() {
+    this.status = 'done';
     return this.save();
 };
 
