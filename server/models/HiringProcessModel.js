@@ -9,6 +9,10 @@ const HiringProcessSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
+    postId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
     status: {
         type: String,
         enum: ['pending', 'accepted', 'declined', 'done'],
@@ -36,3 +40,4 @@ HiringProcessSchema.methods.done = function() {
 const HiringProcess = mongoose.model("HiringProcess", HiringProcessSchema);
 
 module.exports = HiringProcess;
+

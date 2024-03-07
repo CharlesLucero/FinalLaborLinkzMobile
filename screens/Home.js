@@ -393,11 +393,7 @@ const Home = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          <View style={{ marginTop: 10, paddingHorizontal: 20 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-              Jobs Listings
-            </Text>
-          </View>
+
 
           <View style={{ paddingHorizontal: 10 }}>
             {getFilteredPosts().map((post) => (
@@ -418,11 +414,6 @@ const Home = ({ navigation }) => {
               />
             ))}
           </View>
-          {getFilteredPosts().length === 0 && (
-            <Text style={{ textAlign: "center", marginTop: 10, color: "red" }}>
-              No results found for "{searchText}"
-            </Text>
-          )}
 
           <View
             style={{
