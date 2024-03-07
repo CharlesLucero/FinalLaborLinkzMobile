@@ -227,9 +227,14 @@ const sendHire = async () => {
     // Display success message upon successful hire request
     Alert.alert("Success", "Hire request sent successfully");
   } catch (error) {
-    // Handle error
-    console.error("Error sending hire request", error);
-    Alert.alert("Error", "Failed to send hire request");
+    if (error.response && error.response.status === 409) {
+      // Handle 409 status code (conflict - hire request already sent)
+      Alert.alert("Error", "Hire request already sent");
+    } else {
+      // Handle other errors
+      console.error("Error sending hire request", error);
+      Alert.alert("Error", "Failed to send hire request");
+    }
   }
 };
 
