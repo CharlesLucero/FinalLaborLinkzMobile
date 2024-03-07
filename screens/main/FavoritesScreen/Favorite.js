@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, Alert} from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Add this import
+import { useNavigation } from '@react-navigation/native'; 
 import { useAuth } from '../../../context/FavContext';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import axios from 'axios';
@@ -9,47 +9,42 @@ import { ImageF, host } from "../../../APIRoutes";
 import FooterMenu from '../../../components/Menus/FooterMenu';
 
 const Favorite = () => {
-    const navigation = useNavigation(); // Initialize useNavigation hook
+    const navigation = useNavigation();
     const { favorites, removeFromFavorites } = useAuth();
     const [favoriteUsers, setFavoriteUsers] = useState([]);
-    const [userId, setUserId] = useState(null); // State to store user ID
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
-      console.log(`USE EFFECT+++++++++++++++++++++++`);
-      console.log('Inside useEffect'); 
       fetchFavoriteUsers();
     }, []);
   
     const fetchFavoriteUsers = async () => {
-      
       const userId = await SecureStore.getItemAsync('userId');
 
-      console.log(`THIS IS THE USER ID FOR FAVORITES: ${userId}`)
       try {
         const response = await axios.get(`/favorite/favorite-users/${userId}`);
-        setFavoriteUsers(response.data.data); // Update state with response.data
-        console.log(`TESTER ESROARORW WOA : ${JSON.stringify(favoriteUsers)}`);
-
+        setFavoriteUsers(response.data.data);
       } catch (error) {
         console.error("Error fetching favorite users:", error);
         Alert.alert("Error", "Failed to fetch favorite users");
       }
     };
-  
+
+
     const handleRemoveFavorite = async (index, favoriteId) => {
       try {
         await axios.delete(`/favorite/remove/${favoriteId}`);
-        removeFromFavorites(index);
-        fetchFavoriteUsers();
+        removeFromFavorites(index); // Remove the favorite locally from the state
+        setFavoriteUsers(prevState => prevState.filter(favorite => favorite._id !== favoriteId)); // Update the state by filtering out the removed favorite
         Alert.alert("Success", "Favorite removed successfully");
       } catch (error) {
         console.error("Error removing favorite:", error);
         Alert.alert("Error", "Failed to remove favorite");
       }
     };
+    
 
   return (
-  
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
           <Text style={{ color: '#343434', fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' }}>
@@ -63,7 +58,7 @@ const Favorite = () => {
           <TouchableOpacity key={index} onPress={() => navigation.navigate('ViewProfile', { profilepost: favorite })}> 
             <View style={styles.card}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-              <Image
+                <Image
                   source={{ uri: host + favorite?.receiverId?.image }}
                   style={{
                     height: 50,
@@ -74,18 +69,15 @@ const Favorite = () => {
                   }}
                 />
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: 500}}>
+                  <Text style={{fontSize: 14, color: '#00CCAA', fontWeight: '500'}}>
                     {favorite?.receiverId?.firstName} {favorite?.receiverId?.lastName}
                   </Text>
                   <Text style={{marginTop: 2, fontSize: 14, color: 'white'}}>{favorite?.receiverId?.barangay?.name}, {favorite?.receiverId?.city?.name} {favorite?.receiverId?.province?.name}</Text>
                 </View>
               </View>
-              <View>
-              <AntDesign style={{ marginTop: 4 }} name="heart" size={24} color="#00CCAA" />
-              {/* <TouchableOpacity style={styles.remove}onPress={() => handleRemoveFavorite(index)}>
-              <Feather name="trash-2" size={18} color="#F02" />
-              </TouchableOpacity> */}
-              </View>
+              <TouchableOpacity style={styles.remove} onPress={() => handleRemoveFavorite(index, favorite._id)}>
+                <Feather name="trash-2" size={18} color="#F02" />
+              </TouchableOpacity>
             </View>
           </TouchableOpacity> 
         ))}
@@ -110,14 +102,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 30,
     paddingVertical: 18,
-    marginBottom: 20, // Add margin bottom to separate each favorite item
+    marginBottom: 20,
     flexDirection: "row",
   },
   info: {
     color: '#00CCAA',
     fontSize: 15,
     fontWeight: '600',
-    marginTop: 5, // Adjust spacing between each text item
+    marginTop: 5,
   },
   footer: {
     position: 'absolute',
@@ -133,7 +125,10 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   remove: {
-    left: 30,
+    position: 'absolute',
+    right: 10,
+    top: '50%',
+    transform: [{translateY: -9}]
   },
   card: {
     width: "100%",

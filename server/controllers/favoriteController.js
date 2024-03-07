@@ -1,3 +1,4 @@
+const FavoriteModel = require("../models/FavoriteModel");
 const Favorite = require("../models/FavoriteModel");
 const User = require("../models/userModel");
 
@@ -23,17 +24,55 @@ const addFavorite = async (req, res) => {
 };
 
 
+// // Remove a favorite
+// const removeFavorite = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     // Find the favorite by ID and update the liked field to false
+//     await Favorite.findByIdAndUpdate(id, { liked: false });
+//     res.json({ message: "Favorite removed successfully" });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
 // Remove a favorite
 const removeFavorite = async (req, res) => {
   try {
-    const { id } = req.params;
-    // Find the favorite by ID and update the liked field to false
-    await Favorite.findByIdAndUpdate(id, { liked: false });
-    res.json({ message: "Favorite removed successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const {id} = req.params
+    await FavoriteModel.findByIdAndDelete({_id:id})
+    res.status(200).send({
+      success: true,
+      message: "Your fav been deleted"
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "error in delete fav api",
+      error,
+    })
   }
 };
+
+
+// const deletePostController = async (req, res) =>{
+//   try {
+//     const {id} = req.params
+//     await postModel.findByIdAndDelete({_id:id})
+//     res.status(200).send({
+//       success: true,
+//       message: "Your Post been deleted"
+//     })
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       success: false,
+//       message: "error in delete post api",
+//       error,
+//     })
+//   }
+// };
 
 const getAllFavoriteUsers = async (req, res) => {
     const { userId } = req.params;

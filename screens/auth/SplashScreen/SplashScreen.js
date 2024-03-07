@@ -14,7 +14,7 @@ const SplashScreen = ({navigation}) => {
         <View style = {styles.maincontainer}>
             <ImageBackground style = {styles.background}  source={require('../../../assets/image/background.png')}>
 
-            <View style = {{marginTop: '150%', paddingHorizontal: 20}}>
+            <View style = {{marginTop: '120%', paddingHorizontal: 20}}>
                 <HeaderText
                 text="LaborLinkz"
                 color="white"

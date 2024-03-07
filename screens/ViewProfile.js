@@ -18,7 +18,18 @@ import { TextInput } from "react-native-paper";
 import { AuthContext } from "../context/authContext"; 
 import { host } from "../APIRoutes";
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const fetchFavoriteUserIds = async () => {
+  try {
+    const favoriteUserIds = await AsyncStorage.getItem('favoriteUserIds');
+    return favoriteUserIds ? JSON.parse(favoriteUserIds) : [];
+  } catch (error) {
+    console.error('Error fetching favorite user IDs:', error);
+    return [];
+  }
+};
+  
 
 const ViewProfile = ({ route, navigation }) => {
   const [userData, setUserData] = useState(null);
@@ -31,7 +42,61 @@ const ViewProfile = ({ route, navigation }) => {
   const [state, setState] = useContext(AuthContext);
   const [jwtToken, setJwtToken] = useState(null); // State to store JWT token
   const [userId, setUserId] = useState(null); // State to store user ID
-  const [favorite, setFavorite] = useState(false); // Define favorite state
+  const [favorite, setFavorite] = useState(true); // Define favorite state
+  const [favoriteUserIds, setFavoriteUserIds] = useState([]); // State to store favorite user IDs
+
+  useEffect(() => {
+    // Fetch favorite user IDs when the component mounts
+    const fetchData = async () => {
+      try {
+        const ids = await fetchFavoriteUserIds();
+        setFavoriteUserIds(ids);
+      } catch (error) {
+        console.error('Error fetching favorite user IDs:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    // Fetch favorite user IDs from AsyncStorage
+    const fetchFavoriteUserIds = async () => {
+      try {
+        const favoriteUserIds = await AsyncStorage.getItem('favoriteUserIds');
+        return favoriteUserIds ? JSON.parse(favoriteUserIds) : [];
+      } catch (error) {
+        console.error('Error fetching favorite user IDs:', error);
+        return [];
+      }
+    };
+    
+    fetchFavoriteUserIds(); // Call the function
+  }, []);
+
+
+  useEffect(() => {
+    // Fetch favorite user IDs when the component mounts
+    const fetchFavoriteIds = async () => {
+      const ids = await fetchFavoriteUserIds();
+      setFavoriteUserIds(ids);
+    };
+    fetchFavoriteIds();
+  }, []);
+
+useEffect(() => {
+  AsyncStorage.setItem('favoriteUserIds', JSON.stringify(favoriteUserIds))
+    .catch(error => console.error('Error updating favorite user IDs:', error));
+}, [favoriteUserIds]);
+
+  useEffect(() => {
+    // Check if the user is already in favorites
+    if (userData && userData.userInfo && userData.userInfo._id) {
+      setFavorite(favoriteUserIds.includes(userData.userInfo._id));
+    }
+  }, [userData, favoriteUserIds]);
+
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -131,15 +196,16 @@ const ViewProfile = ({ route, navigation }) => {
   };
 
  // Add a favorite
-const addFavorite = async () => {
+
+ const addFavorite = async () => {
   try {
     const senderId = userId; 
     const receiverId = userData.userInfo._id; // Assuming userData is populated
     await axios.post("/favorite/add", { senderId, receiverId });
-    
-    // Update state to indicate that the user is now a favorite
+    // Update state to reflect that the user is now a favorite
     setFavorite(true);
-    
+    // Store the user ID in AsyncStorage
+    await AsyncStorage.setItem('favoriteUserIds', JSON.stringify([...favoriteUserIds, receiverId]));
     // Display a success message or perform any other action upon successful addition
     Alert.alert("Success", "User added to favorites successfully");
   } catch (error) {

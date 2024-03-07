@@ -1,23 +1,49 @@
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, Button} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import moment from "moment";
-import { AntDesign, FontAwesome, MaterialIcons, Feather, Ionicons} from "@expo/vector-icons";
+import { AntDesign, FontAwesome, EvilIcons, Feather, Ionicons} from "@expo/vector-icons";
 import axios from "axios"; // Import axios
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "./CustomButton";
 import { AuthContext } from '../context/authContext';
 import * as SecureStore from 'expo-secure-store';
 
-const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, location, data }) => {
+const PostCard = ({Account, currentPage, removeFromFavorites, location, data }) => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [post, setPost] = useState({});
+  const [posts, setPosts]  = useState([]);
   const [showApplyButton, setShowApplyButton] = useState(false); 
   const [showAuthorInfo, setShowAuthorInfo] = useState(false); // State for author information visibility
   const [state, setState] = useContext(AuthContext);
   const { user, token } = state;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
+  
+  const postsPerPage = 5;
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+
+  const getAllPosts = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get("/post/get-all-post");
+      setLoading(false);
+      setPosts(data?.posts);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+// inintal  posts
+ useEffect(() => {
+    getAllPosts();
+  }, []);
+
+  const handleRefresh = () => {
+    getAllPosts();
+  };
 
     
     console.log('Posts:', JSON.stringify(posts));
@@ -120,9 +146,21 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, locatio
   }
 
   return (
+ 
     <View>
+    {!Account && (
+      <View style = {{marginTop: 10, paddingHorizontal: 5, marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Text style = {{fontWeight: 'bold', fontSize: 16}}>There are <Text style = {{color: '#00CCAA'}}>{posts?.length}</Text> Jobs/Services</Text>
+      <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+      <EvilIcons name="refresh" size={24} color="#00CCAA"  />
+      </TouchableOpacity>
+
+      </View>
+)}
+
+
       {/* Sort the posts array by creation date in descending order */}
-      {posts
+      {posts //pag posts nakalagay nadidispaly sa accountpero walang pagination \\ pero pag currentPosts naman nawawala sa accont pero may pagination
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map((post, i) => (
           <View style={styles.card} key={i}>
@@ -281,6 +319,8 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, locatio
   </View>
   </TouchableOpacity>
 </Modal>
+
+
 
     </View>
   );
