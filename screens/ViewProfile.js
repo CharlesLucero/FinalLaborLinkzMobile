@@ -223,6 +223,13 @@ const sendHire = async () => {
   try {
     const senderId = userId;
     const receiverId = userData?.userInfo?._id;
+
+    // Prevent sending a hire request to oneself
+    if (senderId === receiverId) {
+      Alert.alert("Error", "You cannot send a hire request to yourself");
+      return; // Exit the function early
+    }
+
     await axios.post("/hiring/send-hire", { senderId, receiverId });
     // Display success message upon successful hire request
     Alert.alert("Success", "Hire request sent successfully");
@@ -237,6 +244,7 @@ const sendHire = async () => {
     }
   }
 };
+
 
 // In your ViewProfile component, update the heart icon rendering:
 

@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import CustomButton from "./CustomButton";
 import { AuthContext } from '../context/authContext';
 import * as SecureStore from 'expo-secure-store';
+import EditModal from "./EditModal";
 
 const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, location, data }) => {
   const [loading, setLoading] = useState(false);
@@ -122,6 +123,7 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, locatio
   return (
     <View>
       {/* Sort the posts array by creation date in descending order */}
+      {Account && <EditModal modalVisible={modalVisible} setModalVisible={setModalVisible} post={post}/>}
       {posts
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map((post, i) => (
@@ -135,13 +137,9 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, locatio
                     justifyContent: 'flex-end'
                   }}
                 >
-                  <Text style={{ textAlign: "right" }}>
-                    <FontAwesome
-                      name="pencil"
-                      size={16}
-                      color="darkblue"
-                    />
-                  </Text>
+                  <Text style = {{textAlign: 'right'}}>
+                                    <FontAwesome name="pencil" size={16} color="darkblue" onPress={() => { setPost(post), setModalVisible(true);}} />
+                                </Text>
                   <Text style={{ textAlign: "right" }}>
                     <FontAwesome
                       name="trash"
