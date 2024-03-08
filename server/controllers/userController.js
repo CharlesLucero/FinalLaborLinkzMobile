@@ -540,6 +540,46 @@ const verificationController = async (req, res) => {
   }
 };
 
+const banUserController = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // Find the user by userId
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Check if the user is already banned
+    if (user.banned) {
+      return res.status(400).json({
+        success: false,
+        message: "User is already banned",
+      });
+    }
+
+    // Update the user's banned status to true
+    user.banned = true;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User banned successfully",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error banning user",
+      error: error.message,
+    });
+  }
+};
 
 
 module.exports = { 
@@ -554,5 +594,6 @@ module.exports = {
     getAllUsersController,
     getTotalUsersController,
     updateRating,
-    getUserDetailsController // Add this line to export the controller
+    getUserDetailsController,
+    banUserController
 };
