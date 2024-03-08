@@ -36,6 +36,26 @@ const reportUser = async (req, res) => {
     }
 };
 
-module.exports = { reportUser };
+const getAllReports = async (req, res) => {
+    try {
+        // Fetch all reports from the database
+        const reports = await reportModel.find();
+
+        res.status(200).send({
+            success: true,
+            message: "All reports retrieved successfully",
+            reports,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            success: false,
+            message: "Error in fetching reports",
+            error,
+        });
+    }
+};
+
+module.exports = { reportUser, getAllReports };
 
 
