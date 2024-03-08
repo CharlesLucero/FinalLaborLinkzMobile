@@ -16,7 +16,8 @@ const {
     banUserController,
     getAllBannedUsersController,
     getUnverifiedUser,
-    verifyUserController
+    verifyUserController,
+    countPendingVerificationUsersController
 } = require('../controllers/userController');
 
 // Register route
@@ -32,6 +33,8 @@ router.post("/upload", upload.single("image"), uploadImage);
 router.put("/update-user", upload.single("image"), requireSignIn, updateUserController);
 
 router.get("/all-users", getAllUsersController  );
+
+router.get("/total-verified", countPendingVerificationUsersController );
 
 router.get("/total-users", getTotalUsersController  );
 
