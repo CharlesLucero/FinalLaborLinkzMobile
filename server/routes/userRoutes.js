@@ -13,7 +13,8 @@ const {
     updatePasswordController,
     getUserDetailsController,
     verificationController,
-    banUserController
+    banUserController,
+    getAllBannedUsersController
 
 } = require('../controllers/userController');
 
@@ -32,6 +33,8 @@ router.put("/update-user", upload.single("image"), requireSignIn, updateUserCont
 router.get("/all-users", getAllUsersController  );
 
 router.get("/total-users", getTotalUsersController  );
+
+router.get("/get-banned", getAllBannedUsersController );
 
 router.post("/ban-user", banUserController );
 

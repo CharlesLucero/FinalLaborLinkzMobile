@@ -581,6 +581,17 @@ const banUserController = async (req, res) => {
   }
 };
 
+const getAllBannedUsersController = async (req, res) => {
+  try {
+    // Query the database to get all banned users
+    const bannedUsers = await userModel.find({ banned: true });
+    res.status(200).json(bannedUsers);
+  } catch (error) {
+    console.error("Error fetching all banned users:", error);
+    res.status(500).json({ error: "Failed to fetch all banned users." });
+  }
+};
+
 
 module.exports = { 
     requireSignIn, 
@@ -595,5 +606,6 @@ module.exports = {
     getTotalUsersController,
     updateRating,
     getUserDetailsController,
-    banUserController
+    banUserController,
+    getAllBannedUsersController
 };
