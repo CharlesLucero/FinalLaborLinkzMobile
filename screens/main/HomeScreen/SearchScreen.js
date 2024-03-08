@@ -43,12 +43,14 @@ const SearchScreen = ({ navigation }) => {
       // Filter the original infos based on search query
       const filtered = originalInfos.filter(
         (info) =>
-          info.job &&
-          info.job.some(
-            (job) =>
-              typeof job === "string" &&
-              job.toLowerCase().includes(text.toLowerCase())
-          )
+          (info.createdBy.firstName.toLowerCase().includes(text.toLowerCase()) ||
+            info.createdBy.lastName.toLowerCase().includes(text.toLowerCase())) ||
+          (info.job &&
+            info.job.some(
+              (job) =>
+                typeof job === "string" &&
+                job.toLowerCase().includes(text.toLowerCase())
+            ))
       );
       setInfos(filtered);
     }

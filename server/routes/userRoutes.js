@@ -12,8 +12,12 @@ const {
     updateRating,
     updatePasswordController,
     getUserDetailsController,
-    verificationController
-
+    verificationController,
+    banUserController,
+    getAllBannedUsersController,
+    getUnverifiedUser,
+    verifyUserController,
+    countPendingVerificationUsersController
 } = require('../controllers/userController');
 
 // Register route
@@ -30,13 +34,24 @@ router.put("/update-user", upload.single("image"), requireSignIn, updateUserCont
 
 router.get("/all-users", getAllUsersController  );
 
+router.get("/total-verified", countPendingVerificationUsersController );
+
 router.get("/total-users", getTotalUsersController  );
+
+router.get("/get-banned", getAllBannedUsersController );
+
+router.get("/get-unverified", getUnverifiedUser);
+
+router.post("/ban-user", banUserController );
+
+router.post("/verify-user", verifyUserController );
 
 router.post("/ratings", updateRating)
 
 router.put("/update-pass", requireSignIn, updatePasswordController);
 
 router.post("/get-user", requireSignIn, getUserDetailsController );
+
 
 router.put("/update-veri", upload.array('idImages', 2), requireSignIn, verificationController);
 module.exports = router;

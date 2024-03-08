@@ -223,15 +223,28 @@ const sendHire = async () => {
   try {
     const senderId = userId;
     const receiverId = userData?.userInfo?._id;
+
+    // Prevent sending a hire request to oneself
+    if (senderId === receiverId) {
+      Alert.alert("Error", "You cannot send a hire request to yourself");
+      return; // Exit the function early
+    }
+
     await axios.post("/hiring/send-hire", { senderId, receiverId });
     // Display success message upon successful hire request
     Alert.alert("Success", "Hire request sent successfully");
   } catch (error) {
-    // Handle error
-    console.error("Error sending hire request", error);
-    Alert.alert("Error", "Failed to send hire request");
+    if (error.response && error.response.status === 409) {
+      // Handle 409 status code (conflict - hire request already sent)
+      Alert.alert("Error", "Hire request already sent");
+    } else {
+      // Handle other errors
+      console.error("Error sending hire request", error);
+      Alert.alert("Error", "Failed to send hire request");
+    }
   }
 };
+
 
 // In your ViewProfile component, update the heart icon rendering:
 

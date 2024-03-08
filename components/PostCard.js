@@ -9,63 +9,26 @@ import {
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import moment from "moment";
-import {
-  AntDesign,
-  FontAwesome,
-  EvilIcons,
-  Feather,
-  Ionicons,
-} from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialIcons, Feather, Ionicons} from "@expo/vector-icons";
 import axios from "axios"; // Import axios
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "./CustomButton";
-import { AuthContext } from "../context/authContext";
-import * as SecureStore from "expo-secure-store";
+import { AuthContext } from '../context/authContext';
+import * as SecureStore from 'expo-secure-store';
+import EditModal from "./EditModal";
 
-const PostCard = ({
-  Account,
-  currentPage,
-  removeFromFavorites,
-  location,
-  data,
-}) => {
+const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, location, data }) => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [posts, setPosts] = useState([]);
-  const [showApplyButton, setShowApplyButton] = useState(false);
+  const [post, setPost] = useState({});
+  const [showApplyButton, setShowApplyButton] = useState(false); 
   const [showAuthorInfo, setShowAuthorInfo] = useState(false); // State for author information visibility
   const [state, setState] = useContext(AuthContext);
   const { user, token } = state;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const postsPerPage = 5;
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-
-  const getAllPosts = async () => {
-    setLoading(true);
-    try {
-      const { data } = await axios.get("/post/get-all-post");
-      setLoading(false);
-      setPosts(data?.posts);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
-  // inintal  posts
-  useEffect(() => {
-    getAllPosts();
-  }, []);
-
-  const handleRefresh = () => {
-    getAllPosts();
-  };
-
-  console.log("Posts:", JSON.stringify(posts));
-  console.log(`DATA @ POST CARD: ${JSON.stringify(data)}`);
+    console.log(`DATA @ POST CARD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: ${JSON.stringify(data)}`);
 
   const handleApply = async (postId, senderId, receiverId) => {
     try {
@@ -175,31 +138,9 @@ const PostCard = ({
 
   return (
     <View>
-      {!Account && (
-        <View
-          style={{
-            marginTop: 10,
-            paddingHorizontal: 5,
-            marginBottom: 12,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-            There are <Text style={{ color: "#00CCAA" }}>{posts?.length}</Text>{" "}
-            Jobs/Services
-          </Text>
-          <TouchableOpacity
-            onPress={handleRefresh}
-            style={styles.refreshButton}
-          >
-            <EvilIcons name="refresh" size={24} color="#00CCAA" />
-          </TouchableOpacity>
-        </View>
-      )}
-
       {/* Sort the posts array by creation date in descending order */}
-      {posts //pag posts nakalagay nadidispaly sa accountpero walang pagination \\ pero pag currentPosts naman nawawala sa accont pero may pagination
+      {Account && <EditModal modalVisible={modalVisible} setModalVisible={setModalVisible} post={post}/>}
+      {posts
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map((post, i) => (
           <View style={styles.card} key={i}>
@@ -208,12 +149,13 @@ const PostCard = ({
                 <View
                   style={{
                     flexDirection: "row",
-                    justifyContent: "space-between",
+                    gap: 10,
+                    justifyContent: 'flex-end'
                   }}
                 >
-                  <Text style={{ textAlign: "right" }}>
-                    <FontAwesome name="pencil" size={16} color="darkblue" />
-                  </Text>
+                  <Text style = {{textAlign: 'right'}}>
+                                    <FontAwesome name="pencil" size={16} color="darkblue" onPress={() => { setPost(post), setModalVisible(true);}} />
+                                </Text>
                   <Text style={{ textAlign: "right" }}>
                     <FontAwesome
                       name="trash"
@@ -227,31 +169,25 @@ const PostCard = ({
             </View>
 
             <TouchableOpacity onPress={() => handleOpenModal(post)}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 5,
-                }}
-              >
-                <Text
-                  style={{ fontSize: 18, color: "white" }}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
+              <View style={{flexDirection: "row", justifyContent: 'space-between'}}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 5,
+                  }}
                 >
-                  {post?.title}
-                </Text>
-                {/* Toggle Apply button visibility */}
+                  <Text style={{ fontSize: 18, color: 'white' }} numberOfLines={1} ellipsizeMode="tail">{post?.title}</Text>
+                  {/* Toggle Apply button visibility */}
+                </View>
+                {post?.postedBy?.verified &&
+                  <View style={{ marginLeft: 5 }}>
+                    <MaterialIcons name="verified" size={28} color="#3897F0" />
+                  </View>
+                }
               </View>
-
-              <View
-                style={{
-                  marginTop: 6,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
+              
+              <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
                 <Ionicons name="location-sharp" size={20} color="#00CCAA" />
                 <Text style={{ color: "#e4e4e4", fontSize: 14 }}>
                   {post?.postedBy?.barangay?.name} {post?.postedBy?.city?.name}{" "}
@@ -413,10 +349,11 @@ const PostCard = ({
       <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
         <Text style={styles.closeButtonText}>Close Modal</Text>
       </TouchableOpacity> */}
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+    </View>
+  </View>
+  </TouchableOpacity>
+</Modal>
+
     </View>
   );
 };

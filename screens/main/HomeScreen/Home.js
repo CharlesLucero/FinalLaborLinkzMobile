@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import {Modal, View, Text, SafeAreaView, StyleSheet, TouchableOpacity, RefreshControl, Image, TextInput, ScrollView, TouchableHighlight,} from 'react-native';
 import FooterMenu from '../../../components/Menus/FooterMenu';
@@ -15,13 +13,13 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const Home = ({navigation}) => {
     //global state
-    const [posts] = useContext(PostContext);
+    const [posts, getAllPosts] = useContext(PostContext);
     const [refreshing, setRefreshing] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [token, setToken] = useState(null); // State to store the token
-    const postsPerPage = 5;
+    const postsPerPage = 10;
 
-    console.log(posts);
+    console.log(`ETO YUNG PSOT POST POT POST POST POST POST POST POST POST: _-----------------------------------------------------------------: ${JSON.stringify(posts)}`);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
 
@@ -29,36 +27,22 @@ const Home = ({navigation}) => {
         setSelectedPost(post);
         setIsModalVisible(!isModalVisible);
     };
-    const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-    const handleNextPage = () => {
-        // Assuming postsPerPage is available from somewhere
-        const totalPosts = posts.length;
-        const totalPages = Math.ceil(totalPosts / postsPerPage);
-
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
 
 
-    //  // Calculate start and end indices for posts to be displayed
-    //  const indexOfLastPost = currentPage * postsPerPage;
-    //  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    //  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+     // Calculate start and end indices for posts to be displayed
+     const indexOfLastPost = currentPage * postsPerPage;
+     const indexOfFirstPost = indexOfLastPost - postsPerPage;
+     const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
-        // // Function to handle navigation to previous page
-        // const goToPreviousPage = () => {
-        //     setCurrentPage(currentPage => currentPage - 1);
-        // };
+        // Function to handle navigation to previous page
+        const goToPreviousPage = () => {
+            setCurrentPage(currentPage => currentPage - 1);
+        };
 
-        // // Function to handle navigation to next page
-        // const goToNextPage = () => {
-        //     setCurrentPage(currentPage => currentPage + 1);
-        // };
+        // Function to handle navigation to next page
+        const goToNextPage = () => {
+            setCurrentPage(currentPage => currentPage + 1);
+        };
 
         useFocusEffect(() => {
             // Check for JWT token when component mounts
@@ -83,7 +67,7 @@ const Home = ({navigation}) => {
      //fresh controll
      const onRefresh = useCallback(() => {
         setRefreshing(true);
-
+        getAllPosts;
         setTimeout(() => {
             setRefreshing(false);
         }, 500);
@@ -198,7 +182,8 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
         {/* Search Desc**/}
         <View>
-            <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 20}}> Search available jobs now</Text>
+            <Text style = {{color: '#000000', fontWeight: '600', textAlign:'center', marginTop: 2, marginBottom: 20}}> Search from 
+            <Text style = {styleS.heading}> {posts?.length}</Text> available jobs now</Text>
         </View>
 
 
@@ -242,17 +227,26 @@ const Home = ({navigation}) => {
                 </ScrollView>
         </View>
 
-
-
-        <View style={{ paddingHorizontal: 10 }}>
-        
-                <TouchableOpacity  onPress={() => setIsModalVisible(true)}>
-                <PostCard currentPage={currentPage}   />
-                </TouchableOpacity>
-      
+        <View style = {{marginTop: 10, paddingHorizontal: 20, marginBottom: 12}}>
+                <Text style = {{fontWeight: 'bold', fontSize: 16}}>Jobs/Services</Text>
         </View>
 
-{/*             
+        <View style={{ paddingHorizontal: 10 }}>
+            {currentPosts.map(post => (
+                <TouchableOpacity key={post._id} onPress={() => setIsModalVisible(true)}>
+                    <PostCard
+                        post={post}
+                        navigation={navigation}
+                        posts={[{
+                            ...post,
+                       
+                        }]}
+                    />
+                </TouchableOpacity>
+            ))}
+        </View>
+
+            
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10}}>
                         <TouchableOpacity onPress={goToPreviousPage}>
                             <FontAwesome name="chevron-left" size={24} color="#00CCAA" />
@@ -262,16 +256,7 @@ const Home = ({navigation}) => {
                             <FontAwesome name="chevron-right" size={24} color="#00CCAA" />
                         </TouchableOpacity>
                     </View>
- */}
- <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10 }}>
-                <TouchableOpacity onPress={handlePreviousPage}>
-                    <FontAwesome name="chevron-left" size={24} color="#00CCAA" />
-                </TouchableOpacity>
-                <Text>{currentPage}</Text>
-                <TouchableOpacity onPress={handleNextPage}>
-                    <FontAwesome name="chevron-right" size={24} color="#00CCAA" />
-                </TouchableOpacity>
-            </View>
+
 
 
             </ScrollView>

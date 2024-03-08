@@ -125,57 +125,68 @@ const registerController = async (req, res) => {
 
 
 
-//login controller
 const loginController = async (req, res) => {
-    try{
-        const { email, password } = req.body;
-        //validation
-        if(!email || !password) {
-            return res.status(500).send({
-                success: false,
-                message: 'Please provide email or password'
-            });
-        }
+  try {
+      const { email, password } = req.body;
 
-
-        // Find the user by email
-        const user = await userModel.findOne({ email });
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found',
-            });
-        }
-        //match password
-        const match = await comparePassword(password, user.password)
-        if(!match){
-            return res.status(500).send({
-                success: false,
-                message:'Please provide a correct password'
-            });
-        }
-        //token jwt
-        const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "7d",
+      // Validation
+      if (!email || !password) {
+          return res.status(400).json({
+              success: false,
+              message: 'Please provide email and password'
           });
+      }
 
-          // Omit sensitive information from the user object
-          user.password = undefined;
+      // Find the user by email
+      const user = await userModel.findOne({ email });
 
-        res.status(200).send({
-            success: true,
-            token,
-            user,
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            success: false,
-            message: 'error in login api'
-       
-        });
-    }
+      // Check if user exists
+      if (!user) {
+          return res.status(404).json({
+              success: false,
+              message: 'User not found'
+          });
+      }
+
+      // Check if the user is banned
+      if (user.banned) {
+          return res.status(403).json({
+              success: false,
+              message: 'User is banned. Cannot login.'
+          });
+      }
+
+      // Match password
+      const match = await comparePassword(password, user.password);
+      if (!match) {
+          return res.status(401).json({
+              success: false,
+              message: 'Invalid password'
+          });
+      }
+
+      // Generate JWT token
+      const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "50d",
+      });
+
+      // Omit sensitive information from the user object
+      user.password = undefined;
+
+      res.status(200).json({
+          success: true,
+          token,
+          user
+      });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+          success: false,
+          message: 'Error in login API'
+      });
+  }
 };
+
 
 
 
@@ -273,18 +284,6 @@ const updateUserController = async (req, res) => {
   }
 };
 
-  
-  const uploadImage = async (req, res) => {
-    console.log(req.body);
-    const imageName = req.file.filename;
-  
-    try {
-      await Images.create({ image: imageName });
-      res.json({ status: "ok" });
-    } catch (error) {
-      res.json({ status: error });
-    }
-  };
 
   const getAllUsersController = async (req, res) => {
     try {
@@ -296,8 +295,6 @@ const updateUserController = async (req, res) => {
     }
   };
 
-
-//hello
 
   // Get total number of users controller
 const getTotalUsersController = async (req, res) => {
@@ -338,7 +335,6 @@ const updateRating = async (req, res) => {
       });
   }
 };
-
 
 const updatePasswordController = async (req, res) => {
   try {
@@ -450,6 +446,18 @@ const getUserDetailsController = async (req, res) => {
   }
 };
 
+const uploadImage = async (req, res) => {
+  console.log(req.body);
+  const imageName = req.file.filename;
+
+  try {
+    await Images.create({ image: imageName });
+    res.json({ status: "ok" });
+  } catch (error) {
+    res.json({ status: error });
+  }
+};
+
 const verificationController = async (req, res) => {
   try {
     const { email, idType } = req.body;
@@ -540,6 +548,150 @@ const verificationController = async (req, res) => {
   }
 };
 
+const banUserController = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    console.log(`THIS IS THE USER IDDD:D:D:D: ${userId}`);
+    // Find the user by userId
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Check if the user is already banned
+    if (user.banned) {
+      return res.status(409).json({
+        success: false,
+        message: "User is already banned",
+      });
+    }
+
+    // Update the user's banned status to true
+    user.banned = true;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User banned successfully",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error banning user",
+      error: error.message,
+    });
+  }
+};
+
+const getAllBannedUsersController = async (req, res) => {
+  try {
+    // Query the database to count all banned users
+    const bannedUsersCount = await userModel.countDocuments({ banned: true });
+    res.status(200).json({
+      success: true,
+      bannedUsersCount: bannedUsersCount
+    });
+  } catch (error) {
+    console.error("Error fetching all banned users:", error);
+    res.status(500).json({ error: "Failed to fetch all banned users." });
+  }
+};
+
+
+const getUnverifiedUser = async (req, res) => {
+  try {
+    // Query the database to get all users that are not yet verified
+    const unverifiedUsers = await userModel.find({ verified: false });
+    res.status(200).json(unverifiedUsers);
+  } catch (error) {
+    console.error("Error fetching all unverified users:", error);
+    res.status(500).json({ error: "Failed to fetch all unverified users." });
+  }
+};
+
+const verifyUserController = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // Validate input
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required for user verification.",
+      });
+    }
+
+    // Find the user by userId
+    const user = await userModel.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided ID.",
+      });
+    }
+
+    // Check if the user is already verified
+    if (user.verified) {
+      return res.status(409).json({
+        success: false,
+        message: "User is already verified.",
+      });
+    }
+
+    // Update the user's verification status to true
+    user.verified = true;
+    await user.save();
+
+    // Omit sensitive information from the user object
+    user.password = undefined;
+
+    // Send success response with updated user details
+    res.status(200).json({
+      success: true,
+      message: "User verification successful.",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error verifying user.",
+      error: error.message,
+    });
+  }
+
+};
+const countPendingVerificationUsersController = async (req, res) => {
+  try {
+    // Query the database to get the count of all unverified users
+    const pendingVerificationCount = await userModel.countDocuments({ verified: false });
+
+    // Query the database to get the count of all users
+    const totalUsersCount = await userModel.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      totalUsers: totalUsersCount,
+      pendingVerificationUsers: pendingVerificationCount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error counting pending verification users",
+      error: error.message,
+    });
+  }
+};
 
 
 module.exports = { 
@@ -554,5 +706,10 @@ module.exports = {
     getAllUsersController,
     getTotalUsersController,
     updateRating,
-    getUserDetailsController // Add this line to export the controller
+    getUserDetailsController,
+    banUserController,
+    getAllBannedUsersController,
+    getUnverifiedUser,
+    verifyUserController,
+    countPendingVerificationUsersController
 };
