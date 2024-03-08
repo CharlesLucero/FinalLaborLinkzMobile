@@ -42,7 +42,7 @@ const getAllPostsController = async (req, res) => {
     const posts = await postModel.find()
     .populate({
       path: "postedBy",
-      select: "_id firstName lastName location rating",
+      select: "_id firstName lastName verified rating",
       populate: [
         { path: "province", select: "name" },
         { path: "city", select: "name" },

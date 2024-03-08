@@ -125,57 +125,68 @@ const registerController = async (req, res) => {
 
 
 
-//login controller
 const loginController = async (req, res) => {
-    try{
-        const { email, password } = req.body;
-        //validation
-        if(!email || !password) {
-            return res.status(500).send({
-                success: false,
-                message: 'Please provide email or password'
-            });
-        }
+  try {
+      const { email, password } = req.body;
 
-
-        // Find the user by email
-        const user = await userModel.findOne({ email });
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found',
-            });
-        }
-        //match password
-        const match = await comparePassword(password, user.password)
-        if(!match){
-            return res.status(500).send({
-                success: false,
-                message:'Please provide a correct password'
-            });
-        }
-        //token jwt
-        const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "50d",
+      // Validation
+      if (!email || !password) {
+          return res.status(400).json({
+              success: false,
+              message: 'Please provide email and password'
           });
+      }
 
-          // Omit sensitive information from the user object
-          user.password = undefined;
+      // Find the user by email
+      const user = await userModel.findOne({ email });
 
-        res.status(200).send({
-            success: true,
-            token,
-            user,
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-            success: false,
-            message: 'error in login api'
-       
-        });
-    }
+      // Check if user exists
+      if (!user) {
+          return res.status(404).json({
+              success: false,
+              message: 'User not found'
+          });
+      }
+
+      // Check if the user is banned
+      if (user.banned) {
+          return res.status(403).json({
+              success: false,
+              message: 'User is banned. Cannot login.'
+          });
+      }
+
+      // Match password
+      const match = await comparePassword(password, user.password);
+      if (!match) {
+          return res.status(401).json({
+              success: false,
+              message: 'Invalid password'
+          });
+      }
+
+      // Generate JWT token
+      const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "50d",
+      });
+
+      // Omit sensitive information from the user object
+      user.password = undefined;
+
+      res.status(200).json({
+          success: true,
+          token,
+          user
+      });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+          success: false,
+          message: 'Error in login API'
+      });
+  }
 };
+
 
 
 
