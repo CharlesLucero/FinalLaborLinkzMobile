@@ -14,8 +14,8 @@ const {
     getUserDetailsController,
     verificationController,
     banUserController,
-    getAllBannedUsersController
-
+    getAllBannedUsersController,
+    getUnverifiedUser
 } = require('../controllers/userController');
 
 // Register route
@@ -36,6 +36,8 @@ router.get("/total-users", getTotalUsersController  );
 
 router.get("/get-banned", getAllBannedUsersController );
 
+router.get("/get-unverified", getUnverifiedUser);
+
 router.post("/ban-user", banUserController );
 
 router.post("/ratings", updateRating)
@@ -43,6 +45,7 @@ router.post("/ratings", updateRating)
 router.put("/update-pass", requireSignIn, updatePasswordController);
 
 router.post("/get-user", requireSignIn, getUserDetailsController );
+
 
 router.put("/update-veri", upload.array('idImages', 2), requireSignIn, verificationController);
 module.exports = router;
