@@ -19,7 +19,7 @@ const Home = ({navigation}) => {
     const [token, setToken] = useState(null); // State to store the token
     const postsPerPage = 10;
 
-    console.log(posts);
+    console.log(`ETO YUNG PSOT POST POT POST POST POST POST POST POST POST: _-----------------------------------------------------------------: ${JSON.stringify(posts)}`);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
 

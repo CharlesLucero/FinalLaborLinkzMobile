@@ -20,8 +20,6 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, locatio
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
 
-    
-    console.log('Posts:', JSON.stringify(posts));
     console.log(`DATA @ POST CARD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: ${JSON.stringify(data)}`);
 
     const handleApply = async (postId, senderId, receiverId) => {
@@ -153,17 +151,24 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, locatio
             </View>
 
             <TouchableOpacity onPress={() => handleOpenModal(post)}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 5,
-                }}
-              >
-                <Text style={{ fontSize: 18, color: 'white' }} numberOfLines={1} ellipsizeMode="tail">{post?.title}</Text>
-                {/* Toggle Apply button visibility */}
+              <View style={{flexDirection: "row", justifyContent: 'space-between'}}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 5,
+                  }}
+                >
+                  <Text style={{ fontSize: 18, color: 'white' }} numberOfLines={1} ellipsizeMode="tail">{post?.title}</Text>
+                  {/* Toggle Apply button visibility */}
+                </View>
+                {post?.postedBy?.verified &&
+                  <View style={{ marginLeft: 5 }}>
+                    <MaterialIcons name="verified" size={28} color="#3897F0" />
+                  </View>
+                }
               </View>
-
+              
               <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 2}}>
                 <Ionicons name="location-sharp" size={20} color="#00CCAA" />
                 <Text style={{ color: "#e4e4e4", fontSize: 14 }}>

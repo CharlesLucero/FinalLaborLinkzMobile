@@ -17,6 +17,7 @@ import PostCard from "../../../components/PostCard";
 import InformationCards from "../../../components/InformationCards";
 import { host } from "../../../APIRoutes";
 import * as SecureStore from 'expo-secure-store';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Account = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
@@ -48,6 +49,7 @@ const getUserDetails = async () => {
     if (response.status === 200) {
       const user = response.data.user;
       setData(user);
+      console.log(`POTAAA GUMANAAAA KAA:::::::::::::::::::::::: ${user.verified}`);
       console.log(`DATADATADATADATA:: ${JSON.stringify(response.data.user)}`);
     } else {
       throw new Error('Failed to fetch user details: ' + response.statusText);
@@ -127,9 +129,17 @@ const getUserDetails = async () => {
                 borderColor: "#343434",
               }}
             />
-            <Text style={{fontSize: 18, color: '#00CCAA', marginTop: 20, fontWeight: 500}}>
-              {state?.user.firstName} {state?.user.lastName} 
-            </Text>
+            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+              <Text style={{ fontSize: 18, color: 'black', fontWeight: 500, marginRight: 2 }}>
+                {state?.user.firstName} {state?.user.lastName}
+              </Text>
+              {state?.user.verified &&
+                <View style={{ marginLeft: 5 }}>
+                  <MaterialIcons name="verified" size={24} color="#3897F0" />
+                </View>
+              }
+            </View>
+
           </View>
      
           <View style={{ paddingHorizontal: 20 }}>
