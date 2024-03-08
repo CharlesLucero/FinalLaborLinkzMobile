@@ -38,13 +38,16 @@ const reportUser = async (req, res) => {
 
 const getAllReports = async (req, res) => {
     try {
-        // Fetch all reports from the database
-        const reports = await reportModel.find();
+        // Fetch all reports from the database and populate the reportedUserId field
+        const reports = await reportModel.find().populate('reportedUserId');
+
+        // Filter reports where the reportedUserId's banned field is false
+        const filteredReports = reports.filter(report => report.reportedUserId.banned === false);
 
         res.status(200).send({
             success: true,
             message: "All reports retrieved successfully",
-            reports,
+            reports: filteredReports,
         });
     } catch (error) {
         console.error(error);
@@ -55,6 +58,7 @@ const getAllReports = async (req, res) => {
         });
     }
 };
+
 
 module.exports = { reportUser, getAllReports };
 

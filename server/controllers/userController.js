@@ -273,18 +273,6 @@ const updateUserController = async (req, res) => {
   }
 };
 
-  
-  const uploadImage = async (req, res) => {
-    console.log(req.body);
-    const imageName = req.file.filename;
-  
-    try {
-      await Images.create({ image: imageName });
-      res.json({ status: "ok" });
-    } catch (error) {
-      res.json({ status: error });
-    }
-  };
 
   const getAllUsersController = async (req, res) => {
     try {
@@ -296,8 +284,6 @@ const updateUserController = async (req, res) => {
     }
   };
 
-
-//hello
 
   // Get total number of users controller
 const getTotalUsersController = async (req, res) => {
@@ -338,7 +324,6 @@ const updateRating = async (req, res) => {
       });
   }
 };
-
 
 const updatePasswordController = async (req, res) => {
   try {
@@ -450,6 +435,18 @@ const getUserDetailsController = async (req, res) => {
   }
 };
 
+const uploadImage = async (req, res) => {
+  console.log(req.body);
+  const imageName = req.file.filename;
+
+  try {
+    await Images.create({ image: imageName });
+    res.json({ status: "ok" });
+  } catch (error) {
+    res.json({ status: error });
+  }
+};
+
 const verificationController = async (req, res) => {
   try {
     const { email, idType } = req.body;
@@ -544,6 +541,7 @@ const banUserController = async (req, res) => {
   try {
     const { userId } = req.body;
 
+    console.log(`THIS IS THE USER IDDD:D:D:D: ${userId}`);
     // Find the user by userId
     const user = await userModel.findById(userId);
 
@@ -556,7 +554,7 @@ const banUserController = async (req, res) => {
 
     // Check if the user is already banned
     if (user.banned) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "User is already banned",
       });
@@ -583,14 +581,18 @@ const banUserController = async (req, res) => {
 
 const getAllBannedUsersController = async (req, res) => {
   try {
-    // Query the database to get all banned users
-    const bannedUsers = await userModel.find({ banned: true });
-    res.status(200).json(bannedUsers);
+    // Query the database to count all banned users
+    const bannedUsersCount = await userModel.countDocuments({ banned: true });
+    res.status(200).json({
+      success: true,
+      bannedUsersCount: bannedUsersCount
+    });
   } catch (error) {
     console.error("Error fetching all banned users:", error);
     res.status(500).json({ error: "Failed to fetch all banned users." });
   }
 };
+
 
 const getUnverifiedUser = async (req, res) => {
   try {
@@ -626,6 +628,14 @@ const verifyUserController = async (req, res) => {
       });
     }
 
+    // Check if the user is already verified
+    if (user.verified) {
+      return res.status(409).json({
+        success: false,
+        message: "User is already verified.",
+      });
+    }
+
     // Update the user's verification status to true
     user.verified = true;
     await user.save();
@@ -647,7 +657,31 @@ const verifyUserController = async (req, res) => {
       error: error.message,
     });
   }
+
 };
+const countPendingVerificationUsersController = async (req, res) => {
+  try {
+    // Query the database to get the count of all unverified users
+    const pendingVerificationCount = await userModel.countDocuments({ verified: false });
+
+    // Query the database to get the count of all users
+    const totalUsersCount = await userModel.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      totalUsers: totalUsersCount,
+      pendingVerificationUsers: pendingVerificationCount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error counting pending verification users",
+      error: error.message,
+    });
+  }
+};
+
 
 module.exports = { 
     requireSignIn, 
@@ -665,5 +699,6 @@ module.exports = {
     banUserController,
     getAllBannedUsersController,
     getUnverifiedUser,
-    verifyUserController
+    verifyUserController,
+    countPendingVerificationUsersController
 };

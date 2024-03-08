@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema({
     reportedUserId: { 
-        type: String, 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User",
         required: true 
     },
     violation: { 

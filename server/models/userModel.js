@@ -64,11 +64,10 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     identification: {
-        
-        idType: { type: String, default: false },
-        front: { type: String, default: false },
-        back: { type: String, default: false },
-      },
+        idType: { type: String, default: null },
+        front: { type: String, default: null },
+        back: { type: String, default: null },
+    },
     region: {
         code: { trim: true, type: String },
         name: { trim: true, type: String },
