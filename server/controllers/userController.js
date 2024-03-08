@@ -603,6 +603,52 @@ const getUnverifiedUser = async (req, res) => {
   }
 };
 
+const verifyUserController = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // Validate input
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required for user verification.",
+      });
+    }
+
+    // Find the user by userId
+    const user = await userModel.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided ID.",
+      });
+    }
+
+    // Update the user's verification status to true
+    user.verified = true;
+    await user.save();
+
+    // Omit sensitive information from the user object
+    user.password = undefined;
+
+    // Send success response with updated user details
+    res.status(200).json({
+      success: true,
+      message: "User verification successful.",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error verifying user.",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = { 
     requireSignIn, 
     registerController, 
@@ -618,5 +664,6 @@ module.exports = {
     getUserDetailsController,
     banUserController,
     getAllBannedUsersController,
-    getUnverifiedUser
+    getUnverifiedUser,
+    verifyUserController
 };

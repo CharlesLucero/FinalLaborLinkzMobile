@@ -15,7 +15,8 @@ const {
     verificationController,
     banUserController,
     getAllBannedUsersController,
-    getUnverifiedUser
+    getUnverifiedUser,
+    verifyUserController
 } = require('../controllers/userController');
 
 // Register route
@@ -39,6 +40,8 @@ router.get("/get-banned", getAllBannedUsersController );
 router.get("/get-unverified", getUnverifiedUser);
 
 router.post("/ban-user", banUserController );
+
+router.post("/verify-user", verifyUserController );
 
 router.post("/ratings", updateRating)
 
