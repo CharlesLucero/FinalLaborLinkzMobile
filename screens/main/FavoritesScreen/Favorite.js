@@ -30,18 +30,48 @@ const Favorite = () => {
       }
     };
 
-
     const handleRemoveFavorite = async (index, favoriteId) => {
       try {
-        await axios.delete(`/favorite/remove/${favoriteId}`);
-        removeFromFavorites(index); // Remove the favorite locally from the state
-        setFavoriteUsers(prevState => prevState.filter(favorite => favorite._id !== favoriteId)); // Update the state by filtering out the removed favorite
-        Alert.alert("Success", "Favorite removed successfully");
+        Alert.alert(
+          "Attention",
+          "Are you sure you want to delete this post?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+            {
+              text: "Delete",
+              onPress: async () => {
+                await axios.delete(`/favorite/remove/${favoriteId}`);
+                removeFromFavorites(index); // Remove the favorite locally from the state
+                setFavoriteUsers(prevState => prevState.filter(favorite => favorite._id !== favoriteId)); // Update the state by filtering out the removed favorite
+                Alert.alert("Success", "Favorite removed successfully");
+              },
+              style: "destructive"
+            }
+          ],
+          { cancelable: false }
+        );
       } catch (error) {
         console.error("Error removing favorite:", error);
         Alert.alert("Error", "Failed to remove favorite");
       }
     };
+
+
+    // const handleRemoveFavorite = async (index, favoriteId) => {
+    //   try {
+    //     await axios.delete(`/favorite/remove/${favoriteId}`);
+    //     removeFromFavorites(index); // Remove the favorite locally from the state
+    //     setFavoriteUsers(prevState => prevState.filter(favorite => favorite._id !== favoriteId)); // Update the state by filtering out the removed favorite
+    //     Alert.alert("Success", "Favorite removed successfully");
+    //   } catch (error) {
+    //     console.error("Error removing favorite:", error);
+    //     Alert.alert("Error", "Failed to remove favorite");
+    //   }
+    // };
     
 
   return (

@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   Alert
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Entypo } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
@@ -138,6 +138,11 @@ const Verification = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+     <View style={{paddingHorizontal: 5,paddingVertical: 10,}}>
+            <TouchableOpacity onPress={() => navigation.navigate('AccountVerification')}>
+              <Entypo name="chevron-left" size={32} color="#A9A9A9" />
+            </TouchableOpacity>
+          </View>
       <Text style={styles.title}>Verify Account</Text>
       {/* <View style={styles.maindropContainer}>
         <TouchableOpacity

@@ -167,37 +167,57 @@ const Message = () => {
     ));
   };
   //May bagong nadagdag dito
+  // 
+  
   const handleAccept = async () => {
-    try {
-      const response = await axios.put(
-        `/hiring/accept-application/${selectedApplication._id}`,
-        {},
+    Alert.alert(
+      "Attention",
+      `Are you sure you want to accept ${selectedApplication.senderId.firstName} ${selectedApplication.senderId.lastName}?`,
+      [
+        {   
+          text: "Cancel",
+          onPress: () => console.log("Accept canceled"),
+          style: "cancel"
+        },
         {
-          headers: {
-            Authorization: `Bearer ${state.token}`,
-          },
+          text: "Accept",
+          onPress: async () => {
+            try {
+              const response = await axios.put(
+                `/hiring/accept-application/${selectedApplication._id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: `Bearer ${state.token}`,
+                  },
+                }
+              );
+              Alert.alert("Success", response.data.message);
+              setModalVisible(false);
+              setAcceptDone(true);
+              setModalName("");
+              setModalTime("");
+              setModalDate("");
+              toggleOngoingWorkModal(); // Close ongoing work modal
+              setShowDoneModal(true); // Display new modal
+              fetchApplications(); // Refresh applications after accepting
+  
+              // Close "Done" modal
+              setShowOngoingWorkModal(false);
+            } catch (error) {
+              console.error("Error accepting application:", error);
+              Alert.alert(
+                "Error",
+                "Failed to accept application. Please try again later."
+              );
+            }
+          }
         }
-      );
-      Alert.alert("Success", response.data.message);
-      setModalVisible(false);
-      setAcceptDone(true);
-      setModalName("");
-      setModalTime("");
-      setModalDate("");
-      toggleOngoingWorkModal(); // Close ongoing work modal
-      setShowDoneModal(true); // Display new modal
-      fetchApplications(); // Refresh applications after accepting
-
-      // Close "Done" modal
-      setShowOngoingWorkModal(false);
-    } catch (error) {
-      console.error("Error accepting application:", error);
-      Alert.alert(
-        "Error",
-        "Failed to accept application. Please try again later."
-      );
-    }
+      ],
+      { cancelable: false }
+    );
   };
+
 
   const handleDecline = async () => {
     try {
