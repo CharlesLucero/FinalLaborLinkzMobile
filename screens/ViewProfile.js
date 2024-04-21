@@ -362,7 +362,7 @@ const sendHire = async () => {
                 justifyContent: "center",
                 borderRadius: 20,
               }}
-              onPress={addFavorite} 
+        onPress={addFavorite}
             >
               <AntDesign name={favorite ? "heart" : "hearto"} size={32} color="#00CCAA" />
             </TouchableOpacity>

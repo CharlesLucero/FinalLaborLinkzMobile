@@ -11,6 +11,11 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: [true, "please add post description"],
     },
+    postPics: {
+      first: { type: String, default: null },
+      second: { type: String, default: null },
+      third: { type: String, default: null },
+  },
     minRate: {
       type: String,
       required: [true, "please add post description"],
