@@ -136,7 +136,7 @@ const Home = ({navigation}) => {
                                     backgroundColor: '#343434', 
                                     padding: 10, 
                                     borderRadius: 10,                     
-                                    }}>
+                                    }}> 
                                         <SimpleLineIcons name="diamond" size={18} color="white" />
                                     
                                     <Text style={{color: 'white', fontSize: 12}}>Get Pro</Text>

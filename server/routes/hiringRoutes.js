@@ -7,6 +7,7 @@ const {
     getReceivedApplications,
     getSentApplications,
     doneApplication,
+    cancelApplication,
 
 
 
@@ -23,6 +24,8 @@ router.put('/accept-application/:hiringProcessId', requireSignIn, acceptApplicat
 
 router.put('/done-application/:hiringProcessId', requireSignIn, doneApplication);
 
+router.put('/cancel-application/:hiringProcessId', requireSignIn, cancelApplication);
+
 // Route for user2 to decline an application
 router.put('/decline-application/:hiringProcessId', requireSignIn, declineApplication);
 
@@ -31,5 +34,6 @@ router.get('/received-applications/:userId', requireSignIn, getReceivedApplicati
 router.get('/sent-application', requireSignIn, sendApplication);
 
 router.get('/sent-applications/:userId', requireSignIn, getSentApplications); 
+
 
 module.exports = router;

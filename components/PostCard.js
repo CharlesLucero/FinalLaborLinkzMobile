@@ -6,6 +6,7 @@ import {
   Alert,
   Modal,
   Button,
+  Image,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import moment from "moment";
@@ -16,6 +17,8 @@ import CustomButton from "./CustomButton";
 import { AuthContext } from '../context/authContext';
 import * as SecureStore from 'expo-secure-store';
 import EditModal from "./EditModal";
+import { host } from "../APIRoutes";
+
 
 const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, location, data }) => {
   const [loading, setLoading] = useState(false);
@@ -318,7 +321,30 @@ const PostCard = ({ posts, Account, addToFavorites, removeFromFavorites, locatio
 
               {/* Description */}
               <Text style={{ marginTop: 16 }}>{selectedPost?.description}</Text>
-
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  paddingTop: 10,
+                }}
+              >
+                <Image
+                  source={{ uri: host+selectedPost?.postPics?.first,}}
+                  style={{ width: 80, height: 80, marginBottom: 10, borderRadius: 5  }}
+                />
+                 <Image
+                  source={{ uri: host+selectedPost?.postPics?.second,}}
+                  style={{ width: 80, height: 80, marginBottom: 10, borderRadius: 5  }}
+                />
+                 <Image
+                  source={{ uri: host+selectedPost?.postPics?.third,}}
+                  style={{ width: 80, height: 80, marginBottom: 10, borderRadius: 5 }}
+                />
+                
+              </View>
+                
               <View style={{ flexDirection: "row", justifyContent: "center" }}>
                 <View
                   style={{

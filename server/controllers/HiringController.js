@@ -109,6 +109,26 @@ const declineApplication = async (req, res) => {
     }
     };
     
+    const cancelApplication = async (req, res) => {
+        const { hiringProcessId } = req.params;
+    
+        try {
+            // Find the hiring process by ID
+            const hiringProcess = await HiringProcess.findById(hiringProcessId);
+            if (!hiringProcess) {
+                return res.status(404).json({ message: 'Hiring process not found.' });
+            }
+    
+            // Cancel the application
+            await hiringProcess.cancel();
+            return res.status(200).json({ message: 'Application canceled successfully.', data: hiringProcess });
+        } catch (error) {
+            console.error('Error canceling application:', error);
+            return res.status(500).json({ message: 'Internal server error.' });
+        }
+    };
+    
+
     const doneApplication = async (req, res) => {
         const { hiringProcessId } = req.params;
 
@@ -159,4 +179,4 @@ const getSentApplications = async (req, res) => {
     }
 };
 
-module.exports = {declineApplication,getSentApplications, sendHire, getReceivedApplications, acceptApplication, sendApplication, doneApplication}
+module.exports = {declineApplication,getSentApplications, sendHire, cancelApplication, getReceivedApplications, acceptApplication, sendApplication, doneApplication}

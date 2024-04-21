@@ -167,37 +167,57 @@ const Message = () => {
     ));
   };
   //May bagong nadagdag dito
+  // 
+  
   const handleAccept = async () => {
-    try {
-      const response = await axios.put(
-        `/hiring/accept-application/${selectedApplication._id}`,
-        {},
+    Alert.alert(
+      "Attention",
+      `Are you sure you want to accept ${selectedApplication.senderId.firstName} ${selectedApplication.senderId.lastName}?`,
+      [
+        {   
+          text: "Cancel",
+          onPress: () => console.log("Accept canceled"),
+          style: "cancel"
+        },
         {
-          headers: {
-            Authorization: `Bearer ${state.token}`,
-          },
+          text: "Accept",
+          onPress: async () => {
+            try {
+              const response = await axios.put(
+                `/hiring/accept-application/${selectedApplication._id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: `Bearer ${state.token}`,
+                  },
+                }
+              );
+              Alert.alert("Success", response.data.message);
+              setModalVisible(false);
+              setAcceptDone(true);
+              setModalName("");
+              setModalTime("");
+              setModalDate("");
+              toggleOngoingWorkModal(); // Close ongoing work modal
+              setShowDoneModal(true); // Display new modal
+              fetchApplications(); // Refresh applications after accepting
+  
+              // Close "Done" modal
+              setShowOngoingWorkModal(false);
+            } catch (error) {
+              console.error("Error accepting application:", error);
+              Alert.alert(
+                "Error",
+                "Failed to accept application. Please try again later."
+              );
+            }
+          }
         }
-      );
-      Alert.alert("Success", response.data.message);
-      setModalVisible(false);
-      setAcceptDone(true);
-      setModalName("");
-      setModalTime("");
-      setModalDate("");
-      toggleOngoingWorkModal(); // Close ongoing work modal
-      setShowDoneModal(true); // Display new modal
-      fetchApplications(); // Refresh applications after accepting
-
-      // Close "Done" modal
-      setShowOngoingWorkModal(false);
-    } catch (error) {
-      console.error("Error accepting application:", error);
-      Alert.alert(
-        "Error",
-        "Failed to accept application. Please try again later."
-      );
-    }
+      ],
+      { cancelable: false }
+    );
   };
+
 
   const handleDecline = async () => {
     try {
@@ -244,6 +264,29 @@ const Message = () => {
       Alert.alert(
         "Error",
         "Failed to decline application. Please try again later."
+      );
+    }
+  };
+
+  const handelCancel = async () => {
+    try {
+      const response = await axios.put(
+        `/hiring/cancel-application/${selectedApplication._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        }
+      );
+      Alert.alert("Success", "Successfully Cancel the Application");
+      setShowDoneModal(false);
+      closeModal();
+    } catch (error) {
+      console.error("Error cancel application:", error);
+      Alert.alert(
+        "Error",
+        "Failed to cancel application. Please try again later."
       );
     }
   };
@@ -303,11 +346,14 @@ const Message = () => {
       case "accepted":
         statusColor = "#00CCAA"; // Green color for accepted
         break;
-      case "decline":
+      case "declined":
         statusColor = "#FF0000"; // Red color for declined
         break;
       case "done":
         statusColor = "#FFA500"; // Red color for declined
+        break;
+        case "cancelled":
+        statusColor = "#000000"; // Red color for declined
         break;
       default:
         statusColor = "#AAA9A9"; // Gray color for pending
@@ -499,6 +545,7 @@ const Message = () => {
                       </View>
                     </>
                   ) : (
+                    
                     <View>
                       <Text
                         style={{
@@ -509,6 +556,11 @@ const Message = () => {
                         }}
                       >
                         Ongoing Work
+                       
+
+                      </Text>
+                      <Text style={{ marginTop: 5, fontSize: 16, marginBottom: 10 }}>
+                      You can contact the User using the number provided: <Text style = {{fontWeight: 'bold'}}>{selectedApplication.senderId.contactNumber}</Text>
                       </Text>
                       <Image
                         source={require("../../../assets/image/ongoing.jpg")}
@@ -522,20 +574,6 @@ const Message = () => {
                       />
                       <View style={{ marginTop: 20 }}></View>
                       <View style={styles.buttonContainer}>
-                        {/* <TouchableOpacity
-                          style={[styles.buttonWrapper, { borderRadius: 10 }]}
-                        >
-                          <Text
-                            style={{
-                              backgroundColor: "#00CCAA",
-                              color: "#343434",
-                              textAlign: "center",
-                              paddingVertical: 10,
-                            }}
-                          >
-                            Done
-                          </Text>
-                        </TouchableOpacity> */}
                         <TouchableOpacity
                           style={[styles.buttonWrapper, { borderRadius: 10 }]}
                           onPress={() => {
@@ -671,7 +709,11 @@ const Message = () => {
                       }}
                     >
                       {modalName}
-                    </Text>
+                    </Text> 
+                    
+                    <Text style={{ marginTop: 5, fontSize: 16, marginBottom: 10 }}>
+                      You can contact the User using the number provided: <Text style = {{fontWeight: 'bold'}}>{selectedApplication.receiverId.contactNumber}</Text>
+                      </Text>
                     <Text
                       style={{
                         color: "#AAA9A9",
@@ -684,6 +726,8 @@ const Message = () => {
                       {modalDate}
                     </Text>
                   </View>
+                  
+                  <View style = {{flexDirection: 'row', gap: 30, justifyContent:'center', paddingLeft: 70}}>
                   <TouchableOpacity
                     onPress={() => {
                       setModalVisible(!modalVisible);
@@ -701,6 +745,27 @@ const Message = () => {
                       Go Back
                     </Text>
                   </TouchableOpacity>
+
+                  <TouchableOpacity
+                          onPress={() => {
+                            handelCancel();
+            
+                          }}
+                          style={{
+                      backgroundColor: "#343434",
+                      marginTop: 60,
+                      paddingVertical: 10,
+                      paddingHorizontal: 20,
+                      borderRadius: 5,
+                      alignSelf: "center",
+                    }}
+                  >
+                                <Text style={{ color: "#00CCAA", fontWeight: "bold" }}>
+                            Cancel
+                          </Text>
+                        </TouchableOpacity>
+
+                  </View>
                 </View>
               )}
               {/* this is modal is for rating */}

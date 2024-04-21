@@ -7,11 +7,18 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Entypo } from "@expo/vector-icons";
 
 const AccountVerification = ({ navigation }) => {
   return (
     <SafeAreaView style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
+
+    <View style={{paddingHorizontal: 24,paddingVertical: 20,}}>
+            <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
+              <Entypo name="chevron-left" size={32} color="#A9A9A9" />
+            </TouchableOpacity>
+          </View>
+
       <Image
         source={require("../../../../../assets/image/verification.jpg")}
         style={styles.image}
@@ -70,7 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     color: "#00CCAA",
-    marginTop: 10,
+
   },
   details: {
     textAlign: "center",

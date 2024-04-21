@@ -40,6 +40,7 @@ const Register = ({ navigation }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState();
 
   const data = [
     { label: "Male", gender: "Male" },
@@ -157,6 +158,12 @@ const Register = ({ navigation }) => {
         setLoading(false);
         return;
       }
+      if (password !== confirmPassword) {
+        Alert.alert('Passwords do not match');
+        setLoading(false);
+        return;
+      }
+      
 
       const regionDatabase = await fetchData(
         `https://psgc.gitlab.io/api/regions/${selectedRegion}/`
@@ -441,6 +448,14 @@ const Register = ({ navigation }) => {
                 value={password}
                 setValue={setPassword}
               />
+                <InputBox
+                placeholder = 'Confirm Password'
+                height={50}
+                secureTextEntry={!showPassword}
+                showPasswordToggle={true}
+                value={confirmPassword}
+                setValue={setConfirmPassword}
+                />
             </View>
 
             {/* <View style={{ paddingHorizontal: 32, marginTop: 24 }}>

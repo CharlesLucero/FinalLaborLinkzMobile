@@ -300,11 +300,17 @@ const sendHire = async () => {
           <View style={{ alignSelf: "center" }}>
             {userData && (
               <View>
-                <View style={styles.nameContainer}>
+              <View style={{ flexDirection: "row", justifyContent: 'center', marginTop: 20, marginLeft: 13 }}>
 
-                  <Text style={styles.completeName}>
+                <Text style={{ fontSize: 24, color: 'black', fontWeight: 500, alignItems: 'center' }}>
                     {userData.userInfo.firstName} {userData.userInfo.lastName}
                   </Text>
+
+                  {userData.userInfo.verified &&
+                  <View style={{ marginLeft: 5 }}>
+                    <MaterialIcons name="verified" size={24} color="#3897F0" />
+                  </View>
+                  }
 
 
                 </View>
@@ -356,7 +362,7 @@ const sendHire = async () => {
                 justifyContent: "center",
                 borderRadius: 20,
               }}
-              onPress={addFavorite} 
+        onPress={addFavorite}
             >
               <AntDesign name={favorite ? "heart" : "hearto"} size={32} color="#00CCAA" />
             </TouchableOpacity>
@@ -530,7 +536,8 @@ const sendHire = async () => {
 
 const styles = StyleSheet.create({
   nameContainer: {
-    alignSelf:'center'
+    alignSelf:'center',
+    flexDirection: 'row'
   },
   completeName: {
     color: "#00CCAA",
