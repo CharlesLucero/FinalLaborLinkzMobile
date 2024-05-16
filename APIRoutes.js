@@ -1,4 +1,4 @@
-export const host = "http://192.168.100.4:8082/";
+export const host = "http://172.20.10.3:8082/";
 export const allUsersRoute = `${host}/ap1/v1/auth/allusers`;
 export const sendMessageRoute = `${host}/ap1/v1/chats/addmsg`;
 export const recieveMessageRoute = `${host}/ap1/chats/getmsg`;

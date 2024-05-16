@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useState, useEffect } from "react";
 import {
   View,
@@ -39,7 +37,8 @@ const Notifications = () => {
           },
         }
       );
-      setReceivedApplications(response.data.data);
+      const sortedApplications = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setReceivedApplications(sortedApplications);
     } catch (error) {
       console.error("Error fetching received applications:", error);
       Alert.alert("Error", "Failed to fetch received applications.");
@@ -56,7 +55,7 @@ const Notifications = () => {
     const createdAt = moment(item.createdAt);
     const formattedDate = createdAt.format("MMMM Do YYYY");
     const formattedTime = createdAt.format("h:mm:ss a");
-  
+
     return (
       <TouchableOpacity onPress={() => handleApplicationPress(item)}>
         <View style={styles.itemContainer}>
@@ -89,7 +88,7 @@ const Notifications = () => {
                 source={require("../../../assets/image/logoblack.png")}
                 style={{ width: 45, height: 45 }}
               />
-              <Text style={styles.headerTitle}>Request Application </Text>
+              <Text style={styles.headerTitle}>Request Application</Text>
             </View>
           }
           data={receivedApplications}
@@ -165,4 +164,3 @@ const styles = StyleSheet.create({
 });
 
 export default Notifications;
-

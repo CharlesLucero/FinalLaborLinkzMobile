@@ -169,8 +169,12 @@ useEffect(() => {
     // Clear input fields
     setViolation("");
     setDescription("");
-
+    const senderId = userId;
     const reportedUserId = `${userData?.userInfo?._id || ""}`;
+    if (senderId === reportedUserId) {
+      Alert.alert("Error", "You cannot report yourself");
+      return; // Exit the function early
+    }
 
     try {
       await axios.post("/report/report-user", {
@@ -201,6 +205,10 @@ useEffect(() => {
   try {
     const senderId = userId; 
     const receiverId = userData.userInfo._id; // Assuming userData is populated
+    if (senderId === receiverId) {
+      Alert.alert("Error", "You cannot favorite yourself!");
+      return; // Exit the function early
+    }
     await axios.post("/favorite/add", { senderId, receiverId });
     // Update state to reflect that the user is now a favorite
     setFavorite(true);
@@ -389,12 +397,6 @@ const sendHire = async () => {
                   <Feather name="file-text" size={24} color="#00CCAA" />
                   <Text style={styles.userText}>
                     Bio: {userData.userAdditionalInfo.bio}
-                  </Text>
-                </View>
-                <View style={styles.userContent}>
-                  <Feather name="smartphone" size={24} color="#00CCAA" />
-                  <Text style={styles.userText}>
-                    {userData.userInfo.contactNumber}
                   </Text>
                 </View>
                 <View style={styles.userContent}>

@@ -17,7 +17,7 @@ import PostCard from "../../../components/PostCard";
 import InformationCards from "../../../components/InformationCards";
 import { host } from "../../../APIRoutes";
 import * as SecureStore from 'expo-secure-store';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome} from '@expo/vector-icons';
 
 const Account = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
@@ -142,6 +142,24 @@ const getUserDetails = async () => {
 
           </View>
      
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center", // Center the stars horizontally
+              marginTop: 10,
+            }}
+          >
+            {[...Array(5)].map((_, index) => (
+              <FontAwesome
+                key={index}
+                name={index < state?.user.rating ? "star" : "star-o"} // Use 'star' for filled stars and 'star-o' for outline stars
+                size={18}
+
+                color="yellow"
+              />
+            ))}
+          </View>
           <View style={{ paddingHorizontal: 20 }}>
             <Text style={{color: '#343434', fontSize: 16, fontWeight: 500, marginTop: 14}}>User Information</Text>
           </View>

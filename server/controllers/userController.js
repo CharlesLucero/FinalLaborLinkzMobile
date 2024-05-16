@@ -693,9 +693,70 @@ const countPendingVerificationUsersController = async (req, res) => {
   }
 };
 
+const getUserByIdNameController = async (req, res) => {
+  try {
+    // Find all users and select only id, firstName, and lastName fields
+    const users = await userModel.find({}, 'id firstName lastName');
+
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch users',
+      error: error.message,
+    });
+  }
+};
+
+const getBannedUsersController = async (req, res) => {
+  try {
+    // Find all banned users and select only id, firstName, and lastName fields
+    const bannedUsers = await userModel.find({ banned: true }, 'id firstName lastName');
+
+    res.status(200).json({
+      success: true,
+      users: bannedUsers,
+    });
+  } catch (error) {
+    console.error('Error fetching banned users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch banned users',
+      error: error.message,
+    });
+  }
+};
+
+const getVerifiedUsersController = async (req, res) => {
+  try {
+    // Find all banned users and select only id, firstName, and lastName fields
+    const verifiedUsers = await userModel.find({ verified: true }, 'id firstName lastName');
+
+    res.status(200).json({
+      success: true,
+      users: verifiedUsers,
+    });
+  } catch (error) {
+    console.error('Error fetching verified users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch verified users',
+      error: error.message,
+    });
+  }
+};
+
+
 
 module.exports = { 
     requireSignIn, 
+    getUserByIdNameController,
+    getVerifiedUsersController,
+    getBannedUsersController,
     registerController, 
     loginController, 
     updateUserController,

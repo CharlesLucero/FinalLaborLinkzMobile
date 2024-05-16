@@ -10,6 +10,7 @@ const {
   getElectricianController,
   getUserInfoController,
   getAllInfoController,
+  updateInformationController,
 
 } = require("../controllers/informationController");
 
@@ -42,6 +43,8 @@ router.get("/get-user-info", requireSignIn, getUserInfoController);
 
 //GET ALL POSTs
 router.get("/get-all-info", getAllInfoController);
+
+router.put("/update-info/:id", requireSignIn, updateInformationController);
 
 //export
 module.exports = router;

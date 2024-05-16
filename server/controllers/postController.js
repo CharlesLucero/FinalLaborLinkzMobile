@@ -33,9 +33,18 @@ const createPostController = async (req, res) => {
     let second = "";
     let third = "";
 
-    first = req.files[0].filename;
-    second = req.files[1].filename;
-    third = req.files[2].filename;
+    if (req.files && req.files.length > 0) {
+      // Assign filenames if files exist
+      if (req.files[0]) {
+        first = req.files[0].filename;
+      }
+      if (req.files[1]) {
+        second = req.files[1].filename;
+      }
+      if (req.files[2]) {
+        third = req.files[2].filename;
+      }
+    }
 
 
     // Create a new post
@@ -45,7 +54,7 @@ const createPostController = async (req, res) => {
       minRate,
       maxRate,
       "postPics.first": first,
-      "postPics.second": second, 
+      "postPics.second": second,
       "postPics.third": third,
     postedBy: req.auth._id,
     });
