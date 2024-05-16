@@ -75,6 +75,35 @@ const Message = () => {
     setReportModalVisible(false);
   };
 
+  // const fetchApplications = async () => {
+  //   try {
+  //     const receivedResponse = await axios.get(
+  //       `/hiring/received-applications/${user._id}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setReceivedApplications(receivedResponse.data.data);
+
+  //     const sentResponse = await axios.get(
+  //       `/hiring/sent-applications/${user._id}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setSentApplications(sentResponse.data.data);
+  //   } catch (error) {
+  //     console.error("Error fetching applications:", error);
+  //     Alert.alert("Error", "Failed to fetch applications.");
+  //   } finally {
+  //     setRefreshing(false);
+  //   }
+  // };
+
   const fetchApplications = async () => {
     try {
       const receivedResponse = await axios.get(
@@ -85,8 +114,11 @@ const Message = () => {
           },
         }
       );
-      setReceivedApplications(receivedResponse.data.data);
-
+      const sortedReceivedApplications = receivedResponse.data.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setReceivedApplications(sortedReceivedApplications);
+  
       const sentResponse = await axios.get(
         `/hiring/sent-applications/${user._id}`,
         {
@@ -95,7 +127,10 @@ const Message = () => {
           },
         }
       );
-      setSentApplications(sentResponse.data.data);
+      const sortedSentApplications = sentResponse.data.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setSentApplications(sortedSentApplications);
     } catch (error) {
       console.error("Error fetching applications:", error);
       Alert.alert("Error", "Failed to fetch applications.");
@@ -103,7 +138,7 @@ const Message = () => {
       setRefreshing(false);
     }
   };
-
+  
   const showReportModal = () => {
     setReportModalVisible(true);
   };

@@ -49,7 +49,7 @@ const Setting = ({navigation}) => {
                     <View style = {styles.format}>
                     <MaterialCommunityIcons name="account-edit-outline" size={27} color="#00CCAA" />
                             <BodyText
-                            text = 'Edit Profile'
+                            text = 'Setup Profile'
                             fontSize={18}
                             fontWeight={600}
                             color = "#F6F6F6"  

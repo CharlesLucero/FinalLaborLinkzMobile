@@ -275,7 +275,46 @@ const getAllInfoController =  async (req, res) => {
   }
 };
 
-  
+// Update information
+const updateInformationController = async (req, res) => {
+  try {
+    const { bio, age, job } = req.body;
+
+    const info = await informationModel.findById({_id: req.params.id});
+
+    // Validate
+    if (!bio || !age || !job ) {
+      return res.status(500).send({
+        success: false,
+        message: "Please Provide All Fields",
+      });
+    }
+    
+    const updatedInfo = await informationModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        bio:bio || info?.bio,
+        age:age || info?.age,
+        job:job || info?.job
+      },
+      { new: true }
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Information Updated Successfully",
+      info: updatedInfo,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in Update Info API",
+      error,
+    });
+  }
+};
+
   
 
-  module.exports = {getPlumberController,getAllInfoController,  getUserInfoController, getMaidController,createInformationController, getElectricianController, getCarpenterController, getTechnicianController, getDriverController};
+  module.exports = {getPlumberController,getAllInfoController, updateInformationController,  getUserInfoController, getMaidController,createInformationController, getElectricianController, getCarpenterController, getTechnicianController, getDriverController};

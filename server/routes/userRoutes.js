@@ -17,7 +17,10 @@ const {
     getAllBannedUsersController,
     getUnverifiedUser,
     verifyUserController,
-    countPendingVerificationUsersController
+    countPendingVerificationUsersController,
+    getUserByIdNameController,
+    getBannedUsersController,
+    getVerifiedUsersController
 } = require('../controllers/userController');
 
 // Register route
@@ -51,6 +54,13 @@ router.post("/ratings", updateRating)
 router.put("/update-pass", requireSignIn, updatePasswordController);
 
 router.post("/get-user", requireSignIn, getUserDetailsController );
+
+router.get("/all", getUserByIdNameController  );
+
+router.get("/ban", getBannedUsersController  );
+
+
+router.get("/verified", getVerifiedUsersController  );
 
 
 router.put("/update-veri", upload.array('idImages', 2), requireSignIn, verificationController);
